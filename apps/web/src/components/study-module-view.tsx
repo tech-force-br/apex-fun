@@ -9,7 +9,6 @@ import {
   getModule,
   mockTopicLock,
   topicExerciseCount,
-  topicKindForMap,
 } from "@/lib/curriculum";
 import { useCurriculumModules } from "@/lib/curriculum-store";
 import { chromeCopy } from "@/lib/locale";
@@ -56,9 +55,8 @@ export function StudyModuleView() {
       <ol className="mt-8 space-y-3" aria-label={copy.topicsTitle}>
         {selected.topics.map((topic, topicIndex) => {
           const lock = mockTopicLock(selected.status, topicIndex);
-          const kind = topicKindForMap(topic);
           const meta =
-            kind === "theory"
+            topic.kind === "theory"
               ? copy.theory
               : copy.exercises(topicExerciseCount(topic));
 

@@ -183,10 +183,7 @@ export const curriculum: CurriculumModule[] = [
 
 export const emptyLocalizedText: LocalizedText = { en: "", "pt-BR": "" };
 
-export function getModule(
-  id: string,
-  modules: CurriculumModule[] = curriculum,
-) {
+export function getModule(id: string, modules: CurriculumModule[]) {
   return modules.find((item) => item.id === id);
 }
 
@@ -206,11 +203,6 @@ export function topicExerciseCount(topic: Topic) {
     .length;
   if (fromCards > 0) return fromCards;
   return topic.exerciseCount ?? 0;
-}
-
-export function topicKindForMap(topic: Topic): TopicKind {
-  if (topic.cards.some((card) => card.type === "exercise")) return "exercises";
-  return topic.kind;
 }
 
 /** Mock new-student progress: first topic in an open module is current. */
