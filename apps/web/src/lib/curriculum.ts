@@ -146,6 +146,10 @@ export const curriculum: CurriculumModule[] = [
   },
 ];
 
+export function getModule(id: string) {
+  return curriculum.find((module) => module.id === id);
+}
+
 /** Mock new-student progress: first Variables topic is current. */
 export function mockTopicLock(
   moduleId: string,

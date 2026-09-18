@@ -3,12 +3,14 @@
 ## Content tree
 
 ```
-Module
+Module (folder)
   └── Topic (folder)
         └── Card (one thing)
               ├── Theory card
               └── or Exercise card
 ```
+
+The map shows module folders. Opening a module folder shows its topic folders.
 
 v1 rule: **one card = one thing**.
 
@@ -20,9 +22,9 @@ v1 rule: **one card = one thing**.
 
 After a successful sign-in, the student is taken to `/study` (the map).
 
-1. Map of modules
-2. Open Variables
-3. See topics. Current topic is open. Later topics locked.
+1. Map of module folders
+2. Open the Variables folder
+3. See topic folders. Current topic is open. Later topics locked.
 4. Inside a topic: list of cards
 5. Finished cards can be opened again
 6. The next unfinished card is available

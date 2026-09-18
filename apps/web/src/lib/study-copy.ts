@@ -15,13 +15,17 @@ export const studyCopy: Record<
     signOut: string;
     mockNote: string;
     loading: string;
+    backToMap: string;
+    topicsTitle: string;
+    topicsIntro: string;
+    folder: string;
   }
 > = {
   en: {
     wordmark: "ApexFun",
     title: "Your map",
     intro:
-      "Open Variables. Later modules stay locked until they ship.",
+      "Open a module folder. Later modules stay locked until they ship.",
     open: "Open",
     comingLater: "Coming later",
     current: "Current",
@@ -32,12 +36,16 @@ export const studyCopy: Record<
     signOut: "Sign out",
     mockNote: "Demo only. Progress is not saved yet.",
     loading: "Loading your map…",
+    backToMap: "All modules",
+    topicsTitle: "Topics",
+    topicsIntro: "Current topic is open. Later topics stay locked.",
+    folder: "Folder",
   },
   "pt-BR": {
     wordmark: "ApexFun",
     title: "Seu mapa",
     intro:
-      "Abra Variáveis. Os módulos seguintes ficam bloqueados até serem lançados.",
+      "Abra uma pasta de módulo. Os módulos seguintes ficam bloqueados até serem lançados.",
     open: "Aberto",
     comingLater: "Em breve",
     current: "Atual",
@@ -48,5 +56,9 @@ export const studyCopy: Record<
     signOut: "Sair",
     mockNote: "Só uma demonstração. O progresso ainda não é salvo.",
     loading: "Carregando seu mapa…",
+    backToMap: "Todos os módulos",
+    topicsTitle: "Tópicos",
+    topicsIntro: "O tópico atual está aberto. Os seguintes ficam bloqueados.",
+    folder: "Pasta",
   },
 };
