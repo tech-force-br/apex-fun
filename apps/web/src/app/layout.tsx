@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { LocaleProvider } from "@/components/locale-provider";
+import { MockAuthProvider } from "@/components/mock-auth-provider";
 import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
 
@@ -27,8 +28,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col font-sans antialiased`}
       >
         <LocaleProvider>
-          <div className="relative flex flex-1 flex-col">{children}</div>
-          <SiteFooter />
+          <MockAuthProvider>
+            <div className="relative flex flex-1 flex-col">{children}</div>
+            <SiteFooter />
+          </MockAuthProvider>
         </LocaleProvider>
       </body>
     </html>

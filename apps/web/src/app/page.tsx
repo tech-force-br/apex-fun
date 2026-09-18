@@ -1,9 +1,5 @@
-import { AuthCard } from "@/components/auth-card";
+import { HomeView } from "@/components/home-view";
 
 export default function Home() {
-  return (
-    <main className="relative flex flex-1 items-center justify-center px-6 py-12">
-      <AuthCard />
-    </main>
-  );
+  return <HomeView />;
 }

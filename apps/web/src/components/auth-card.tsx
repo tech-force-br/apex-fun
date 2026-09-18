@@ -1,15 +1,16 @@
 "use client";
 
 import { useId, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { authCopy } from "@/lib/auth-copy";
-import { chromeCopy, localeOptions } from "@/lib/locale";
 import {
   mockAuthenticate,
   type AuthMode,
   type MockAuthError,
-  type MockSession,
 } from "@/lib/mock-auth";
+import { LanguageToggle } from "@/components/language-toggle";
 import { useLocale } from "@/components/locale-provider";
+import { useMockAuth } from "@/components/mock-auth-provider";
 
 function GoogleMark() {
   return (
@@ -38,9 +39,10 @@ const fieldClassName =
   "mt-1.5 w-full rounded-lg border border-white/10 bg-space px-3 py-2.5 text-ink outline-none placeholder:text-muted/70 focus:border-accent/70 focus:ring-2 focus:ring-accent/25";
 
 export function AuthCard() {
-  const { locale, setLocale } = useLocale();
+  const router = useRouter();
+  const { locale } = useLocale();
+  const { signIn } = useMockAuth();
   const copy = authCopy[locale];
-  const chrome = chromeCopy[locale];
   const emailId = useId();
   const passwordId = useId();
   const [mode, setMode] = useState<AuthMode>("signup");
@@ -48,7 +50,6 @@ export function AuthCard() {
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<MockAuthError | null>(null);
-  const [session, setSession] = useState<MockSession | null>(null);
 
   async function runAuth(
     input: { provider: "password" } | { provider: "google" },
@@ -66,23 +67,18 @@ export function AuthCard() {
             language: locale,
           },
     );
-    setPending(false);
     if (!result.ok) {
+      setPending(false);
       setError(result.error);
       return;
     }
-    setSession(result.session);
+    signIn(result.session);
+    router.replace("/study");
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     void runAuth({ provider: "password" });
-  }
-
-  function signOut() {
-    setSession(null);
-    setPassword("");
-    setError(null);
   }
 
   return (
@@ -91,169 +87,111 @@ export function AuthCard() {
       className="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-space-card/95 p-8 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm"
     >
       <div className="flex justify-end">
-        <div
-          className="inline-flex rounded-full border border-white/10 bg-space p-1"
-          role="group"
-          aria-label={chrome.language}
-        >
-          {localeOptions.map((option) => {
-            const active = option.id === locale;
-            return (
-              <button
-                key={option.id}
-                type="button"
-                onClick={() => {
-                  setLocale(option.id);
-                  setSession((current) =>
-                    current ? { ...current, language: option.id } : current,
-                  );
-                }}
-                className={`cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition ${
-                  active ? "bg-accent text-space" : "text-muted hover:text-ink"
-                }`}
-              >
-                {option.id === "en" ? "EN" : "PT"}
-              </button>
-            );
-          })}
-        </div>
+        <LanguageToggle />
       </div>
 
-      {session ? (
-        <div className="mt-6">
-          <p className="text-sm font-medium tracking-[0.22em] text-accent uppercase">
-            {copy.wordmark}
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-ink">
-            {copy.welcome}
-          </h1>
-          <p className="mt-3 text-muted">
-            {session.provider === "google"
-              ? copy.signedInGoogle
-              : `${copy.signedInPassword}: ${session.email}`}
-          </p>
-          <p className="mt-2 text-sm text-muted">
-            {copy.lessonLanguage}:{" "}
-            {
-              localeOptions.find((option) => option.id === session.language)
-                ?.nativeName
-            }
-          </p>
-          <p className="mt-5 text-sm text-muted">{copy.mockNote}</p>
-          <button
-            type="button"
-            onClick={signOut}
-            className="mt-6 w-full cursor-pointer rounded-lg border border-white/15 bg-space px-3 py-2.5 font-medium text-ink hover:border-accent/40"
-          >
-            {copy.signOut}
-          </button>
-        </div>
-      ) : (
-        <>
-          <p className="mt-5 text-sm font-medium tracking-[0.22em] text-accent uppercase">
-            {copy.wordmark}
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-ink">
-            {mode === "signin" ? copy.signIn : copy.signUp}
-          </h1>
-          <p className="mt-2 text-muted">{copy.tagline}</p>
-          {mode === "signup" ? (
-            <p className="mt-2 text-sm text-muted">{copy.languageHelp}</p>
-          ) : null}
+      <p className="mt-5 text-sm font-medium tracking-[0.22em] text-accent uppercase">
+        {copy.wordmark}
+      </p>
+      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-ink">
+        {mode === "signin" ? copy.signIn : copy.signUp}
+      </h1>
+      <p className="mt-2 text-muted">{copy.tagline}</p>
+      {mode === "signup" ? (
+        <p className="mt-2 text-sm text-muted">{copy.languageHelp}</p>
+      ) : null}
 
-          <div
-            className="mt-6 grid grid-cols-2 rounded-lg border border-white/10 bg-space p-1"
-            role="tablist"
-            aria-label={copy.accountTabs}
-          >
-            {(["signup", "signin"] as const).map((tab) => {
-              const active = mode === tab;
-              const label = tab === "signup" ? copy.signUp : copy.signIn;
-              return (
-                <button
-                  key={tab}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  onClick={() => {
-                    setMode(tab);
-                    setError(null);
-                  }}
-                  className={`cursor-pointer rounded-md px-3 py-2 text-sm font-medium transition ${
-                    active
-                      ? "bg-space-card text-ink shadow-sm"
-                      : "text-muted hover:text-ink"
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-
-          <form className="mt-6 space-y-4" onSubmit={onSubmit}>
-            <label className="block text-sm text-muted" htmlFor={emailId}>
-              {copy.email}
-              <input
-                id={emailId}
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder={copy.emailPlaceholder}
-                className={fieldClassName}
-              />
-            </label>
-            <label className="block text-sm text-muted" htmlFor={passwordId}>
-              {copy.password}
-              <input
-                id={passwordId}
-                name="password"
-                type="password"
-                autoComplete={
-                  mode === "signup" ? "new-password" : "current-password"
-                }
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                className={fieldClassName}
-              />
-            </label>
-
-            {error ? (
-              <p className="text-sm text-red-300" role="alert">
-                {copy.errors[error]}
-              </p>
-            ) : null}
-
+      <div
+        className="mt-6 grid grid-cols-2 rounded-lg border border-white/10 bg-space p-1"
+        role="tablist"
+        aria-label={copy.accountTabs}
+      >
+        {(["signup", "signin"] as const).map((tab) => {
+          const active = mode === tab;
+          const label = tab === "signup" ? copy.signUp : copy.signIn;
+          return (
             <button
-              type="submit"
-              disabled={pending}
-              className="w-full cursor-pointer rounded-lg bg-accent px-3 py-2.5 font-medium text-space disabled:opacity-60"
+              key={tab}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => {
+                setMode(tab);
+                setError(null);
+              }}
+              className={`cursor-pointer rounded-md px-3 py-2 text-sm font-medium transition ${
+                active
+                  ? "bg-space-card text-ink shadow-sm"
+                  : "text-muted hover:text-ink"
+              }`}
             >
-              {mode === "signup" ? copy.submitSignUp : copy.submitSignIn}
+              {label}
             </button>
-          </form>
+          );
+        })}
+      </div>
 
-          <div className="my-5 flex items-center gap-3 text-xs tracking-wide text-muted uppercase">
-            <span className="h-px flex-1 bg-white/10" />
-            {copy.or}
-            <span className="h-px flex-1 bg-white/10" />
-          </div>
+      <form className="mt-6 space-y-4" onSubmit={onSubmit}>
+        <label className="block text-sm text-muted" htmlFor={emailId}>
+          {copy.email}
+          <input
+            id={emailId}
+            name="email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder={copy.emailPlaceholder}
+            className={fieldClassName}
+          />
+        </label>
+        <label className="block text-sm text-muted" htmlFor={passwordId}>
+          {copy.password}
+          <input
+            id={passwordId}
+            name="password"
+            type="password"
+            autoComplete={
+              mode === "signup" ? "new-password" : "current-password"
+            }
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            className={fieldClassName}
+          />
+        </label>
 
-          <button
-            type="button"
-            disabled={pending}
-            onClick={() => void runAuth({ provider: "google" })}
-            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-white/15 bg-space px-3 py-2.5 font-medium text-ink hover:border-accent/40 disabled:opacity-60"
-          >
-            <GoogleMark />
-            {copy.google}
-          </button>
+        {error ? (
+          <p className="text-sm text-red-300" role="alert">
+            {copy.errors[error]}
+          </p>
+        ) : null}
 
-          <p className="mt-5 text-center text-xs text-muted">{copy.mockNote}</p>
-        </>
-      )}
+        <button
+          type="submit"
+          disabled={pending}
+          className="w-full cursor-pointer rounded-lg bg-accent px-3 py-2.5 font-medium text-space disabled:opacity-60"
+        >
+          {mode === "signup" ? copy.submitSignUp : copy.submitSignIn}
+        </button>
+      </form>
+
+      <div className="my-5 flex items-center gap-3 text-xs tracking-wide text-muted uppercase">
+        <span className="h-px flex-1 bg-white/10" />
+        {copy.or}
+        <span className="h-px flex-1 bg-white/10" />
+      </div>
+
+      <button
+        type="button"
+        disabled={pending}
+        onClick={() => void runAuth({ provider: "google" })}
+        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-white/15 bg-space px-3 py-2.5 font-medium text-ink hover:border-accent/40 disabled:opacity-60"
+      >
+        <GoogleMark />
+        {copy.google}
+      </button>
+
+      <p className="mt-5 text-center text-xs text-muted">{copy.mockNote}</p>
     </section>
   );
 }

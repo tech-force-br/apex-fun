@@ -6,9 +6,16 @@ import {
   useEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import type { Locale } from "@/lib/locale";
+import {
+  getMockSessionServerSnapshot,
+  getMockSessionSnapshot,
+  setMockSession,
+  subscribeMockSession,
+} from "@/lib/mock-auth";
 
 type LocaleContextValue = {
   locale: Locale;
@@ -18,13 +25,36 @@ type LocaleContextValue = {
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState<Locale>("en");
+  const session = useSyncExternalStore(
+    subscribeMockSession,
+    getMockSessionSnapshot,
+    getMockSessionServerSnapshot,
+  );
+  const [guestLocale, setGuestLocale] = useState<Locale>("en");
+  if (session && session.language !== guestLocale) {
+    setGuestLocale(session.language);
+  }
+  const locale = session?.language ?? guestLocale;
 
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
 
-  const value = useMemo(() => ({ locale, setLocale }), [locale]);
+  const value = useMemo(
+    () => ({
+      locale,
+      setLocale(next: Locale) {
+        if (session) {
+          if (session.language !== next) {
+            setMockSession({ ...session, language: next });
+          }
+          return;
+        }
+        setGuestLocale(next);
+      },
+    }),
+    [locale, session],
+  );
 
   return (
     <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>

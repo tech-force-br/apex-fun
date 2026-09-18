@@ -18,6 +18,8 @@ v1 rule: **one card = one thing**.
 
 ## Student path
 
+After a successful sign-in, the student is taken to `/study` (the map).
+
 1. Map of modules
 2. Open Variables
 3. See topics. Current topic is open. Later topics locked.
