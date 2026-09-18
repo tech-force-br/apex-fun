@@ -4,6 +4,9 @@ import { useSyncExternalStore } from "react";
 import {
   curriculum,
   emptyLocalizedText,
+  getCard,
+  getModule,
+  getTopic,
   type Card,
   type CurriculumModule,
   type ExerciseCard,
@@ -11,6 +14,7 @@ import {
   type LocalizedText,
   type ModuleStatus,
   type TheoryCard,
+  type Topic,
   type TopicKind,
 } from "@/lib/curriculum";
 
@@ -44,20 +48,8 @@ export type TopicDraft = {
   kind: TopicKind;
 };
 
-export type TheoryDraft = {
-  type: "theory";
-  bodies: LocalizedText;
-  imageRefs: string[];
-  sampleApex: string;
-};
-
-export type ExerciseDraft = {
-  type: "exercise";
-  prompts: LocalizedText;
-  hiddenTests: HiddenTest[];
-  previewCode: string;
-};
-
+export type TheoryDraft = Omit<TheoryCard, "id">;
+export type ExerciseDraft = Omit<ExerciseCard, "id">;
 export type CardDraft = TheoryDraft | ExerciseDraft;
 
 const listeners = new Set<() => void>();
@@ -124,7 +116,7 @@ function uniqueId(used: string[], base: string) {
   return `${base}-${n}`;
 }
 
-function moveById<T extends { id: string }>(
+export function moveById<T extends { id: string }>(
   list: T[],
   id: string,
   direction: -1 | 1,
@@ -138,12 +130,29 @@ function moveById<T extends { id: string }>(
   return copy;
 }
 
-function findModule(modules: CurriculumModule[], moduleId: string) {
-  return modules.find((item) => item.id === moduleId);
+function withModule(
+  moduleId: string,
+  fn: (selected: CurriculumModule) => void | boolean,
+) {
+  const next = cloneCurriculum();
+  const selected = getModule(moduleId, next);
+  if (!selected) return false;
+  if (fn(selected) === false) return false;
+  commit(next);
+  return true;
 }
 
-function findTopic(selected: CurriculumModule | undefined, topicId: string) {
-  return selected?.topics.find((item) => item.id === topicId);
+function withTopic(
+  moduleId: string,
+  topicId: string,
+  fn: (topic: Topic) => void | boolean,
+) {
+  const next = cloneCurriculum();
+  const topic = getTopic(getModule(moduleId, next), topicId);
+  if (!topic) return false;
+  if (fn(topic) === false) return false;
+  commit(next);
+  return true;
 }
 
 export function validateNames(names: LocalizedText): SaveIssue[] {
@@ -283,12 +292,11 @@ export function createModule(draft: ModuleDraft): StoreResult {
 export function updateModule(moduleId: string, draft: ModuleDraft): StoreResult {
   const issues = validateNames(draft.names);
   if (issues.length > 0) return { ok: false, issues };
-  const next = cloneCurriculum();
-  const selected = findModule(next, moduleId);
-  if (!selected) return { ok: false, issues: [{ code: "name_en" }] };
-  selected.names = trimText(draft.names);
-  selected.status = draft.status;
-  commit(next);
+  const found = withModule(moduleId, (selected) => {
+    selected.names = trimText(draft.names);
+    selected.status = draft.status;
+  });
+  if (!found) return { ok: false, issues: [] };
   return { ok: true, id: moduleId };
 }
 
@@ -303,20 +311,20 @@ export function moveModule(moduleId: string, direction: -1 | 1) {
 export function createTopic(moduleId: string, draft: TopicDraft): StoreResult {
   const issues = validateNames(draft.names);
   if (issues.length > 0) return { ok: false, issues };
-  const next = cloneCurriculum();
-  const selected = findModule(next, moduleId);
-  if (!selected) return { ok: false, issues: [{ code: "name_en" }] };
-  const id = uniqueId(
-    selected.topics.map((item) => item.id),
-    slugify(draft.names.en),
-  );
-  selected.topics.push({
-    id,
-    names: trimText(draft.names),
-    kind: draft.kind,
-    cards: [],
+  let id = "";
+  const found = withModule(moduleId, (selected) => {
+    id = uniqueId(
+      selected.topics.map((item) => item.id),
+      slugify(draft.names.en),
+    );
+    selected.topics.push({
+      id,
+      names: trimText(draft.names),
+      kind: draft.kind,
+      cards: [],
+    });
   });
-  commit(next);
+  if (!found) return { ok: false, issues: [] };
   return { ok: true, id };
 }
 
@@ -327,21 +335,18 @@ export function updateTopic(
 ): StoreResult {
   const issues = validateNames(draft.names);
   if (issues.length > 0) return { ok: false, issues };
-  const next = cloneCurriculum();
-  const topic = findTopic(findModule(next, moduleId), topicId);
-  if (!topic) return { ok: false, issues: [{ code: "name_en" }] };
-  topic.names = trimText(draft.names);
-  topic.kind = draft.kind;
-  commit(next);
+  const found = withTopic(moduleId, topicId, (topic) => {
+    topic.names = trimText(draft.names);
+    topic.kind = draft.kind;
+  });
+  if (!found) return { ok: false, issues: [] };
   return { ok: true, id: topicId };
 }
 
 export function removeTopic(moduleId: string, topicId: string) {
-  const next = cloneCurriculum();
-  const selected = findModule(next, moduleId);
-  if (!selected) return;
-  selected.topics = selected.topics.filter((item) => item.id !== topicId);
-  commit(next);
+  withModule(moduleId, (selected) => {
+    selected.topics = selected.topics.filter((item) => item.id !== topicId);
+  });
 }
 
 export function moveTopic(
@@ -349,11 +354,9 @@ export function moveTopic(
   topicId: string,
   direction: -1 | 1,
 ) {
-  const next = cloneCurriculum();
-  const selected = findModule(next, moduleId);
-  if (!selected) return;
-  selected.topics = moveById(selected.topics, topicId, direction);
-  commit(next);
+  withModule(moduleId, (selected) => {
+    selected.topics = moveById(selected.topics, topicId, direction);
+  });
 }
 
 export function createCard(
@@ -363,12 +366,11 @@ export function createCard(
 ): StoreResult {
   const issues = validateCard(draft);
   if (issues.length > 0) return { ok: false, issues };
-  const next = cloneCurriculum();
-  const topic = findTopic(findModule(next, moduleId), topicId);
-  if (!topic) return { ok: false, issues: [{ code: "body_en" }] };
   const id = crypto.randomUUID();
-  topic.cards.push(toCard(id, draft));
-  commit(next);
+  const found = withTopic(moduleId, topicId, (topic) => {
+    topic.cards.push(toCard(id, draft));
+  });
+  if (!found) return { ok: false, issues: [] };
   return { ok: true, id };
 }
 
@@ -380,22 +382,20 @@ export function updateCard(
 ): StoreResult {
   const issues = validateCard(draft);
   if (issues.length > 0) return { ok: false, issues };
-  const next = cloneCurriculum();
-  const topic = findTopic(findModule(next, moduleId), topicId);
-  if (!topic) return { ok: false, issues: [{ code: "body_en" }] };
-  const index = topic.cards.findIndex((item) => item.id === cardId);
-  if (index < 0) return { ok: false, issues: [{ code: "body_en" }] };
-  topic.cards[index] = toCard(cardId, draft);
-  commit(next);
+  const found = withTopic(moduleId, topicId, (topic) => {
+    if (!getCard(topic, cardId)) return false;
+    topic.cards = topic.cards.map((card) =>
+      card.id === cardId ? toCard(cardId, draft) : card,
+    );
+  });
+  if (!found) return { ok: false, issues: [] };
   return { ok: true, id: cardId };
 }
 
 export function removeCard(moduleId: string, topicId: string, cardId: string) {
-  const next = cloneCurriculum();
-  const topic = findTopic(findModule(next, moduleId), topicId);
-  if (!topic) return;
-  topic.cards = topic.cards.filter((item) => item.id !== cardId);
-  commit(next);
+  withTopic(moduleId, topicId, (topic) => {
+    topic.cards = topic.cards.filter((item) => item.id !== cardId);
+  });
 }
 
 export function moveCard(
@@ -404,9 +404,7 @@ export function moveCard(
   cardId: string,
   direction: -1 | 1,
 ) {
-  const next = cloneCurriculum();
-  const topic = findTopic(findModule(next, moduleId), topicId);
-  if (!topic) return;
-  topic.cards = moveById(topic.cards, cardId, direction);
-  commit(next);
+  withTopic(moduleId, topicId, (topic) => {
+    topic.cards = moveById(topic.cards, cardId, direction);
+  });
 }

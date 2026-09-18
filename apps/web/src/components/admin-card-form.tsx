@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import { adminCopy } from "@/lib/admin-copy";
 import {
   emptyHiddenTest,
+  moveById,
   type CardDraft,
   type ExerciseDraft,
   type SaveIssue,
@@ -198,13 +199,11 @@ function ExerciseFields({
     onChange({ ...draft, hiddenTests });
   }
 
-  function moveTest(index: number, direction: -1 | 1) {
-    const nextIndex = index + direction;
-    if (nextIndex < 0 || nextIndex >= draft.hiddenTests.length) return;
-    const hiddenTests = draft.hiddenTests.slice();
-    const [item] = hiddenTests.splice(index, 1);
-    hiddenTests.splice(nextIndex, 0, item);
-    onChange({ ...draft, hiddenTests });
+  function moveTest(id: string, direction: -1 | 1) {
+    onChange({
+      ...draft,
+      hiddenTests: moveById(draft.hiddenTests, id, direction),
+    });
   }
 
   return (
@@ -268,8 +267,8 @@ function ExerciseFields({
                     downLabel={copy.moveDown}
                     disableUp={index === 0}
                     disableDown={index === draft.hiddenTests.length - 1}
-                    onUp={() => moveTest(index, -1)}
-                    onDown={() => moveTest(index, 1)}
+                    onUp={() => moveTest(test.id, -1)}
+                    onDown={() => moveTest(test.id, 1)}
                   />
                   <button
                     type="button"
