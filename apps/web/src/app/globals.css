@@ -16,6 +16,10 @@ body {
   min-height: 100%;
 }
 
+button {
+  cursor: pointer;
+}
+
 body {
   background-color: var(--color-space);
   background-image:
@@ -23,7 +27,10 @@ body {
     radial-gradient(1px 1px at 78% 22%, rgba(255, 255, 255, 0.28), transparent),
     radial-gradient(1px 1px at 64% 76%, rgba(255, 255, 255, 0.22), transparent),
     radial-gradient(1px 1px at 30% 88%, rgba(255, 255, 255, 0.18), transparent),
-    radial-gradient(900px 480px at 50% -8%, rgba(110, 231, 255, 0.1), transparent);
+    radial-gradient(1.5px 1.5px at 46% 36%, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(1px 1px at 88% 58%, rgba(255, 255, 255, 0.16), transparent),
+    radial-gradient(900px 480px at 50% -8%, rgba(110, 231, 255, 0.1), transparent),
+    radial-gradient(700px 420px at 100% 0%, rgba(167, 139, 250, 0.08), transparent);
   background-attachment: fixed;
   color: var(--color-ink);
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { LocaleProvider } from "@/components/locale-provider";
 import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
 
@@ -25,8 +26,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col font-sans antialiased`}
       >
-        <div className="flex-1">{children}</div>
-        <SiteFooter />
+        <LocaleProvider>
+          <div className="relative flex flex-1 flex-col">{children}</div>
+          <SiteFooter />
+        </LocaleProvider>
       </body>
     </html>
   );

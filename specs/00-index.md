@@ -13,7 +13,7 @@ Read these in order. Each file is more detailed than the one before it.
 | 7 | [07-student-ui.md](07-student-ui.md) | Product | Editor, theory pane, copy/paste, results |
 | 8 | [08-content-admin.md](08-content-admin.md) | Product | Owner admin, builder, bilingual save rules |
 | 9 | [09-languages.md](09-languages.md) | Product | English and pt-BR |
-| 10 | [10-visual-design.md](10-visual-design.md) | Product | Space theme, original crew, login |
+| 10 | [10-visual-design.md](10-visual-design.md) | Product | Space theme, login card, pointer cursor on buttons |
 | 11 | [11-tech-architecture.md](11-tech-architecture.md) | Tech | Stack, hosts, monorepo, request path |
 | 12 | [12-data-model.md](12-data-model.md) | Tech | Tables and progress fields |
 | 13 | [13-runner.md](13-runner.md) | Tech | How student Apex is glued and run on aer |

@@ -1,8 +1,14 @@
+"use client";
+
+import { chromeCopy } from "@/lib/locale";
+import { useLocale } from "@/components/locale-provider";
+
 export function SiteFooter() {
+  const { locale } = useLocale();
+
   return (
-    <footer className="px-6 py-8 text-center text-xs leading-relaxed text-muted">
-      ApexFun is not affiliated with, endorsed by, or sponsored by Salesforce,
-      Inc. Salesforce and Apex are trademarks of Salesforce, Inc.
+    <footer className="relative z-10 px-6 py-8 text-center text-xs leading-relaxed text-muted">
+      {chromeCopy[locale].footer}
     </footer>
   );
 }

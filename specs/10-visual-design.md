@@ -14,13 +14,15 @@ Inside lessons and the editor: high contrast. Stars and characters stay in the b
 
 ## Login
 
-Dark space background. Slow animation of original astronaut characters floating. Login card sits on top and stays easy to read.
+Dark space background. Login card sits in the center and stays easy to read.
 
 ## Characters
 
-**Original space crew** owned by ApexFun. Roles can echo the community (guide, admin, developer) without copying Salesforce art.
-
 Do not use official Salesforce mascots (Astro, Codey, Cloudy, and the rest) unless Salesforce gives written permission.
+
+## Buttons
+
+Every button uses a pointer cursor (`cursor: pointer` / Tailwind `cursor-pointer`). That includes disabled buttons. Set it in the global theme on the `button` element so new buttons inherit it. Do not leave the browser default arrow on buttons.
 
 ## Devices
 
