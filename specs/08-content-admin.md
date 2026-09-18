@@ -39,6 +39,14 @@ Apex samples and hidden-check Apex stay English.
 
 No debug-match switch.
 
+## Current slice (2026-09-18)
+
+Owner admin lives at `/admin` after mock sign-in. The builder creates and edits modules, topic folders, theory cards, and exercise cards. Cards can be reordered inside a topic. Save still follows the bilingual / hidden-test rules above.
+
+Edits apply only in the browser tab’s memory. Refresh restores the seed curriculum. Not stored in Supabase yet.
+
+Not in this slice: student progress view, live preview against the runner (the preview box is on the exercise form; Run preview does not call aer yet).
+
 ## Related
 
 Back: [07-student-ui.md](07-student-ui.md)

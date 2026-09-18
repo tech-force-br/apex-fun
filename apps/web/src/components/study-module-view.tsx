@@ -7,7 +7,13 @@ import { FolderRow } from "@/components/study-folder-row";
 import { StudyHeader } from "@/components/study-header";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
-import { getModule, mockTopicLock } from "@/lib/curriculum";
+import {
+  getModule,
+  mockTopicLock,
+  topicExerciseCount,
+  topicKindForMap,
+} from "@/lib/curriculum";
+import { useCurriculumModules } from "@/lib/curriculum-store";
 import { studyCopy } from "@/lib/study-copy";
 
 export function StudyModuleView() {
@@ -16,7 +22,8 @@ export function StudyModuleView() {
   const { locale } = useLocale();
   const { ready, session, signOut } = useMockAuth();
   const copy = studyCopy[locale];
-  const selected = getModule(params.moduleId);
+  const modules = useCurriculumModules();
+  const selected = getModule(params.moduleId, modules);
 
   useEffect(() => {
     if (ready && !session) router.replace("/");
@@ -51,6 +58,8 @@ export function StudyModuleView() {
         email={session.email}
         signOutLabel={copy.signOut}
         onSignOut={onSignOut}
+        navHref="/admin"
+        navLabel={copy.admin}
       />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
@@ -67,11 +76,12 @@ export function StudyModuleView() {
 
         <ol className="mt-8 space-y-3" aria-label={copy.topicsTitle}>
           {selected.topics.map((topic, topicIndex) => {
-            const lock = mockTopicLock(selected.id, topicIndex);
+            const lock = mockTopicLock(selected.status, topicIndex);
+            const kind = topicKindForMap(topic);
             const meta =
-              topic.kind === "theory"
+              kind === "theory"
                 ? copy.theory
-                : copy.exercises(topic.exerciseCount ?? 0);
+                : copy.exercises(topicExerciseCount(topic));
 
             return (
               <li key={topic.id}>

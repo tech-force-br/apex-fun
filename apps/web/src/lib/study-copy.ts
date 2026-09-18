@@ -19,6 +19,7 @@ export const studyCopy: Record<
     topicsTitle: string;
     topicsIntro: string;
     folder: string;
+    admin: string;
   }
 > = {
   en: {
@@ -40,6 +41,7 @@ export const studyCopy: Record<
     topicsTitle: "Topics",
     topicsIntro: "Current topic is open. Later topics stay locked.",
     folder: "Folder",
+    admin: "Admin",
   },
   "pt-BR": {
     wordmark: "ApexFun",
@@ -60,5 +62,6 @@ export const studyCopy: Record<
     topicsTitle: "Tópicos",
     topicsIntro: "O tópico atual está aberto. Os seguintes ficam bloqueados.",
     folder: "Pasta",
+    admin: "Admin",
   },
 };
