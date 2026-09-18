@@ -18,7 +18,6 @@ export type MockAuthResult =
   | { ok: false; error: MockAuthError };
 
 type PasswordInput = {
-  mode: AuthMode;
   provider: "password";
   email: string;
   password: string;
@@ -26,7 +25,6 @@ type PasswordInput = {
 };
 
 type GoogleInput = {
-  mode: AuthMode;
   provider: "google";
   language: Locale;
 };
@@ -110,9 +108,8 @@ function wait(ms: number) {
 export async function mockAuthenticate(
   input: MockAuthInput,
 ): Promise<MockAuthResult> {
-  await wait(650);
-
   if (input.provider === "google") {
+    await wait(650);
     return {
       ok: true,
       session: {
@@ -134,6 +131,7 @@ export async function mockAuthenticate(
     return { ok: false, error: "missing_password" };
   }
 
+  await wait(650);
   return {
     ok: true,
     session: {

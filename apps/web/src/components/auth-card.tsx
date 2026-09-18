@@ -1,14 +1,15 @@
 "use client";
 
 import { useId, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import { authCopy } from "@/lib/auth-copy";
+import { chromeCopy } from "@/lib/locale";
 import {
   mockAuthenticate,
   type AuthMode,
   type MockAuthError,
 } from "@/lib/mock-auth";
 import { LanguageToggle } from "@/components/language-toggle";
+import { SegmentedControl } from "@/components/segmented-control";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
 
@@ -39,10 +40,10 @@ const fieldClassName =
   "mt-1.5 w-full rounded-lg border border-white/10 bg-space px-3 py-2.5 text-ink outline-none placeholder:text-muted/70 focus:border-accent/70 focus:ring-2 focus:ring-accent/25";
 
 export function AuthCard() {
-  const router = useRouter();
   const { locale } = useLocale();
   const { signIn } = useMockAuth();
   const copy = authCopy[locale];
+  const chrome = chromeCopy[locale];
   const emailId = useId();
   const passwordId = useId();
   const [mode, setMode] = useState<AuthMode>("signup");
@@ -58,9 +59,8 @@ export function AuthCard() {
     setError(null);
     const result = await mockAuthenticate(
       input.provider === "google"
-        ? { mode, provider: "google", language: locale }
+        ? { provider: "google", language: locale }
         : {
-            mode,
             provider: "password",
             email,
             password,
@@ -73,7 +73,6 @@ export function AuthCard() {
       return;
     }
     signIn(result.session);
-    router.replace("/study");
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -87,51 +86,34 @@ export function AuthCard() {
       className="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-space-card/95 p-8 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm"
     >
       <div className="flex justify-end">
-        <LanguageToggle />
+        <LanguageToggle disabled={pending} />
       </div>
 
       <p className="mt-5 text-sm font-medium tracking-[0.22em] text-accent uppercase">
-        {copy.wordmark}
+        {chrome.wordmark}
       </p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-ink">
         {mode === "signin" ? copy.signIn : copy.signUp}
       </h1>
       <p className="mt-2 text-muted">{copy.tagline}</p>
-      {mode === "signup" ? (
-        <p className="mt-2 text-sm text-muted">{copy.languageHelp}</p>
-      ) : null}
+      <p className="mt-2 text-sm text-muted">{copy.languageHelp}</p>
 
-      <div
-        className="mt-6 grid grid-cols-2 rounded-lg border border-white/10 bg-space p-1"
-        role="tablist"
+      <SegmentedControl
+        className="mt-6"
         aria-label={copy.accountTabs}
-      >
-        {(["signup", "signin"] as const).map((tab) => {
-          const active = mode === tab;
-          const label = tab === "signup" ? copy.signUp : copy.signIn;
-          return (
-            <button
-              key={tab}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => {
-                setMode(tab);
-                setError(null);
-              }}
-              className={`cursor-pointer rounded-md px-3 py-2 text-sm font-medium transition ${
-                active
-                  ? "bg-space-card text-ink shadow-sm"
-                  : "text-muted hover:text-ink"
-              }`}
-            >
-              {label}
-            </button>
-          );
-        })}
-      </div>
+        disabled={pending}
+        value={mode}
+        onChange={(next) => {
+          setMode(next);
+          setError(null);
+        }}
+        options={[
+          { value: "signup" as const, label: copy.signUp },
+          { value: "signin" as const, label: copy.signIn },
+        ]}
+      />
 
-      <form className="mt-6 space-y-4" onSubmit={onSubmit}>
+      <form className="mt-6 space-y-4" onSubmit={onSubmit} noValidate>
         <label className="block text-sm text-muted" htmlFor={emailId}>
           {copy.email}
           <input

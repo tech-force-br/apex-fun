@@ -2,21 +2,21 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { AuthCard } from "@/components/auth-card";
+import { StudyHeader } from "@/components/study-header";
+import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
 import { chromeCopy } from "@/lib/locale";
-import { useLocale } from "@/components/locale-provider";
 
-export function HomeView() {
+export default function SignedInLayout({ children }: LayoutProps<"/">) {
   const router = useRouter();
   const { locale } = useLocale();
-  const { session } = useMockAuth();
+  const { ready, session } = useMockAuth();
 
   useEffect(() => {
-    if (session) router.replace("/study");
-  }, [session, router]);
+    if (ready && !session) router.replace("/");
+  }, [ready, session, router]);
 
-  if (session) {
+  if (!ready || !session) {
     return (
       <main
         className="relative flex flex-1 items-center justify-center px-6 py-12"
@@ -28,8 +28,9 @@ export function HomeView() {
   }
 
   return (
-    <main className="relative flex flex-1 items-center justify-center px-6 py-12">
-      <AuthCard />
-    </main>
+    <div className="relative flex flex-1 flex-col">
+      <StudyHeader />
+      {children}
+    </div>
   );
 }

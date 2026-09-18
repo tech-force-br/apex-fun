@@ -3,7 +3,6 @@ import type { Locale } from "@/lib/locale";
 export const authCopy: Record<
   Locale,
   {
-    wordmark: string;
     tagline: string;
     signIn: string;
     signUp: string;
@@ -17,11 +16,6 @@ export const authCopy: Record<
     or: string;
     google: string;
     mockNote: string;
-    welcome: string;
-    signedInGoogle: string;
-    signedInPassword: string;
-    lessonLanguage: string;
-    signOut: string;
     errors: {
       missing_email: string;
       invalid_email: string;
@@ -30,7 +24,6 @@ export const authCopy: Record<
   }
 > = {
   en: {
-    wordmark: "ApexFun",
     tagline: "Little theory. Many small, checked exercises.",
     signIn: "Sign in",
     signUp: "Sign up",
@@ -44,11 +37,6 @@ export const authCopy: Record<
     or: "or",
     google: "Continue with Google",
     mockNote: "Demo only. Accounts are not saved yet.",
-    welcome: "You are in",
-    signedInGoogle: "Signed in with Google",
-    signedInPassword: "Signed in with email",
-    lessonLanguage: "Lesson language",
-    signOut: "Sign out",
     errors: {
       missing_email: "Enter an email address.",
       invalid_email: "Enter a valid email address.",
@@ -56,7 +44,6 @@ export const authCopy: Record<
     },
   },
   "pt-BR": {
-    wordmark: "ApexFun",
     tagline: "Pouca teoria. Muitos exercícios curtos e conferidos.",
     signIn: "Entrar",
     signUp: "Criar conta",
@@ -70,11 +57,6 @@ export const authCopy: Record<
     or: "ou",
     google: "Continuar com o Google",
     mockNote: "Só uma demonstração. As contas ainda não são salvas.",
-    welcome: "Você entrou",
-    signedInGoogle: "Entrada com o Google",
-    signedInPassword: "Entrada com e-mail",
-    lessonLanguage: "Idioma das lições",
-    signOut: "Sair",
     errors: {
       missing_email: "Digite um e-mail.",
       invalid_email: "Digite um e-mail válido.",

@@ -4,12 +4,8 @@ import type { SaveIssue } from "@/lib/curriculum-store";
 export const adminCopy: Record<
   Locale,
   {
-    wordmark: string;
     title: string;
     intro: string;
-    studyMap: string;
-    signOut: string;
-    loading: string;
     memoryNote: string;
     saved: string;
     save: string;
@@ -74,12 +70,8 @@ export const adminCopy: Record<
   }
 > = {
   en: {
-    wordmark: "ApexFun",
     title: "Content admin",
     intro: "Create and edit modules, topic folders, and cards.",
-    studyMap: "Student map",
-    signOut: "Sign out",
-    loading: "Loading admin…",
     memoryNote:
       "Saves apply in this tab only. Refresh restores the seed curriculum.",
     saved: "Saved in this tab.",
@@ -172,12 +164,8 @@ export const adminCopy: Record<
     },
   },
   "pt-BR": {
-    wordmark: "ApexFun",
     title: "Admin de conteúdo",
     intro: "Crie e edite módulos, pastas de tópicos e cards.",
-    studyMap: "Mapa do aluno",
-    signOut: "Sair",
-    loading: "Carregando admin…",
     memoryNote:
       "As alterações valem só nesta aba. Atualizar a página volta o currículo inicial.",
     saved: "Salvo nesta aba.",

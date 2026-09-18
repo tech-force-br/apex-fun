@@ -7,6 +7,7 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
+import type { Locale } from "@/lib/locale";
 import {
   getMockSessionServerSnapshot,
   getMockSessionSnapshot,
@@ -20,6 +21,7 @@ type MockAuthContextValue = {
   session: MockSession | null;
   signIn: (session: MockSession) => void;
   signOut: () => void;
+  setLanguage: (language: Locale) => void;
 };
 
 const MockAuthContext = createContext<MockAuthContextValue | null>(null);
@@ -49,6 +51,10 @@ export function MockAuthProvider({ children }: { children: ReactNode }) {
       },
       signOut() {
         setMockSession(null);
+      },
+      setLanguage(language) {
+        if (!session || session.language === language) return;
+        setMockSession({ ...session, language });
       },
     }),
     [ready, session],

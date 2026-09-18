@@ -1,14 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { AdminCardForm } from "@/components/admin-card-form";
 import { AdminModuleForm } from "@/components/admin-module-form";
 import { AdminTopicForm } from "@/components/admin-topic-form";
 import { AdminTree } from "@/components/admin-tree";
-import { StudyHeader } from "@/components/study-header";
 import { useLocale } from "@/components/locale-provider";
-import { useMockAuth } from "@/components/mock-auth-provider";
 import { adminCopy } from "@/lib/admin-copy";
 import {
   selectionKey,
@@ -44,9 +41,7 @@ import {
 } from "@/lib/curriculum";
 
 export function AdminView() {
-  const router = useRouter();
   const { locale } = useLocale();
-  const { ready, session, signOut } = useMockAuth();
   const copy = adminCopy[locale];
   const modules = useCurriculumModules();
   const [selection, setSelection] = useState<AdminSelection>({ kind: "pick" });
@@ -57,17 +52,8 @@ export function AdminView() {
   const savingRef = useRef(false);
 
   useEffect(() => {
-    if (ready && !session) router.replace("/");
-  }, [ready, session, router]);
-
-  useEffect(() => {
     savingRef.current = false;
   }, [selection]);
-
-  function onSignOut() {
-    signOut();
-    router.replace("/");
-  }
 
   function requestSelect(next: AdminSelection) {
     if (
@@ -115,32 +101,10 @@ export function AdminView() {
     setSelection(next);
   }
 
-  if (!ready || !session) {
-    return (
-      <main
-        className="relative flex flex-1 items-center justify-center px-6 py-12"
-        aria-busy="true"
-      >
-        <p className="text-sm text-muted">{copy.loading}</p>
-      </main>
-    );
-  }
-
   const editorKey = selectionKey(selection);
 
   return (
-    <div className="relative flex flex-1 flex-col">
-      <StudyHeader
-        wide
-        wordmark={copy.wordmark}
-        email={session.email}
-        signOutLabel={copy.signOut}
-        onSignOut={onSignOut}
-        navHref="/study"
-        navLabel={copy.studyMap}
-      />
-
-      <main className="mx-auto grid w-full max-w-6xl flex-1 gap-6 px-6 py-8 lg:grid-cols-[minmax(18rem,24rem)_1fr]">
+    <main className="mx-auto grid w-full max-w-6xl flex-1 gap-6 px-6 py-8 lg:grid-cols-[minmax(18rem,24rem)_1fr]">
         <div className="min-w-0 lg:sticky lg:top-20 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
         <AdminTree
           modules={modules}
@@ -276,8 +240,7 @@ export function AdminView() {
             }}
           />
         </section>
-      </main>
-    </div>
+    </main>
   );
 }
 

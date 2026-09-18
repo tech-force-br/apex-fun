@@ -6,16 +6,10 @@ import {
   useEffect,
   useMemo,
   useState,
-  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import type { Locale } from "@/lib/locale";
-import {
-  getMockSessionServerSnapshot,
-  getMockSessionSnapshot,
-  setMockSession,
-  subscribeMockSession,
-} from "@/lib/mock-auth";
+import { useMockAuth } from "@/components/mock-auth-provider";
 
 type LocaleContextValue = {
   locale: Locale;
@@ -25,11 +19,7 @@ type LocaleContextValue = {
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const session = useSyncExternalStore(
-    subscribeMockSession,
-    getMockSessionSnapshot,
-    getMockSessionServerSnapshot,
-  );
+  const { session, setLanguage } = useMockAuth();
   const [guestLocale, setGuestLocale] = useState<Locale>("en");
   if (session && session.language !== guestLocale) {
     setGuestLocale(session.language);
@@ -45,15 +35,13 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       locale,
       setLocale(next: Locale) {
         if (session) {
-          if (session.language !== next) {
-            setMockSession({ ...session, language: next });
-          }
+          setLanguage(next);
           return;
         }
         setGuestLocale(next);
       },
     }),
-    [locale, session],
+    [locale, session, setLanguage],
   );
 
   return (
