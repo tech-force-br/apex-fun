@@ -215,10 +215,15 @@ export function mockTopicLock(
   return "locked";
 }
 
-export function cardLabel(card: Card) {
+export function cardLabel(card: Card, locale: Locale) {
   const text =
-    card.type === "theory" ? card.bodies.en : card.prompts.en;
+    card.type === "theory" ? card.bodies[locale] : card.prompts[locale];
   const trimmed = text.trim().replace(/\s+/g, " ");
-  if (!trimmed) return card.type === "theory" ? "Theory card" : "Exercise card";
+  if (!trimmed) {
+    if (locale === "pt-BR") {
+      return card.type === "theory" ? "Card de teoria" : "Card de exercício";
+    }
+    return card.type === "theory" ? "Theory card" : "Exercise card";
+  }
   return trimmed.length > 48 ? `${trimmed.slice(0, 48)}…` : trimmed;
 }

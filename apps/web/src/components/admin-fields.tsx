@@ -1,6 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
+import type { LocalizedText } from "@/lib/curriculum";
 
 export const fieldClassName =
   "mt-1.5 w-full rounded-lg border border-white/10 bg-space px-3 py-2.5 text-ink outline-none placeholder:text-muted/70 focus:border-accent/70 focus:ring-2 focus:ring-accent/25";
@@ -51,6 +52,62 @@ export function TextInput({
       onChange={(event) => onChange(event.target.value)}
       className={fieldClassName}
     />
+  );
+}
+
+export function LocalizedFields({
+  enLabel,
+  ptLabel,
+  value,
+  onChange,
+  multiline = false,
+  rows,
+}: {
+  enLabel: string;
+  ptLabel: string;
+  value: LocalizedText;
+  onChange: (value: LocalizedText) => void;
+  multiline?: boolean;
+  rows?: number;
+}) {
+  const enId = useId();
+  const ptId = useId();
+
+  return (
+    <>
+      <Field label={enLabel} htmlFor={enId}>
+        {multiline ? (
+          <TextArea
+            id={enId}
+            value={value.en}
+            rows={rows}
+            onChange={(en) => onChange({ ...value, en })}
+          />
+        ) : (
+          <TextInput
+            id={enId}
+            value={value.en}
+            onChange={(en) => onChange({ ...value, en })}
+          />
+        )}
+      </Field>
+      <Field label={ptLabel} htmlFor={ptId}>
+        {multiline ? (
+          <TextArea
+            id={ptId}
+            value={value["pt-BR"]}
+            rows={rows}
+            onChange={(pt) => onChange({ ...value, "pt-BR": pt })}
+          />
+        ) : (
+          <TextInput
+            id={ptId}
+            value={value["pt-BR"]}
+            onChange={(pt) => onChange({ ...value, "pt-BR": pt })}
+          />
+        )}
+      </Field>
+    </>
   );
 }
 

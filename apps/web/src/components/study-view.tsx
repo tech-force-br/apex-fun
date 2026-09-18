@@ -24,10 +24,11 @@ export function StudyView() {
             <li key={item.id}>
               <FolderRow
                 name={item.names[locale]}
-                href={open ? `/study/${item.id}` : undefined}
-                locked={!open}
                 badge={open ? copy.open : copy.comingLater}
                 folderLabel={copy.folder}
+                {...(open
+                  ? { state: "open" as const, href: `/study/${item.id}` }
+                  : { state: "locked" as const })}
               />
             </li>
           );

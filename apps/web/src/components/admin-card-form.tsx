@@ -15,6 +15,7 @@ import {
   AdminFormActions,
   Field,
   IssueList,
+  LocalizedFields,
   MoveButtons,
   TextArea,
   TextInput,
@@ -92,35 +93,18 @@ function TheoryFields({
 }) {
   const { locale } = useLocale();
   const copy = adminCopy[locale];
-  const bodyEnId = useId();
-  const bodyPtId = useId();
   const sampleId = useId();
 
   return (
     <>
-      <Field label={copy.bodyEn} htmlFor={bodyEnId}>
-        <TextArea
-          id={bodyEnId}
-          value={draft.bodies.en}
-          rows={8}
-          onChange={(en) =>
-            onChange({ ...draft, bodies: { ...draft.bodies, en } })
-          }
-        />
-      </Field>
-      <Field label={copy.bodyPt} htmlFor={bodyPtId}>
-        <TextArea
-          id={bodyPtId}
-          value={draft.bodies["pt-BR"]}
-          rows={8}
-          onChange={(pt) =>
-            onChange({
-              ...draft,
-              bodies: { ...draft.bodies, "pt-BR": pt },
-            })
-          }
-        />
-      </Field>
+      <LocalizedFields
+        enLabel={copy.bodyEn}
+        ptLabel={copy.bodyPt}
+        value={draft.bodies}
+        multiline
+        rows={8}
+        onChange={(bodies) => onChange({ ...draft, bodies })}
+      />
       <Field label={copy.sampleApex} htmlFor={sampleId} hint={copy.sampleApexHelp}>
         <TextArea
           id={sampleId}
@@ -189,8 +173,6 @@ function ExerciseFields({
 }) {
   const { locale } = useLocale();
   const copy = adminCopy[locale];
-  const promptEnId = useId();
-  const promptPtId = useId();
   const previewId = useId();
 
   function patchTest(index: number, next: HiddenTest) {
@@ -208,29 +190,14 @@ function ExerciseFields({
 
   return (
     <>
-      <Field label={copy.promptEn} htmlFor={promptEnId}>
-        <TextArea
-          id={promptEnId}
-          value={draft.prompts.en}
-          rows={5}
-          onChange={(en) =>
-            onChange({ ...draft, prompts: { ...draft.prompts, en } })
-          }
-        />
-      </Field>
-      <Field label={copy.promptPt} htmlFor={promptPtId}>
-        <TextArea
-          id={promptPtId}
-          value={draft.prompts["pt-BR"]}
-          rows={5}
-          onChange={(pt) =>
-            onChange({
-              ...draft,
-              prompts: { ...draft.prompts, "pt-BR": pt },
-            })
-          }
-        />
-      </Field>
+      <LocalizedFields
+        enLabel={copy.promptEn}
+        ptLabel={copy.promptPt}
+        value={draft.prompts}
+        multiline
+        rows={5}
+        onChange={(prompts) => onChange({ ...draft, prompts })}
+      />
 
       <div>
         <div className="flex items-center justify-between gap-2">
@@ -346,38 +313,14 @@ function ExerciseFields({
                 </Field>
               ) : null}
 
-              <Field
-                label={copy.testMessageEn}
-                htmlFor={`${test.id}-msg-en`}
-              >
-                <TextArea
-                  id={`${test.id}-msg-en`}
-                  value={test.messages.en}
-                  rows={3}
-                  onChange={(en) =>
-                    patchTest(index, {
-                      ...test,
-                      messages: { ...test.messages, en },
-                    })
-                  }
-                />
-              </Field>
-              <Field
-                label={copy.testMessagePt}
-                htmlFor={`${test.id}-msg-pt`}
-              >
-                <TextArea
-                  id={`${test.id}-msg-pt`}
-                  value={test.messages["pt-BR"]}
-                  rows={3}
-                  onChange={(pt) =>
-                    patchTest(index, {
-                      ...test,
-                      messages: { ...test.messages, "pt-BR": pt },
-                    })
-                  }
-                />
-              </Field>
+              <LocalizedFields
+                enLabel={copy.testMessageEn}
+                ptLabel={copy.testMessagePt}
+                value={test.messages}
+                multiline
+                rows={3}
+                onChange={(messages) => patchTest(index, { ...test, messages })}
+              />
             </li>
           ))}
         </ol>

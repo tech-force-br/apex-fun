@@ -65,16 +65,11 @@ export function StudyModuleView() {
               <FolderRow
                 name={topic.names[locale]}
                 meta={meta}
-                locked={lock === "locked"}
-                current={lock === "current"}
-                badge={
-                  lock === "current"
-                    ? copy.current
-                    : lock === "open"
-                      ? copy.open
-                      : copy.locked
-                }
+                badge={lock === "current" ? copy.current : copy.locked}
                 folderLabel={copy.folder}
+                {...(lock === "locked"
+                  ? { state: "locked" as const }
+                  : { state: "current" as const })}
               />
             </li>
           );

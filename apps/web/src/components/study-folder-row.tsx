@@ -41,23 +41,23 @@ export function FolderIcon({
   );
 }
 
-export function FolderRow({
-  name,
-  meta,
-  badge,
-  href,
-  locked,
-  current,
-  folderLabel,
-}: {
+type FolderRowProps = {
   name: string;
   meta?: string;
   badge: string;
-  href?: string;
-  locked?: boolean;
-  current?: boolean;
   folderLabel: string;
-}) {
+} & (
+  | { state: "open"; href: string }
+  | { state: "locked" }
+  | { state: "current" }
+);
+
+export function FolderRow(props: FolderRowProps) {
+  const { name, meta, badge, folderLabel, state } = props;
+  const href = state === "open" ? props.href : undefined;
+  const locked = state === "locked";
+  const current = state === "current";
+
   const className = `flex w-full items-center gap-3 rounded-xl border px-4 py-3.5 text-left transition ${
     href || locked ? "cursor-pointer" : ""
   } ${
@@ -95,12 +95,11 @@ export function FolderRow({
     </>
   );
 
-  if (href && !locked) {
+  if (state === "open") {
     return (
       <Link
-        href={href}
+        href={props.href}
         className={className}
-        aria-current={current ? "page" : undefined}
         aria-label={`${name}, ${folderLabel}`}
       >
         {inner}
@@ -124,7 +123,7 @@ export function FolderRow({
   return (
     <div
       className={className}
-      aria-current={current ? "step" : undefined}
+      aria-current="step"
       aria-label={`${name}, ${folderLabel}`}
     >
       {inner}

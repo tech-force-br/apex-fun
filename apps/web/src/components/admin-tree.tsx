@@ -26,7 +26,11 @@ export function AdminTree({
   onSelect: (next: AdminSelection) => void;
   onAddModule: () => void;
   onAddTopic: (moduleId: string) => void;
-  onAddCard: (moduleId: string, topicId: string, cardType: "theory" | "exercise") => void;
+  onAddCard: (
+    moduleId: string,
+    topicId: string,
+    cardType: "theory" | "exercise",
+  ) => void;
   onMoveModule: (moduleId: string, direction: -1 | 1) => void;
   onMoveTopic: (moduleId: string, topicId: string, direction: -1 | 1) => void;
   onMoveCard: (
@@ -68,186 +72,165 @@ export function AdminTree({
         </button>
       </div>
 
-      {modules.length === 0 ? (
-        <p className="mt-4 text-sm text-muted">{copy.emptyModules}</p>
-      ) : (
-        <ol className="mt-4 space-y-2">
-          {modules.map((item, moduleIndex) => {
-            const open = selectedModuleId === item.id;
-            const selected =
-              selection.kind === "module" && selection.moduleId === item.id;
-            return (
-              <li key={item.id}>
-                <TreeRow
-                  label={item.names[locale]}
-                  meta={
-                    item.status === "open" ? copy.statusOpen : copy.statusLater
-                  }
-                  selected={selected}
-                  onClick={() =>
-                    onSelect({ kind: "module", moduleId: item.id })
-                  }
-                >
-                  <MoveButtons
-                    upLabel={copy.moveUp}
-                    downLabel={copy.moveDown}
-                    disableUp={moduleIndex === 0}
-                    disableDown={moduleIndex === modules.length - 1}
-                    onUp={() => onMoveModule(item.id, -1)}
-                    onDown={() => onMoveModule(item.id, 1)}
-                  />
-                </TreeRow>
-
-                {open ? (
-                  <div className="mt-2 ml-3 border-l border-white/10 pl-3">
-                    {item.topics.length === 0 ? (
-                      <p className="mb-2 text-xs text-muted">
-                        {copy.emptyTopics}
-                      </p>
-                    ) : (
-                      <ol className="space-y-2">
-                        {item.topics.map((topic, topicIndex) => {
-                          const topicOpen =
-                            selectedTopicId === topic.id ||
-                            (selection.kind === "topic" &&
-                              selection.topicId === topic.id);
-                          const topicSelected =
-                            selection.kind === "topic" &&
-                            selection.topicId === topic.id;
-                          return (
-                            <li key={topic.id}>
-                              <TreeRow
-                                label={topic.names[locale]}
-                                meta={
-                                  topic.kind === "theory"
-                                    ? copy.kindTheory
-                                    : copy.kindExercises
-                                }
-                                selected={topicSelected}
-                                nested
-                                onClick={() =>
-                                  onSelect({
-                                    kind: "topic",
-                                    moduleId: item.id,
-                                    topicId: topic.id,
-                                  })
-                                }
-                              >
-                                <MoveButtons
-                                  upLabel={copy.moveUp}
-                                  downLabel={copy.moveDown}
-                                  disableUp={topicIndex === 0}
-                                  disableDown={
-                                    topicIndex === item.topics.length - 1
-                                  }
-                                  onUp={() =>
-                                    onMoveTopic(item.id, topic.id, -1)
-                                  }
-                                  onDown={() =>
-                                    onMoveTopic(item.id, topic.id, 1)
-                                  }
-                                />
-                              </TreeRow>
-
-                              {topicOpen ? (
-                                <div className="mt-2 ml-3 border-l border-white/10 pl-3">
-                                  {topic.cards.length === 0 ? (
-                                    <p className="mb-2 text-xs text-muted">
-                                      {copy.emptyCards}
-                                    </p>
-                                  ) : (
-                                    <ol className="space-y-2">
-                                      {topic.cards.map((card, cardIndex) => {
-                                        const cardSelected =
-                                          selection.kind === "card" &&
-                                          selection.cardId === card.id;
-                                        return (
-                                          <li key={card.id}>
-                                            <TreeRow
-                                              label={cardLabel(card)}
-                                              meta={
-                                                card.type === "theory"
-                                                  ? copy.theoryBadge
-                                                  : copy.exerciseBadge
-                                              }
-                                              selected={cardSelected}
-                                              nested
-                                              onClick={() =>
-                                                onSelect({
-                                                  kind: "card",
-                                                  moduleId: item.id,
-                                                  topicId: topic.id,
-                                                  cardId: card.id,
-                                                })
-                                              }
-                                            >
-                                              <MoveButtons
-                                                upLabel={copy.moveUp}
-                                                downLabel={copy.moveDown}
-                                                disableUp={cardIndex === 0}
-                                                disableDown={
-                                                  cardIndex ===
-                                                  topic.cards.length - 1
-                                                }
-                                                onUp={() =>
-                                                  onMoveCard(
-                                                    item.id,
-                                                    topic.id,
-                                                    card.id,
-                                                    -1,
-                                                  )
-                                                }
-                                                onDown={() =>
-                                                  onMoveCard(
-                                                    item.id,
-                                                    topic.id,
-                                                    card.id,
-                                                    1,
-                                                  )
-                                                }
-                                              />
-                                            </TreeRow>
-                                          </li>
-                                        );
-                                      })}
-                                    </ol>
-                                  )}
-                                  <div className="mt-2 flex flex-wrap gap-2">
-                                    <GhostButton
-                                      onClick={() =>
-                                        onAddCard(item.id, topic.id, "theory")
-                                      }
-                                    >
-                                      {copy.addTheory}
-                                    </GhostButton>
-                                    <GhostButton
-                                      onClick={() =>
-                                        onAddCard(item.id, topic.id, "exercise")
-                                      }
-                                    >
-                                      {copy.addExercise}
-                                    </GhostButton>
-                                  </div>
-                                </div>
-                              ) : null}
-                            </li>
-                          );
-                        })}
-                      </ol>
-                    )}
-                    <div className="mt-2">
-                      <GhostButton onClick={() => onAddTopic(item.id)}>
-                        {copy.addTopic}
-                      </GhostButton>
-                    </div>
-                  </div>
-                ) : null}
-              </li>
-            );
-          })}
-        </ol>
-      )}
+      <TreeLevel
+        empty={copy.emptyModules}
+        items={modules.map((item) => ({
+          id: item.id,
+          label: item.names[locale],
+          meta: item.status === "open" ? copy.statusOpen : copy.statusLater,
+          selected:
+            selection.kind === "module" && selection.moduleId === item.id,
+          onSelect: () => onSelect({ kind: "module", moduleId: item.id }),
+          onMove: (direction) => onMoveModule(item.id, direction),
+          expanded:
+            selectedModuleId === item.id ? (
+              <>
+                <TreeLevel
+                  nested
+                  empty={copy.emptyTopics}
+                  items={item.topics.map((topic) => ({
+                    id: topic.id,
+                    label: topic.names[locale],
+                    meta:
+                      topic.kind === "theory"
+                        ? copy.kindTheory
+                        : copy.kindExercises,
+                    selected:
+                      selection.kind === "topic" &&
+                      selection.topicId === topic.id,
+                    onSelect: () =>
+                      onSelect({
+                        kind: "topic",
+                        moduleId: item.id,
+                        topicId: topic.id,
+                      }),
+                    onMove: (direction) =>
+                      onMoveTopic(item.id, topic.id, direction),
+                    expanded:
+                      selectedTopicId === topic.id ? (
+                        <>
+                          <TreeLevel
+                            nested
+                            empty={copy.emptyCards}
+                            items={topic.cards.map((card) => ({
+                              id: card.id,
+                              label: cardLabel(card, locale),
+                              meta:
+                                card.type === "theory"
+                                  ? copy.theoryBadge
+                                  : copy.exerciseBadge,
+                              selected:
+                                selection.kind === "card" &&
+                                selection.cardId === card.id,
+                              onSelect: () =>
+                                onSelect({
+                                  kind: "card",
+                                  moduleId: item.id,
+                                  topicId: topic.id,
+                                  cardId: card.id,
+                                }),
+                              onMove: (direction) =>
+                                onMoveCard(
+                                  item.id,
+                                  topic.id,
+                                  card.id,
+                                  direction,
+                                ),
+                            }))}
+                          />
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            <GhostButton
+                              onClick={() =>
+                                onAddCard(item.id, topic.id, "theory")
+                              }
+                            >
+                              {copy.addTheory}
+                            </GhostButton>
+                            <GhostButton
+                              onClick={() =>
+                                onAddCard(item.id, topic.id, "exercise")
+                              }
+                            >
+                              {copy.addExercise}
+                            </GhostButton>
+                          </div>
+                        </>
+                      ) : undefined,
+                  }))}
+                />
+                <div className="mt-2">
+                  <GhostButton onClick={() => onAddTopic(item.id)}>
+                    {copy.addTopic}
+                  </GhostButton>
+                </div>
+              </>
+            ) : undefined,
+        }))}
+      />
     </nav>
+  );
+}
+
+function TreeLevel({
+  items,
+  empty,
+  nested = false,
+}: {
+  items: {
+    id: string;
+    label: string;
+    meta: string;
+    selected: boolean;
+    onSelect: () => void;
+    onMove: (direction: -1 | 1) => void;
+    expanded?: ReactNode;
+  }[];
+  empty: string;
+  nested?: boolean;
+}) {
+  const { locale } = useLocale();
+  const copy = adminCopy[locale];
+
+  if (items.length === 0) {
+    return (
+      <p
+        className={
+          nested ? "mb-2 text-xs text-muted" : "mt-4 text-sm text-muted"
+        }
+      >
+        {empty}
+      </p>
+    );
+  }
+
+  return (
+    <ol className={nested ? "space-y-2" : "mt-4 space-y-2"}>
+      {items.map((item, index) => (
+        <li key={item.id}>
+          <TreeRow
+            label={item.label}
+            meta={item.meta}
+            selected={item.selected}
+            nested={nested}
+            onClick={item.onSelect}
+          >
+            <MoveButtons
+              upLabel={copy.moveUp}
+              downLabel={copy.moveDown}
+              disableUp={index === 0}
+              disableDown={index === items.length - 1}
+              onUp={() => item.onMove(-1)}
+              onDown={() => item.onMove(1)}
+            />
+          </TreeRow>
+          {item.expanded ? (
+            <div className="mt-2 ml-3 border-l border-white/10 pl-3">
+              {item.expanded}
+            </div>
+          ) : null}
+        </li>
+      ))}
+    </ol>
   );
 }
 
