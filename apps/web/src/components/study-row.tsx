@@ -1,4 +1,15 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
+import type { TopicLock } from "@/lib/curriculum";
+
+export function lockBadge(
+  lock: TopicLock,
+  copy: { current: string; open: string; locked: string },
+) {
+  if (lock === "current") return copy.current;
+  if (lock === "locked") return copy.locked;
+  return copy.open;
+}
 
 export function FolderIcon({
   active,
@@ -41,36 +52,56 @@ export function FolderIcon({
   );
 }
 
-type FolderRowProps = {
+export function CardIndex({
+  label,
+  active,
+}: {
+  label: string;
+  active: boolean;
+}) {
+  return (
+    <span
+      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm font-medium ${
+        active ? "bg-accent/15 text-accent" : "bg-space text-muted"
+      }`}
+    >
+      {label}
+    </span>
+  );
+}
+
+type StudyRowProps = {
   name: string;
   meta?: string;
   badge: string;
-  folderLabel: string;
-} & (
-  | { state: "open"; href: string }
-  | { state: "locked" }
-  | { state: "current" }
-);
+  accessibleLabel: string;
+  lock: TopicLock;
+  href: string;
+  leading: ReactNode;
+};
 
-export function FolderRow(props: FolderRowProps) {
-  const { name, meta, badge, folderLabel, state } = props;
-  const href = state === "open" ? props.href : undefined;
-  const locked = state === "locked";
-  const current = state === "current";
-
+export function StudyRow({
+  name,
+  meta,
+  badge,
+  accessibleLabel,
+  lock,
+  href,
+  leading,
+}: StudyRowProps) {
+  const locked = lock === "locked";
+  const current = lock === "current";
   const className = `flex w-full items-center gap-3 rounded-xl border px-4 py-3.5 text-left transition ${
-    href || locked ? "cursor-pointer" : ""
-  } ${
-    current
-      ? "border-accent/40 bg-accent/10"
-      : locked
-        ? "border-white/10 bg-space-card/60"
+    locked
+      ? "border-white/10 bg-space-card/60"
+      : current
+        ? "border-accent/40 bg-accent/10 hover:border-accent/70"
         : "border-white/10 bg-space-card/95 hover:border-accent/40"
   }`;
 
   const inner = (
     <>
-      <FolderIcon active={current || Boolean(href)} locked={locked} />
+      {leading}
       <span className="min-w-0 flex-1">
         <span
           className={`block truncate font-medium ${
@@ -83,11 +114,7 @@ export function FolderRow(props: FolderRowProps) {
       </span>
       <span
         className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
-          current
-            ? "bg-accent/15 text-accent"
-            : locked
-              ? "bg-white/5 text-muted"
-              : "bg-accent/15 text-accent"
+          locked ? "bg-white/5 text-muted" : "bg-accent/15 text-accent"
         }`}
       >
         {badge}
@@ -95,38 +122,24 @@ export function FolderRow(props: FolderRowProps) {
     </>
   );
 
-  if (state === "open") {
-    return (
-      <Link
-        href={props.href}
-        className={className}
-        aria-label={`${name}, ${folderLabel}`}
-      >
-        {inner}
-      </Link>
-    );
-  }
+  const label = `${name}, ${accessibleLabel}`;
 
   if (locked) {
     return (
-      <button
-        type="button"
-        disabled
-        className={className}
-        aria-label={`${name}, ${folderLabel}`}
-      >
+      <button type="button" disabled className={className} aria-label={label}>
         {inner}
       </button>
     );
   }
 
   return (
-    <div
-      className={className}
-      aria-current="step"
-      aria-label={`${name}, ${folderLabel}`}
+    <Link
+      href={href}
+      className={`${className} cursor-pointer`}
+      aria-current={current ? "step" : undefined}
+      aria-label={label}
     >
       {inner}
-    </div>
+    </Link>
   );
 }

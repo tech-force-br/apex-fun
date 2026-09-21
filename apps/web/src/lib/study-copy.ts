@@ -16,6 +16,15 @@ export const studyCopy: Record<
     topicsTitle: string;
     topicsIntro: string;
     folder: string;
+    exercise: string;
+    cardsTitle: string;
+    cardsIntro: string;
+    cardsIntroDone: string;
+    emptyCards: string;
+    card: string;
+    continue: string;
+    sample: string;
+    exerciseUnavailable: string;
   }
 > = {
   en: {
@@ -32,8 +41,17 @@ export const studyCopy: Record<
     mockNote: "Demo only. Progress is not saved yet.",
     backToMap: "All modules",
     topicsTitle: "Topics",
-    topicsIntro: "Current topic is open. Later topics stay locked.",
+    topicsIntro: "Open the current topic. Later topics stay locked.",
     folder: "Folder",
+    exercise: "Exercise",
+    cardsTitle: "Cards",
+    cardsIntro: "Open the next card. Later cards stay locked.",
+    cardsIntroDone: "You can open every card in this topic.",
+    emptyCards: "This topic has no cards yet.",
+    card: "Card",
+    continue: "Continue",
+    sample: "Sample",
+    exerciseUnavailable: "Exercises are not in this demo yet.",
   },
   "pt-BR": {
     title: "Seu mapa",
@@ -49,7 +67,16 @@ export const studyCopy: Record<
     mockNote: "Só uma demonstração. O progresso ainda não é salvo.",
     backToMap: "Todos os módulos",
     topicsTitle: "Tópicos",
-    topicsIntro: "O tópico atual está aberto. Os seguintes ficam bloqueados.",
+    topicsIntro: "Abra o tópico atual. Os seguintes ficam bloqueados.",
     folder: "Pasta",
+    exercise: "Exercício",
+    cardsTitle: "Cards",
+    cardsIntro: "Abra o próximo card. Os seguintes ficam bloqueados.",
+    cardsIntroDone: "Você pode abrir todos os cards deste tópico.",
+    emptyCards: "Este tópico ainda não tem cards.",
+    card: "Card",
+    continue: "Continuar",
+    sample: "Amostra",
+    exerciseUnavailable: "Os exercícios ainda não estão nesta demonstração.",
   },
 };

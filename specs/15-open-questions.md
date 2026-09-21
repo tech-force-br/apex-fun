@@ -9,7 +9,6 @@ Not decided. Do not invent an answer in code without asking.
 - Decimal writing style (for example `1.5` vs `1.50`)
 - Exact library of plain-language compile-error sentences
 - Admin progress screen layout
-- Topic 1 theory copy (English and Portuguese) — not written yet
 - A first sample exercise card (prompt + hidden tests + preview) — not written yet
 
 ## Tech

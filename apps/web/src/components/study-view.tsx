@@ -1,6 +1,6 @@
 "use client";
 
-import { FolderRow } from "@/components/study-folder-row";
+import { FolderIcon, StudyRow } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
 import { useCurriculumModules } from "@/lib/curriculum-store";
 import { studyCopy } from "@/lib/study-copy";
@@ -22,13 +22,13 @@ export function StudyView() {
           const open = item.status === "open";
           return (
             <li key={item.id}>
-              <FolderRow
+              <StudyRow
                 name={item.names[locale]}
                 badge={open ? copy.open : copy.comingLater}
-                folderLabel={copy.folder}
-                {...(open
-                  ? { state: "open" as const, href: `/study/${item.id}` }
-                  : { state: "locked" as const })}
+                accessibleLabel={copy.folder}
+                lock={open ? "open" : "locked"}
+                href={`/study/${item.id}`}
+                leading={<FolderIcon active={open} locked={!open} />}
               />
             </li>
           );

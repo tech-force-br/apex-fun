@@ -1,43 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { FolderRow } from "@/components/study-folder-row";
+import { useParams } from "next/navigation";
+import { StudyPending, useStudyGate } from "@/components/study-gate";
+import { FolderIcon, lockBadge, StudyRow } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
-import {
-  getModule,
-  mockTopicLock,
-  topicExerciseCount,
-} from "@/lib/curriculum";
-import { useCurriculumModules } from "@/lib/curriculum-store";
-import { chromeCopy } from "@/lib/locale";
+import { topicAvailability, topicExerciseCount } from "@/lib/curriculum";
 import { studyCopy } from "@/lib/study-copy";
 
 export function StudyModuleView() {
-  const router = useRouter();
   const params = useParams<{ moduleId: string }>();
   const { locale } = useLocale();
   const copy = studyCopy[locale];
-  const modules = useCurriculumModules();
-  const selected = getModule(params.moduleId, modules);
+  const { selected, finished, redirect } = useStudyGate({
+    moduleId: params.moduleId,
+  });
 
-  useEffect(() => {
-    if (!selected || selected.status !== "open") {
-      router.replace("/study");
-    }
-  }, [selected, router]);
-
-  if (!selected || selected.status !== "open") {
-    return (
-      <main
-        className="relative flex flex-1 items-center justify-center px-6 py-12"
-        aria-busy="true"
-      >
-        <p className="text-sm text-muted">{chromeCopy[locale].loading}</p>
-      </main>
-    );
-  }
+  if (redirect || !selected) return <StudyPending />;
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
@@ -54,7 +33,12 @@ export function StudyModuleView() {
 
       <ol className="mt-8 space-y-3" aria-label={copy.topicsTitle}>
         {selected.topics.map((topic, topicIndex) => {
-          const lock = mockTopicLock(selected.status, topicIndex);
+          const lock = topicAvailability(
+            selected.status,
+            selected.topics,
+            topicIndex,
+            finished,
+          );
           const meta =
             topic.kind === "theory"
               ? copy.theory
@@ -62,14 +46,19 @@ export function StudyModuleView() {
 
           return (
             <li key={topic.id}>
-              <FolderRow
+              <StudyRow
                 name={topic.names[locale]}
                 meta={meta}
-                badge={lock === "current" ? copy.current : copy.locked}
-                folderLabel={copy.folder}
-                {...(lock === "locked"
-                  ? { state: "locked" as const }
-                  : { state: "current" as const })}
+                badge={lockBadge(lock, copy)}
+                accessibleLabel={copy.folder}
+                lock={lock}
+                href={`/study/${selected.id}/${topic.id}`}
+                leading={
+                  <FolderIcon
+                    active={lock !== "locked"}
+                    locked={lock === "locked"}
+                  />
+                }
               />
             </li>
           );
