@@ -12,19 +12,22 @@ import type {
 import type { Locale } from "@/lib/locale";
 import { studyCopy } from "@/lib/study-copy";
 import { finishCard } from "@/lib/study-progress";
+import { theoryAdvance } from "@/lib/study-route";
 
-const continueClass =
+const actionClass =
   "mt-8 w-full cursor-pointer rounded-lg border border-accent/40 bg-accent/15 px-4 py-2.5 text-sm font-medium text-accent hover:border-accent sm:w-auto";
 
 export function StudyTheoryView({
   selected,
   topic,
+  topicIndex,
   card,
   cardIndex,
   cardLock,
 }: {
   selected: CurriculumModule;
   topic: Topic;
+  topicIndex: number;
   card: TheoryCard;
   cardIndex: number;
   cardLock: TopicLock;
@@ -32,16 +35,15 @@ export function StudyTheoryView({
   const router = useRouter();
   const { locale } = useLocale();
   const copy = studyCopy[locale];
-  const next = topic.cards[cardIndex + 1];
-  const nextHref = next
-    ? `/study/${selected.id}/${topic.id}/${next.id}`
-    : `/study/${selected.id}`;
-  const showContinue = cardLock === "current" || next !== undefined;
-
-  function onContinue() {
-    finishCard(card.id);
-    router.push(nextHref);
-  }
+  const destination = theoryAdvance(
+    selected,
+    topic,
+    topicIndex,
+    cardIndex,
+    cardLock,
+    locale,
+    copy,
+  );
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
@@ -53,9 +55,16 @@ export function StudyTheoryView({
       </Link>
       <p className="mt-4 text-sm text-muted">{copy.theory}</p>
       <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
-      {showContinue ? (
-        <button type="button" onClick={onContinue} className={continueClass}>
-          {copy.continue}
+      {destination ? (
+        <button
+          type="button"
+          onClick={() => {
+            finishCard(card.id);
+            router.push(destination.href);
+          }}
+          className={actionClass}
+        >
+          {destination.label}
         </button>
       ) : null}
     </main>

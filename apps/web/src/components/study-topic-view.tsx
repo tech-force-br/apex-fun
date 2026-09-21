@@ -8,7 +8,7 @@ import { useLocale } from "@/components/locale-provider";
 import {
   cardAvailability,
   cardLabel,
-  everyCardFinished,
+  topicIsComplete,
 } from "@/lib/curriculum";
 import { studyCopy } from "@/lib/study-copy";
 
@@ -23,7 +23,7 @@ export function StudyTopicView() {
 
   if (redirect || !selected || !topic) return <StudyPending />;
 
-  const cardsDone = everyCardFinished(topic, finished);
+  const cardsDone = topicIsComplete(topic, finished);
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">

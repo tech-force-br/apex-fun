@@ -41,7 +41,6 @@ export type Topic = {
   id: string;
   names: LocalizedText;
   kind: TopicKind;
-  exerciseCount?: number;
   cards: Card[];
 };
 
@@ -99,37 +98,30 @@ const variablesTopicMeta: Record<
   integer: {
     names: { en: "Integer", "pt-BR": "Integer" },
     kind: "exercises",
-    exerciseCount: 10,
   },
   string: {
     names: { en: "String", "pt-BR": "String" },
     kind: "exercises",
-    exerciseCount: 10,
   },
   boolean: {
     names: { en: "Boolean", "pt-BR": "Boolean" },
     kind: "exercises",
-    exerciseCount: 10,
   },
   decimal: {
     names: { en: "Decimal", "pt-BR": "Decimal" },
     kind: "exercises",
-    exerciseCount: 10,
   },
   date: {
     names: { en: "Date", "pt-BR": "Date" },
     kind: "exercises",
-    exerciseCount: 10,
   },
   concatenation: {
     names: { en: "Concatenation", "pt-BR": "Concatenação" },
     kind: "exercises",
-    exerciseCount: 10,
   },
   "mixed-review": {
     names: { en: "Mixed review", "pt-BR": "Revisão mista" },
     kind: "exercises",
-    exerciseCount: 50,
   },
 };
 
@@ -215,19 +207,28 @@ function exerciseCardCount(topic: Topic) {
   return topic.cards.filter((card) => card.type === "exercise").length;
 }
 
-/** Planned exercise cards that are not written yet. */
-function unauthoredExercises(topic: Topic) {
-  const planned = topic.exerciseCount ?? 0;
-  return Math.max(planned - exerciseCardCount(topic), 0);
+export type TopicListMeta =
+  | { kind: "theory" }
+  | { kind: "exercises"; count: number }
+  | { kind: "theory-and-exercises"; count: number };
+
+/** Topic-list fact from the theory and exercise cards that exist. */
+export function topicListMeta(topic: Topic): TopicListMeta | undefined {
+  const exercises = exerciseCardCount(topic);
+  const hasTheory = topic.cards.some((card) => card.type === "theory");
+  if (hasTheory && exercises > 0) {
+    return { kind: "theory-and-exercises", count: exercises };
+  }
+  if (exercises > 0) return { kind: "exercises", count: exercises };
+  if (hasTheory) return { kind: "theory" };
+  return undefined;
 }
 
-/** The label stays at the planned total until that many exercise cards exist. */
-export function topicExerciseCount(topic: Topic) {
-  return exerciseCardCount(topic) + unauthoredExercises(topic);
-}
-
-/** Every existing card is finished. An empty card list is not finished. */
-export function everyCardFinished(
+/**
+ * Finished when every card on the topic is finished.
+ * An empty card list stays unfinished. There is no required card count.
+ */
+export function topicIsComplete(
   topic: Topic,
   finished: ReadonlySet<string>,
 ) {
@@ -235,19 +236,6 @@ export function everyCardFinished(
     topic.cards.length > 0 &&
     topic.cards.every((card) => finished.has(card.id))
   );
-}
-
-/**
- * Finished when every card is finished and every planned exercise card exists.
- * An empty card list stays unfinished.
- */
-export function topicIsComplete(
-  topic: Topic,
-  finished: ReadonlySet<string>,
-) {
-  if (topic.cards.length === 0) return false;
-  if (unauthoredExercises(topic) > 0) return false;
-  return everyCardFinished(topic, finished);
 }
 
 function stepLock(index: number, firstUnfinished: number): TopicLock {

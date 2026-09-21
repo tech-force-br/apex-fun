@@ -4,7 +4,10 @@
 
 - An exercise can be retried until it passes.
 - The next card unlocks when this exercise **passes**, not when a score is high enough.
-- The next topic unlocks when every card in the current topic is finished.
+- The next topic unlocks when the student finishes the last card in the current topic.
+- That last card is whichever theory or exercise card is last. The owner can add or remove cards, and the new last card is the one that opens the next topic.
+- A topic with no cards is not finished.
+- The last topic in the module has no next topic.
 - Finished topics stay fully open. Students can re-read theory and Retry old exercises.
 
 ## What “passed” means during the module
@@ -23,12 +26,14 @@ Not a clean pass if they needed extra Runs.
 
 ## 90% check
 
-Checked once: after the last mixed-review card.
+Checked once: after the last card of the module.
 
-All Variables exercises count together (topic exercises + 50 mixed review = 110).
+Every exercise card in the module counts. The total is however many exercise cards exist.
 
-- **99 / 110 or higher** → module complete
-- **Under 99 / 110** → they must start Variables again from the first topic
+- **90% or higher**, rounded up when that is not a whole number → module complete
+- **Under that** → they must start the module again from the first topic
+
+Superseded: a fixed Variables total of 110 exercises and a complete line of 99 / 110.
 
 On restart:
 
@@ -38,7 +43,7 @@ On restart:
 
 ## Results page
 
-Always shown after the last mixed-review card.
+Always shown after the last card of the module.
 
 Shows:
 

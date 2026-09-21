@@ -16,7 +16,7 @@ Teach Apex fundamentals with little theory and many small, checked exercises.
 
 - Accounts: email/password and Google
 - English and Brazilian Portuguese
-- The **Variables** module only (theory + 110 exercises)
+- The **Variables** module only (theory and exercises; the owner sets how many cards)
 - A map that shows later modules as locked (“Coming later”)
 - An admin screen for the site owner only
 - A code runner that uses **aer** on a server (private use until licensed)

@@ -29,31 +29,30 @@ Modules are folders on the map. Topics are folders inside a module. Cards live i
 | 3 | Declaring | Theory only |
 | 4 | Assigning | Theory only |
 | 5 | System.debug | Theory only |
-| 6 | Integer | 10 exercises |
-| 7 | String | 10 exercises |
-| 8 | Boolean | 10 exercises |
-| 9 | Decimal | 10 exercises |
-| 10 | Date | 10 exercises |
-| 11 | Concatenation | 10 exercises |
-| 12 | Mixed review | 50 exercises |
+| 6 | Integer | Exercises |
+| 7 | String | Exercises |
+| 8 | Boolean | Exercises |
+| 9 | Decimal | Exercises |
+| 10 | Date | Exercises |
+| 11 | Concatenation | Exercises |
+| 12 | Mixed review | Exercises |
 
-No fixed number of theory cards per topic. Admin adds as many as needed.
+The owner chooses how many theory cards and exercise cards each topic has, and can add or remove either. The next topic opens when the student finishes the last card on the current topic.
+
+Writing guide, not a required count: about 10 exercises on Integer, String, Boolean, Decimal, Date, and Concatenation, and about 50 on mixed review. Those figures do not decide when the next topic opens.
 
 ## Exercise totals
 
-- Primitive + concatenation exercises: 60
-- Mixed review: 50
-- **Variables total: 110 exercises**
-- Complete line: **99 clean first tries out of 110** (90%, rounded up)
+Standing rule for every module: complete = 90% clean first tries of the exercise cards that exist. If 90% is not a whole number, round up.
 
-Standing rule for every module: complete = 90% clean first tries. If 90% is not a whole number, round up.
+Superseded: a required total of 60 primitive and concatenation exercises, 50 mixed-review exercises, 110 altogether, and a complete line of 99 / 110. That was the writing guide above.
 
 ## What each primitive topic includes
 
 Integer, String, Boolean, Decimal, Date:
 
 - Declare and assign only
-- One of the 10 exercises is a null-declare exercise
+- Include a null-declare exercise
 - Null is **not** its own topic. Teach null in that primitive’s theory
 
 ### Integer and Decimal
@@ -97,9 +96,9 @@ No type-mismatch topic folder. Teach type mismatch in failed-run plain-language 
 ## Mixed review
 
 - Last topic folder inside Variables
-- 50 exercise cards, same lock rules as other topics
+- Same lock rules as other topics. The owner chooses how many cards
 - Fixed admin-set order. Every student sees the same order, including after a restart
-- Mix: about 8 cards each from Integer, String, Boolean, Decimal, Date, Concatenation (48), plus 2 extra the admin places
+- Writing guide for the mix: about 8 cards each from Integer, String, Boolean, Decimal, Date, Concatenation, plus a few extra the owner places
 
 ## Related
 

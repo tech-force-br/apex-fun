@@ -24,7 +24,10 @@ export function StudyCardView() {
     gate.redirect ||
     !gate.selected ||
     !gate.topic ||
+    gate.topicIndex === undefined ||
+    gate.topicIndex < 0 ||
     !gate.card ||
+    gate.cardIndex < 0 ||
     !gate.cardLock ||
     gate.cardLock === "locked"
   ) {
@@ -45,6 +48,7 @@ export function StudyCardView() {
     <StudyTheoryView
       selected={gate.selected}
       topic={gate.topic}
+      topicIndex={gate.topicIndex}
       card={gate.card}
       cardIndex={gate.cardIndex}
       cardLock={gate.cardLock}

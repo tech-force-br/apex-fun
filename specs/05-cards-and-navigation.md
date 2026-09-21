@@ -16,7 +16,7 @@ v1 rule: **one card = one thing**.
 
 - Never theory + exercise on the same card
 - Never a list of exercises on one card
-- Ten exercises means ten exercise cards
+- Each exercise is its own card
 
 ## Student path
 
@@ -29,7 +29,7 @@ After a successful sign-in, the student is taken to `/study` (the map).
 5. Finished cards can be opened again
 6. The next unfinished card is available
 7. Later cards in that topic stay locked
-8. Finish the topic → next topic unlocks
+8. Finish the last card in the topic → the next topic unlocks. Adding or removing cards changes which card that is
 9. Finished topics stay fully open
 
 ## Exercise card

@@ -5,8 +5,8 @@ import { useParams } from "next/navigation";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
 import { FolderIcon, lockBadge, StudyRow } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
-import { topicAvailability, topicExerciseCount } from "@/lib/curriculum";
-import { studyCopy } from "@/lib/study-copy";
+import { topicAvailability, topicListMeta } from "@/lib/curriculum";
+import { studyCopy, topicListLine } from "@/lib/study-copy";
 
 export function StudyModuleView() {
   const params = useParams<{ moduleId: string }>();
@@ -39,10 +39,7 @@ export function StudyModuleView() {
             topicIndex,
             finished,
           );
-          const meta =
-            topic.kind === "theory"
-              ? copy.theory
-              : copy.exercises(topicExerciseCount(topic));
+          const meta = topicListLine(topicListMeta(topic), copy);
 
           return (
             <li key={topic.id}>

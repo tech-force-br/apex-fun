@@ -1,4 +1,20 @@
+import type { TopicListMeta } from "@/lib/curriculum";
 import type { Locale } from "@/lib/locale";
+
+function exerciseLine(count: number, one: string, many: string) {
+  return count === 1 ? `1 ${one}` : `${count} ${many}`;
+}
+
+export function topicListLine(
+  meta: TopicListMeta | undefined,
+  copy: { theory: string; exercises: (count: number) => string },
+) {
+  if (!meta) return undefined;
+  if (meta.kind === "theory") return copy.theory;
+  const exercises = copy.exercises(meta.count);
+  if (meta.kind === "exercises") return exercises;
+  return `${copy.theory} + ${exercises}`;
+}
 
 export const studyCopy: Record<
   Locale,
@@ -11,6 +27,7 @@ export const studyCopy: Record<
     locked: string;
     theory: string;
     exercises: (count: number) => string;
+    nextTopic: (name: string) => string;
     mockNote: string;
     backToMap: string;
     topicsTitle: string;
@@ -36,8 +53,8 @@ export const studyCopy: Record<
     current: "Current",
     locked: "Locked",
     theory: "Theory",
-    exercises: (count) =>
-      count === 1 ? "1 exercise" : `${count} exercises`,
+    exercises: (count) => exerciseLine(count, "Exercise", "Exercises"),
+    nextTopic: (name) => `Next topic: ${name}`,
     mockNote: "Demo only. Progress is not saved yet.",
     backToMap: "All modules",
     topicsTitle: "Topics",
@@ -62,8 +79,8 @@ export const studyCopy: Record<
     current: "Atual",
     locked: "Bloqueado",
     theory: "Teoria",
-    exercises: (count) =>
-      count === 1 ? "1 exercício" : `${count} exercícios`,
+    exercises: (count) => exerciseLine(count, "exercício", "exercícios"),
+    nextTopic: (name) => `Próximo tópico: ${name}`,
     mockNote: "Só uma demonstração. O progresso ainda não é salvo.",
     backToMap: "Todos os módulos",
     topicsTitle: "Tópicos",

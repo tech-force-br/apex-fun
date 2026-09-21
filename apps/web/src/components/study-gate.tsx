@@ -71,6 +71,7 @@ export function useStudyGate(ids: {
   return {
     selected,
     topic,
+    topicIndex,
     card,
     cardIndex: cardIndex ?? -1,
     cardLock,
