@@ -20,6 +20,7 @@ import {
   TextArea,
   TextInput,
 } from "@/components/admin-fields";
+import { CodeEditor } from "@/components/code-editor";
 import { useLocale } from "@/components/locale-provider";
 
 export function AdminCardForm({
@@ -332,13 +333,15 @@ function ExerciseFields({
         </h3>
         <p className="text-xs text-muted">{copy.previewHelp}</p>
         <Field label={copy.previewCode} htmlFor={previewId}>
-          <TextArea
-            id={previewId}
-            value={draft.previewCode}
-            mono
-            rows={6}
-            onChange={(previewCode) => onChange({ ...draft, previewCode })}
-          />
+          <div className="mt-1.5">
+            <CodeEditor
+              id={previewId}
+              initialValue={draft.previewCode}
+              label={copy.previewCode}
+              minHeight="9rem"
+              onChange={(previewCode) => onChange({ ...draft, previewCode })}
+            />
+          </div>
         </Field>
         <button
           type="button"

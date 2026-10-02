@@ -104,13 +104,17 @@ function clipboardBlock(): Extension {
 }
 
 export function CodeEditor({
+  id,
   initialValue = "",
+  onChange,
   readOnly = false,
   blockClipboard = false,
   label,
   minHeight = "0",
 }: {
+  id?: string;
   initialValue?: string;
+  onChange?: (value: string) => void;
   readOnly?: boolean;
   blockClipboard?: boolean;
   label: string;
@@ -119,11 +123,17 @@ export function CodeEditor({
   const hostRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const labelRef = useRef(label);
+  const idRef = useRef(id);
+  const onChangeRef = useRef(onChange);
+  const initialValueRef = useRef(initialValue);
+  const applyingExternalRef = useRef(false);
 
   useEffect(() => {
     labelRef.current = label;
-    viewRef.current?.contentDOM.setAttribute("aria-label", label);
-  }, [label]);
+    idRef.current = id;
+    onChangeRef.current = onChange;
+    initialValueRef.current = initialValue;
+  }, [id, initialValue, label, onChange]);
 
   useEffect(() => {
     const parent = hostRef.current;
@@ -148,7 +158,12 @@ export function CodeEditor({
         "aria-label": labelRef.current,
         "aria-multiline": "true",
         spellcheck: "false",
+        ...(idRef.current ? { id: idRef.current } : {}),
         ...(readOnly ? { "aria-readonly": "true" } : {}),
+      }),
+      EditorView.updateListener.of((update) => {
+        if (!update.docChanged || applyingExternalRef.current) return;
+        onChangeRef.current?.(update.state.doc.toString());
       }),
       ...(readOnly
         ? [EditorState.readOnly.of(true), EditorView.editable.of(false)]
@@ -158,7 +173,10 @@ export function CodeEditor({
 
     const view = new EditorView({
       parent,
-      state: EditorState.create({ doc: initialValue, extensions }),
+      state: EditorState.create({
+        doc: initialValueRef.current,
+        extensions,
+      }),
     });
     viewRef.current = view;
 
@@ -166,7 +184,27 @@ export function CodeEditor({
       view.destroy();
       viewRef.current = null;
     };
-  }, [blockClipboard, initialValue, minHeight, readOnly]);
+  }, [blockClipboard, minHeight, readOnly]);
+
+  useEffect(() => {
+    const content = viewRef.current?.contentDOM;
+    if (!content) return;
+    content.setAttribute("aria-label", label);
+    if (id) content.setAttribute("id", id);
+    else content.removeAttribute("id");
+  }, [id, label]);
+
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+    const current = view.state.doc.toString();
+    if (current === initialValue) return;
+    applyingExternalRef.current = true;
+    view.dispatch({
+      changes: { from: 0, to: view.state.doc.length, insert: initialValue },
+    });
+    applyingExternalRef.current = false;
+  }, [initialValue]);
 
   return (
     <div
