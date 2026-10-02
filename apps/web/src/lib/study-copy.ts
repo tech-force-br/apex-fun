@@ -41,6 +41,7 @@ export const studyCopy: Record<
     card: string;
     continue: string;
     sample: string;
+    editor: string;
     exerciseUnavailable: string;
   }
 > = {
@@ -68,7 +69,8 @@ export const studyCopy: Record<
     card: "Card",
     continue: "Continue",
     sample: "Sample",
-    exerciseUnavailable: "Exercises are not in this demo yet.",
+    editor: "Apex editor",
+    exerciseUnavailable: "Running this exercise is not in this demo yet.",
   },
   "pt-BR": {
     title: "Seu mapa",
@@ -94,6 +96,7 @@ export const studyCopy: Record<
     card: "Card",
     continue: "Continuar",
     sample: "Amostra",
-    exerciseUnavailable: "Os exercícios ainda não estão nesta demonstração.",
+    editor: "Editor de Apex",
+    exerciseUnavailable: "Rodar este exercício ainda não está nesta demonstração.",
   },
 };

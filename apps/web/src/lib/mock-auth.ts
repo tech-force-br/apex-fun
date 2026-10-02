@@ -11,7 +11,14 @@ export type MockSession = {
   email: string;
   language: Locale;
   provider: AuthProvider;
+  /** Site owner. Missing on older saved sessions, which still count as the owner. */
+  isAdmin?: boolean;
 };
+
+/** Student locks apply only when this is explicitly false. */
+export function sessionIsAdmin(session: MockSession | null) {
+  return session !== null && session.isAdmin !== false;
+}
 
 export type MockAuthResult =
   | { ok: true; session: MockSession }
@@ -45,7 +52,8 @@ function isMockSession(value: unknown): value is MockSession {
     typeof session.email === "string" &&
     session.email.length > 0 &&
     isLocale(session.language) &&
-    (session.provider === "password" || session.provider === "google")
+    (session.provider === "password" || session.provider === "google") &&
+    (session.isAdmin === undefined || typeof session.isAdmin === "boolean")
   );
 }
 
@@ -116,6 +124,7 @@ export async function mockAuthenticate(
         email: "google@mock.apexfun",
         language: input.language,
         provider: "google",
+        isAdmin: true,
       },
     };
   }
@@ -138,6 +147,7 @@ export async function mockAuthenticate(
       email,
       language: input.language,
       provider: "password",
+      isAdmin: true,
     },
   };
 }

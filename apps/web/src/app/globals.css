@@ -16,6 +16,10 @@ body {
   min-height: 100%;
 }
 
+:root {
+  --site-footer-height: 4.75rem;
+}
+
 button {
   cursor: pointer;
 }

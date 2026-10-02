@@ -14,6 +14,7 @@ Only the site owner is admin in v1. No other teachers.
 - View a student’s progress
 - Paste freely while writing content
 - Preview an exercise against sample student code
+- Open every module, topic, and card on the study map, including modules marked coming later. This does not mark them finished
 
 ## Save rules
 

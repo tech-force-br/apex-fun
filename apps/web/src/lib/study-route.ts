@@ -1,5 +1,6 @@
 import {
   cardAvailability,
+  moduleAvailability,
   topicAvailability,
   type Card,
   type CurriculumModule,
@@ -22,8 +23,14 @@ export function studyRedirect(args: {
   cardIndex?: number;
   finished: ReadonlySet<string>;
   depth: StudyDepth;
+  unlockAll: boolean;
 }): string | null {
-  if (!args.selected || args.selected.status !== "open") return "/study";
+  if (
+    !args.selected ||
+    moduleAvailability(args.selected.status, args.unlockAll) === "locked"
+  ) {
+    return "/study";
+  }
   if (args.depth === "module") return null;
 
   const topicIndex = args.topicIndex ?? -1;
@@ -35,6 +42,7 @@ export function studyRedirect(args: {
       args.selected.topics,
       topicIndex,
       args.finished,
+      args.unlockAll,
     ) !== "locked";
   if (!topicUnlocked || !args.topic) return `/study/${args.selected.id}`;
   if (args.depth === "topic") return null;
@@ -43,7 +51,8 @@ export function studyRedirect(args: {
   const cardUnlocked =
     args.card !== undefined &&
     cardIndex >= 0 &&
-    cardAvailability(args.topic, cardIndex, args.finished) !== "locked";
+    cardAvailability(args.topic, cardIndex, args.finished, args.unlockAll) !==
+      "locked";
   if (!cardUnlocked) return `/study/${args.selected.id}/${args.topic.id}`;
   return null;
 }

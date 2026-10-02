@@ -57,6 +57,8 @@ Variables remains open.
 
 Locked modules show the name and “Coming later”.
 
+The owner is the exception in [08-content-admin.md](08-content-admin.md). Their map opens every module, topic, and card. Coming-later modules still show that label, and the owner can open them.
+
 ## Related
 
 Back: [04-progress-and-scoring.md](04-progress-and-scoring.md)

@@ -29,9 +29,12 @@ export function StudyHeader() {
           admin ? "max-w-6xl" : "max-w-3xl"
         }`}
       >
-        <p className="text-sm font-medium tracking-[0.22em] text-accent uppercase">
+        <Link
+          href="/study"
+          className="cursor-pointer text-sm font-medium tracking-[0.22em] text-accent uppercase hover:text-ink"
+        >
           {chrome.wordmark}
-        </p>
+        </Link>
         <div className="flex flex-wrap items-center gap-3">
           <LanguageToggle />
           <Link

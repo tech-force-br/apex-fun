@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/components/locale-provider";
+import { useMockAuth } from "@/components/mock-auth-provider";
+import { sessionIsAdmin } from "@/lib/mock-auth";
 import {
   cardAvailability,
   getCard,
@@ -36,6 +38,8 @@ export function useStudyGate(ids: {
   const router = useRouter();
   const modules = useCurriculumModules();
   const finished = useFinishedCards();
+  const { session } = useMockAuth();
+  const unlockAll = sessionIsAdmin(session);
   const selected = getModule(ids.moduleId, modules);
   const topic =
     ids.topicId === undefined ? undefined : getTopic(selected, ids.topicId);
@@ -58,10 +62,11 @@ export function useStudyGate(ids: {
     cardIndex,
     finished,
     depth,
+    unlockAll,
   });
   const cardLock: TopicLock | undefined =
     topic && cardIndex !== undefined && cardIndex >= 0
-      ? cardAvailability(topic, cardIndex, finished)
+      ? cardAvailability(topic, cardIndex, finished, unlockAll)
       : undefined;
 
   useEffect(() => {
@@ -76,6 +81,7 @@ export function useStudyGate(ids: {
     cardIndex: cardIndex ?? -1,
     cardLock,
     finished,
+    unlockAll,
     redirect,
   };
 }

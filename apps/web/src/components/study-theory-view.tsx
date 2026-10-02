@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { CodeEditor } from "@/components/code-editor";
 import { useLocale } from "@/components/locale-provider";
 import type {
   CurriculumModule,
@@ -15,7 +16,7 @@ import { finishCard } from "@/lib/study-progress";
 import { theoryAdvance } from "@/lib/study-route";
 
 const actionClass =
-  "mt-8 w-full cursor-pointer rounded-lg border border-accent/40 bg-accent/15 px-4 py-2.5 text-sm font-medium text-accent hover:border-accent sm:w-auto";
+  "pointer-events-auto max-w-full cursor-pointer rounded-lg border border-accent/40 bg-space-card px-4 py-2.5 text-left text-sm font-medium text-accent hover:border-accent";
 
 export function StudyTheoryView({
   selected,
@@ -46,7 +47,11 @@ export function StudyTheoryView({
   );
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
+    <main
+      className={`mx-auto w-full max-w-3xl flex-1 px-6 pt-10 ${
+        destination ? "pb-32" : "pb-10"
+      }`}
+    >
       <Link
         href={`/study/${selected.id}/${topic.id}`}
         className="cursor-pointer text-sm text-muted hover:text-accent"
@@ -56,16 +61,20 @@ export function StudyTheoryView({
       <p className="mt-4 text-sm text-muted">{copy.theory}</p>
       <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
       {destination ? (
-        <button
-          type="button"
-          onClick={() => {
-            finishCard(card.id);
-            router.push(destination.href);
-          }}
-          className={actionClass}
-        >
-          {destination.label}
-        </button>
+        <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-height)+1rem)] z-20">
+          <div className="mx-auto flex w-full max-w-3xl justify-center px-6 py-3">
+            <button
+              type="button"
+              onClick={() => {
+                finishCard(card.id);
+                router.push(destination.href);
+              }}
+              className={actionClass}
+            >
+              {destination.label}
+            </button>
+          </div>
+        </div>
       ) : null}
     </main>
   );
@@ -116,13 +125,15 @@ function TheoryBody({
           <figcaption className="text-xs font-medium tracking-wide text-muted uppercase">
             {sampleLabel}
           </figcaption>
-          <pre
-            className="mt-2 overflow-x-auto rounded-xl border border-white/10 bg-space p-4 font-mono text-sm leading-6 text-ink select-none"
-            onCopy={(event) => event.preventDefault()}
-            onCut={(event) => event.preventDefault()}
-          >
-            {card.sampleApex}
-          </pre>
+          <div className="mt-2">
+            <CodeEditor
+              key={card.id}
+              initialValue={card.sampleApex}
+              readOnly
+              blockClipboard
+              label={sampleLabel}
+            />
+          </div>
         </figure>
       ) : null}
     </>

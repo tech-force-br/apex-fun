@@ -25,11 +25,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} flex h-dvh flex-col overflow-hidden font-sans antialiased`}
       >
         <MockAuthProvider>
           <LocaleProvider>
-            <div className="relative flex flex-1 flex-col">{children}</div>
+            <div className="relative flex min-h-0 flex-1 flex-col overflow-y-auto">
+              {children}
+            </div>
             <SiteFooter />
           </LocaleProvider>
         </MockAuthProvider>

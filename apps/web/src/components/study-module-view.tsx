@@ -12,7 +12,7 @@ export function StudyModuleView() {
   const params = useParams<{ moduleId: string }>();
   const { locale } = useLocale();
   const copy = studyCopy[locale];
-  const { selected, finished, redirect } = useStudyGate({
+  const { selected, finished, unlockAll, redirect } = useStudyGate({
     moduleId: params.moduleId,
   });
 
@@ -38,6 +38,7 @@ export function StudyModuleView() {
             selected.topics,
             topicIndex,
             finished,
+            unlockAll,
           );
           const meta = topicListLine(topicListMeta(topic), copy);
 

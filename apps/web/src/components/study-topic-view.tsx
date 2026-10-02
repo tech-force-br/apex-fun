@@ -16,7 +16,7 @@ export function StudyTopicView() {
   const params = useParams<{ moduleId: string; topicId: string }>();
   const { locale } = useLocale();
   const copy = studyCopy[locale];
-  const { selected, topic, finished, redirect } = useStudyGate({
+  const { selected, topic, finished, unlockAll, redirect } = useStudyGate({
     moduleId: params.moduleId,
     topicId: params.topicId,
   });
@@ -46,7 +46,7 @@ export function StudyTopicView() {
 
       <ol className="mt-8 space-y-3" aria-label={copy.cardsTitle}>
         {topic.cards.map((card, cardIndex) => {
-          const lock = cardAvailability(topic, cardIndex, finished);
+          const lock = cardAvailability(topic, cardIndex, finished, unlockAll);
 
           return (
             <li key={card.id}>

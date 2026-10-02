@@ -10,6 +10,8 @@
 - The last topic in the module has no next topic.
 - Finished topics stay fully open. Students can re-read theory and Retry old exercises.
 
+The site owner is not held to these locks. On the study map, every module, topic, and card is open for the owner, including modules marked coming later. A student account still follows the locks above. Opening a card this way does not mark it finished.
+
 ## What “passed” means during the module
 
 Students only see **passed** or **not passed**.

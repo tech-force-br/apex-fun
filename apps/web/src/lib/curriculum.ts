@@ -238,6 +238,7 @@ export function topicIsComplete(
   );
 }
 
+/** Student progress only. The first unfinished step is current. Later steps are locked. */
 function stepLock(index: number, firstUnfinished: number): TopicLock {
   if (firstUnfinished < 0 || index < firstUnfinished) return "open";
   if (index === firstUnfinished) return "current";
@@ -245,32 +246,52 @@ function stepLock(index: number, firstUnfinished: number): TopicLock {
 }
 
 /**
+ * Owner map access, applied after the student lock.
+ * A locked step becomes open. The current step stays current.
+ */
+function withOwnerAccess(lock: TopicLock, unlockAll: boolean): TopicLock {
+  if (unlockAll && lock === "locked") return "open";
+  return lock;
+}
+
+/** Coming-later modules stay locked for students. The owner can open them. */
+export function moduleAvailability(
+  status: ModuleStatus,
+  unlockAll: boolean,
+): TopicLock {
+  return withOwnerAccess(status === "open" ? "open" : "locked", unlockAll);
+}
+
+/**
  * First unfinished topic in an open module is current.
  * Finished topics stay open. Later topics stay locked.
+ * The owner can open every topic, including in a coming-later module.
  */
 export function topicAvailability(
   status: ModuleStatus,
   topics: Topic[],
   topicIndex: number,
   finished: ReadonlySet<string>,
+  unlockAll: boolean,
 ): TopicLock {
-  if (status !== "open") return "locked";
   const firstUnfinished = topics.findIndex(
     (topic) => !topicIsComplete(topic, finished),
   );
-  return stepLock(topicIndex, firstUnfinished);
+  if (!unlockAll && status !== "open") return "locked";
+  return withOwnerAccess(stepLock(topicIndex, firstUnfinished), unlockAll);
 }
 
-/** Finished cards stay open. The next unfinished card is current. */
+/** Finished cards stay open. The next unfinished card is current. The owner can open later cards. */
 export function cardAvailability(
   topic: Topic,
   cardIndex: number,
   finished: ReadonlySet<string>,
+  unlockAll: boolean,
 ): TopicLock {
   const firstUnfinished = topic.cards.findIndex(
     (card) => !finished.has(card.id),
   );
-  return stepLock(cardIndex, firstUnfinished);
+  return withOwnerAccess(stepLock(cardIndex, firstUnfinished), unlockAll);
 }
 
 export function cardLabel(card: Card, locale: Locale) {

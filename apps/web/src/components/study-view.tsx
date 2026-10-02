@@ -1,14 +1,19 @@
 "use client";
 
+import { useMockAuth } from "@/components/mock-auth-provider";
 import { FolderIcon, StudyRow } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
+import { moduleAvailability } from "@/lib/curriculum";
 import { useCurriculumModules } from "@/lib/curriculum-store";
+import { sessionIsAdmin } from "@/lib/mock-auth";
 import { studyCopy } from "@/lib/study-copy";
 
 export function StudyView() {
   const { locale } = useLocale();
+  const { session } = useMockAuth();
   const copy = studyCopy[locale];
   const modules = useCurriculumModules();
+  const unlockAll = sessionIsAdmin(session);
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
@@ -19,14 +24,15 @@ export function StudyView() {
 
       <ol className="mt-8 space-y-3">
         {modules.map((item) => {
-          const open = item.status === "open";
+          const lock = moduleAvailability(item.status, unlockAll);
+          const open = lock !== "locked";
           return (
             <li key={item.id}>
               <StudyRow
                 name={item.names[locale]}
-                badge={open ? copy.open : copy.comingLater}
+                badge={item.status === "open" ? copy.open : copy.comingLater}
                 accessibleLabel={copy.folder}
-                lock={open ? "open" : "locked"}
+                lock={lock}
                 href={`/study/${item.id}`}
                 leading={<FolderIcon active={open} locked={!open} />}
               />

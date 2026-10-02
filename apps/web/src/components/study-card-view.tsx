@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { CodeEditor } from "@/components/code-editor";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
 import { StudyTheoryView } from "@/components/study-theory-view";
 import { useLocale } from "@/components/locale-provider";
@@ -81,11 +82,24 @@ function ExerciseUnavailable({
         {copy.exercise}
       </h1>
       {prompt ? (
-        <p className="mt-4 text-base leading-7 whitespace-pre-wrap text-ink">
+        <p
+          className="mt-4 text-base leading-7 whitespace-pre-wrap text-ink"
+          onCopy={(event) => event.preventDefault()}
+          onCut={(event) => event.preventDefault()}
+          onPaste={(event) => event.preventDefault()}
+        >
           {prompt}
         </p>
       ) : null}
-      <p className="mt-6 text-muted">{copy.exerciseUnavailable}</p>
+      <div className="mt-6">
+        <CodeEditor
+          key={card.id}
+          blockClipboard
+          label={copy.editor}
+          minHeight="12rem"
+        />
+      </div>
+      <p className="mt-4 text-sm text-muted">{copy.exerciseUnavailable}</p>
     </main>
   );
 }
