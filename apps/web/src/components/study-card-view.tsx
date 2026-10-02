@@ -21,17 +21,7 @@ export function StudyCardView() {
     cardId: params.cardId,
   });
 
-  if (
-    gate.redirect ||
-    !gate.selected ||
-    !gate.topic ||
-    gate.topicIndex === undefined ||
-    gate.topicIndex < 0 ||
-    !gate.card ||
-    gate.cardIndex < 0 ||
-    !gate.cardLock ||
-    gate.cardLock === "locked"
-  ) {
+  if (gate.status !== "ready" || gate.depth !== "card") {
     return <StudyPending />;
   }
 

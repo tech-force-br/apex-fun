@@ -16,12 +16,14 @@ export function StudyTopicView() {
   const params = useParams<{ moduleId: string; topicId: string }>();
   const { locale } = useLocale();
   const copy = studyCopy[locale];
-  const { selected, topic, finished, unlockAll, redirect } = useStudyGate({
+  const gate = useStudyGate({
     moduleId: params.moduleId,
     topicId: params.topicId,
   });
 
-  if (redirect || !selected || !topic) return <StudyPending />;
+  if (gate.status !== "ready" || gate.depth !== "topic") return <StudyPending />;
+
+  const { selected, topic, finished, unlockAll } = gate;
 
   const cardsDone = topicIsComplete(topic, finished);
 

@@ -12,9 +12,8 @@ import {
 } from "@/lib/curriculum-store";
 import type { HiddenTest, HiddenTestMode } from "@/lib/curriculum";
 import {
-  AdminFormActions,
+  AdminForm,
   Field,
-  IssueList,
   LocalizedFields,
   MoveButtons,
   TextArea,
@@ -54,15 +53,14 @@ export function AdminCardForm({
   }
 
   return (
-    <form
-      className="space-y-5"
-      onSubmit={(event) => {
-        event.preventDefault();
-        onSave(draft);
-      }}
+    <AdminForm
+      title={title}
+      issueMessages={issues.map((issue) => copy.issue(issue))}
+      saveLabel={copy.save}
+      removeLabel={copy.remove}
+      onSave={() => onSave(draft)}
+      onRemove={onRemove}
     >
-      <h2 className="text-xl font-semibold tracking-tight text-ink">{title}</h2>
-
       {draft.type === "theory" ? (
         <TheoryFields draft={draft} onChange={setTheory} />
       ) : (
@@ -73,15 +71,7 @@ export function AdminCardForm({
           onPreview={() => setPreviewResult(copy.previewUnavailable)}
         />
       )}
-
-      <IssueList messages={issues.map((issue) => copy.issue(issue))} />
-      <AdminFormActions
-        saveLabel={copy.save}
-        removeLabel={copy.remove}
-        onSave={() => onSave(draft)}
-        onRemove={onRemove}
-      />
-    </form>
+    </AdminForm>
   );
 }
 

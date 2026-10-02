@@ -127,7 +127,7 @@ function TheoryBody({
           </figcaption>
           <div className="mt-2">
             <CodeEditor
-              key={card.id}
+              key={`${card.id}:${card.sampleApex}`}
               initialValue={card.sampleApex}
               readOnly
               blockClipboard

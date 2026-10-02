@@ -3,8 +3,6 @@ import { variablesTheoryCards } from "@/lib/variables-theory";
 
 export type LocalizedText = Record<Locale, string>;
 
-export type TopicKind = "theory" | "exercises";
-
 export type TopicLock = "open" | "current" | "locked";
 
 export type ModuleStatus = "open" | "coming_later";
@@ -40,7 +38,6 @@ export type Card = TheoryCard | ExerciseCard;
 export type Topic = {
   id: string;
   names: LocalizedText;
-  kind: TopicKind;
   cards: Card[];
 };
 
@@ -77,51 +74,39 @@ const variablesTopicMeta: Record<
       en: "What a variable is",
       "pt-BR": "O que é uma variável",
     },
-    kind: "theory",
   },
   "naming-rules": {
     names: { en: "Naming rules", "pt-BR": "Regras de nomes" },
-    kind: "theory",
   },
   declaring: {
     names: { en: "Declaring", "pt-BR": "Declaração" },
-    kind: "theory",
   },
   assigning: {
     names: { en: "Assigning", "pt-BR": "Atribuição" },
-    kind: "theory",
   },
   "system-debug": {
     names: { en: "System.debug", "pt-BR": "System.debug" },
-    kind: "theory",
   },
   integer: {
     names: { en: "Integer", "pt-BR": "Integer" },
-    kind: "exercises",
   },
   string: {
     names: { en: "String", "pt-BR": "String" },
-    kind: "exercises",
   },
   boolean: {
     names: { en: "Boolean", "pt-BR": "Boolean" },
-    kind: "exercises",
   },
   decimal: {
     names: { en: "Decimal", "pt-BR": "Decimal" },
-    kind: "exercises",
   },
   date: {
     names: { en: "Date", "pt-BR": "Date" },
-    kind: "exercises",
   },
   concatenation: {
     names: { en: "Concatenation", "pt-BR": "Concatenação" },
-    kind: "exercises",
   },
   "mixed-review": {
     names: { en: "Mixed review", "pt-BR": "Revisão mista" },
-    kind: "exercises",
   },
 };
 

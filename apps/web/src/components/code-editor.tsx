@@ -125,14 +125,14 @@ export function CodeEditor({
   const labelRef = useRef(label);
   const idRef = useRef(id);
   const onChangeRef = useRef(onChange);
-  const initialValueRef = useRef(initialValue);
-  const applyingExternalRef = useRef(false);
+  // Latest text for a real remount. Keystrokes stay in the editor.
+  const docRef = useRef(initialValue);
 
   useEffect(() => {
     labelRef.current = label;
     idRef.current = id;
     onChangeRef.current = onChange;
-    initialValueRef.current = initialValue;
+    docRef.current = initialValue;
   }, [id, initialValue, label, onChange]);
 
   useEffect(() => {
@@ -162,7 +162,7 @@ export function CodeEditor({
         ...(readOnly ? { "aria-readonly": "true" } : {}),
       }),
       EditorView.updateListener.of((update) => {
-        if (!update.docChanged || applyingExternalRef.current) return;
+        if (!update.docChanged) return;
         onChangeRef.current?.(update.state.doc.toString());
       }),
       ...(readOnly
@@ -174,7 +174,7 @@ export function CodeEditor({
     const view = new EditorView({
       parent,
       state: EditorState.create({
-        doc: initialValueRef.current,
+        doc: docRef.current,
         extensions,
       }),
     });
@@ -193,18 +193,6 @@ export function CodeEditor({
     if (id) content.setAttribute("id", id);
     else content.removeAttribute("id");
   }, [id, label]);
-
-  useEffect(() => {
-    const view = viewRef.current;
-    if (!view) return;
-    const current = view.state.doc.toString();
-    if (current === initialValue) return;
-    applyingExternalRef.current = true;
-    view.dispatch({
-      changes: { from: 0, to: view.state.doc.length, insert: initialValue },
-    });
-    applyingExternalRef.current = false;
-  }, [initialValue]);
 
   return (
     <div

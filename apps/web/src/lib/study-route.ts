@@ -11,11 +11,34 @@ import type { Locale } from "@/lib/locale";
 
 export type StudyDepth = "module" | "topic" | "card";
 
+export type StudyTarget =
+  | { status: "redirect"; href: string }
+  | { status: "ready"; depth: "module"; selected: CurriculumModule }
+  | {
+      status: "ready";
+      depth: "topic";
+      selected: CurriculumModule;
+      topic: Topic;
+      topicIndex: number;
+    }
+  | {
+      status: "ready";
+      depth: "card";
+      selected: CurriculumModule;
+      topic: Topic;
+      topicIndex: number;
+      card: Card;
+      cardIndex: number;
+      cardLock: TopicLock;
+    };
+
 /**
- * Where to send the student when this study URL is missing or still locked.
- * An unlocked card stays put, including an exercise card.
+ * Where this study URL lands.
+ * A missing or locked step redirects. An unlocked card stays, including an exercise.
+ * topicIndex and cardIndex are omitted when this page has no such id.
+ * A negative index means the id is not in the list.
  */
-export function studyRedirect(args: {
+export function resolveStudyTarget(args: {
   selected: CurriculumModule | undefined;
   topic?: Topic;
   topicIndex?: number;
@@ -24,37 +47,69 @@ export function studyRedirect(args: {
   finished: ReadonlySet<string>;
   depth: StudyDepth;
   unlockAll: boolean;
-}): string | null {
+}): StudyTarget {
   if (
     !args.selected ||
     moduleAvailability(args.selected.status, args.unlockAll) === "locked"
   ) {
-    return "/study";
+    return { status: "redirect", href: "/study" };
   }
-  if (args.depth === "module") return null;
+  const selected = args.selected;
 
-  const topicIndex = args.topicIndex ?? -1;
-  const topicUnlocked =
-    args.topic !== undefined &&
-    topicIndex >= 0 &&
+  if (args.depth === "module") {
+    return { status: "ready", depth: "module", selected };
+  }
+
+  const topicIndex = args.topicIndex;
+  if (
+    args.topic === undefined ||
+    topicIndex === undefined ||
+    topicIndex < 0 ||
     topicAvailability(
-      args.selected.status,
-      args.selected.topics,
+      selected.status,
+      selected.topics,
       topicIndex,
       args.finished,
       args.unlockAll,
-    ) !== "locked";
-  if (!topicUnlocked || !args.topic) return `/study/${args.selected.id}`;
-  if (args.depth === "topic") return null;
+    ) === "locked"
+  ) {
+    return { status: "redirect", href: `/study/${selected.id}` };
+  }
+  const topic = args.topic;
 
-  const cardIndex = args.cardIndex ?? -1;
-  const cardUnlocked =
-    args.card !== undefined &&
-    cardIndex >= 0 &&
-    cardAvailability(args.topic, cardIndex, args.finished, args.unlockAll) !==
-      "locked";
-  if (!cardUnlocked) return `/study/${args.selected.id}/${args.topic.id}`;
-  return null;
+  if (args.depth === "topic") {
+    return { status: "ready", depth: "topic", selected, topic, topicIndex };
+  }
+
+  const cardIndex = args.cardIndex;
+  if (args.card === undefined || cardIndex === undefined || cardIndex < 0) {
+    return {
+      status: "redirect",
+      href: `/study/${selected.id}/${topic.id}`,
+    };
+  }
+  const cardLock = cardAvailability(
+    topic,
+    cardIndex,
+    args.finished,
+    args.unlockAll,
+  );
+  if (cardLock === "locked") {
+    return {
+      status: "redirect",
+      href: `/study/${selected.id}/${topic.id}`,
+    };
+  }
+  return {
+    status: "ready",
+    depth: "card",
+    selected,
+    topic,
+    topicIndex,
+    card: args.card,
+    cardIndex,
+    cardLock,
+  };
 }
 
 /**

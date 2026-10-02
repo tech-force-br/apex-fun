@@ -136,6 +136,44 @@ export function TextArea({
   );
 }
 
+export function AdminForm({
+  title,
+  issueMessages,
+  saveLabel,
+  removeLabel,
+  onSave,
+  onRemove,
+  children,
+}: {
+  title: string;
+  issueMessages: string[];
+  saveLabel: string;
+  removeLabel: string;
+  onSave: () => void;
+  onRemove?: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <form
+      className="space-y-5"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSave();
+      }}
+    >
+      <h2 className="text-xl font-semibold tracking-tight text-ink">{title}</h2>
+      {children}
+      <IssueList messages={issueMessages} />
+      <AdminFormActions
+        saveLabel={saveLabel}
+        removeLabel={removeLabel}
+        onSave={onSave}
+        onRemove={onRemove}
+      />
+    </form>
+  );
+}
+
 export function AdminFormActions({
   saveLabel,
   removeLabel,

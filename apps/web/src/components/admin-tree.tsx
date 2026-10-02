@@ -3,9 +3,11 @@
 import type { ReactNode } from "react";
 import {
   cardLabel,
+  topicListMeta,
   type CurriculumModule,
 } from "@/lib/curriculum";
 import { adminCopy } from "@/lib/admin-copy";
+import { studyCopy, topicListLine } from "@/lib/study-copy";
 import type { AdminSelection } from "@/lib/admin-selection";
 import { MoveButtons } from "@/components/admin-fields";
 import { useLocale } from "@/components/locale-provider";
@@ -91,10 +93,10 @@ export function AdminTree({
                   items={item.topics.map((topic) => ({
                     id: topic.id,
                     label: topic.names[locale],
-                    meta:
-                      topic.kind === "theory"
-                        ? copy.kindTheory
-                        : copy.kindExercises,
+                    meta: topicListLine(
+                      topicListMeta(topic),
+                      studyCopy[locale],
+                    ),
                     selected:
                       selection.kind === "topic" &&
                       selection.topicId === topic.id,
@@ -179,7 +181,7 @@ function TreeLevel({
   items: {
     id: string;
     label: string;
-    meta: string;
+    meta?: string;
     selected: boolean;
     onSelect: () => void;
     onMove: (direction: -1 | 1) => void;
@@ -261,7 +263,7 @@ function TreeRow({
   children,
 }: {
   label: string;
-  meta: string;
+  meta?: string;
   selected: boolean;
   nested?: boolean;
   onClick: () => void;
@@ -285,7 +287,9 @@ function TreeRow({
         >
           {label}
         </span>
-        <span className="block text-[11px] text-muted">{meta}</span>
+        {meta ? (
+          <span className="block text-[11px] text-muted">{meta}</span>
+        ) : null}
       </button>
       {children}
     </div>

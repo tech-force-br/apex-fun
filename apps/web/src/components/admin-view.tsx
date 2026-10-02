@@ -30,10 +30,8 @@ import {
   updateModule,
   updateTopic,
   useCurriculumModules,
-  type CardDraft,
-  type ModuleDraft,
   type SaveIssue,
-  type TopicDraft,
+  type StoreResult,
 } from "@/lib/curriculum-store";
 import {
   emptyLocalizedText,
@@ -81,16 +79,6 @@ export function AdminView() {
     setIssues([]);
     setSaved(true);
     setSelection(next);
-  }
-
-  function persist(draft: ModuleDraft | TopicDraft | CardDraft) {
-    const savedItem = saveDraft(selection, draft);
-    if (!savedItem) return;
-    if (!savedItem.ok) {
-      setIssues(savedItem.issues);
-      return;
-    }
-    afterSave(savedItem.next);
   }
 
   function confirmRemove(run: () => void, next: AdminSelection) {
@@ -179,7 +167,8 @@ export function AdminView() {
           modules={modules}
           issues={issues}
           onDirty={markDirty}
-          onSave={persist}
+          onReject={setIssues}
+          onSaved={afterSave}
           onRemove={remove}
         />
       </section>
@@ -187,80 +176,33 @@ export function AdminView() {
   );
 }
 
-function saveDraft(
-  selection: AdminSelection,
-  draft: ModuleDraft | TopicDraft | CardDraft,
-):
-  | { ok: true; next: AdminSelection }
-  | { ok: false; issues: SaveIssue[] }
-  | null {
-  if (selection.kind === "new-module" || selection.kind === "module") {
-    const result =
-      selection.kind === "module"
-        ? updateModule(selection.moduleId, draft as ModuleDraft)
-        : createModule(draft as ModuleDraft);
-    if (!result.ok) return result;
-    return { ok: true, next: { kind: "module", moduleId: result.id } };
-  }
-
-  if (selection.kind === "new-topic" || selection.kind === "topic") {
-    const result =
-      selection.kind === "topic"
-        ? updateTopic(selection.moduleId, selection.topicId, draft as TopicDraft)
-        : createTopic(selection.moduleId, draft as TopicDraft);
-    if (!result.ok) return result;
-    return {
-      ok: true,
-      next: {
-        kind: "topic",
-        moduleId: selection.moduleId,
-        topicId: result.id,
-      },
-    };
-  }
-
-  if (selection.kind === "new-card" || selection.kind === "card") {
-    const result =
-      selection.kind === "card"
-        ? updateCard(
-            selection.moduleId,
-            selection.topicId,
-            selection.cardId,
-            draft as CardDraft,
-          )
-        : createCard(selection.moduleId, selection.topicId, draft as CardDraft);
-    if (!result.ok) return result;
-    return {
-      ok: true,
-      next: {
-        kind: "card",
-        moduleId: selection.moduleId,
-        topicId: selection.topicId,
-        cardId: result.id,
-      },
-    };
-  }
-
-  return null;
-}
-
 function Editor({
   selection,
   modules,
   issues,
   onDirty,
-  onSave,
+  onReject,
+  onSaved,
   onRemove,
 }: {
   selection: AdminSelection;
   modules: ReturnType<typeof useCurriculumModules>;
   issues: SaveIssue[];
   onDirty: () => void;
-  onSave: (draft: ModuleDraft | TopicDraft | CardDraft) => void;
+  onReject: (issues: SaveIssue[]) => void;
+  onSaved: (next: AdminSelection) => void;
   onRemove: () => void;
 }) {
   const { locale } = useLocale();
   const copy = adminCopy[locale];
+
+  function apply(result: StoreResult, next: (id: string) => AdminSelection) {
+    if (!result.ok) {
+      onReject(result.issues);
+      return;
+    }
+    onSaved(next(result.id));
+  }
 
   if (selection.kind === "pick") {
     return (
@@ -281,7 +223,12 @@ function Editor({
         initial={{ names: { ...emptyLocalizedText }, status: "coming_later" }}
         issues={issues}
         onDirty={onDirty}
-        onSave={onSave}
+        onSave={(draft) =>
+          apply(createModule(draft), (moduleId) => ({
+            kind: "module",
+            moduleId,
+          }))
+        }
       />
     );
   }
@@ -295,7 +242,12 @@ function Editor({
         initial={{ names: { ...selected.names }, status: selected.status }}
         issues={issues}
         onDirty={onDirty}
-        onSave={onSave}
+        onSave={(draft) =>
+          apply(updateModule(selection.moduleId, draft), (moduleId) => ({
+            kind: "module",
+            moduleId,
+          }))
+        }
         onRemove={onRemove}
       />
     );
@@ -305,10 +257,16 @@ function Editor({
     return (
       <AdminTopicForm
         title={copy.newTopic}
-        initial={{ names: { ...emptyLocalizedText }, kind: "theory" }}
+        initial={{ names: { ...emptyLocalizedText } }}
         issues={issues}
         onDirty={onDirty}
-        onSave={onSave}
+        onSave={(draft) =>
+          apply(createTopic(selection.moduleId, draft), (topicId) => ({
+            kind: "topic",
+            moduleId: selection.moduleId,
+            topicId,
+          }))
+        }
       />
     );
   }
@@ -322,10 +280,19 @@ function Editor({
     return (
       <AdminTopicForm
         title={topic.names[locale]}
-        initial={{ names: { ...topic.names }, kind: topic.kind }}
+        initial={{ names: { ...topic.names } }}
         issues={issues}
         onDirty={onDirty}
-        onSave={onSave}
+        onSave={(draft) =>
+          apply(
+            updateTopic(selection.moduleId, selection.topicId, draft),
+            (topicId) => ({
+              kind: "topic",
+              moduleId: selection.moduleId,
+              topicId,
+            }),
+          )
+        }
         onRemove={onRemove}
       />
     );
@@ -344,7 +311,14 @@ function Editor({
         }
         issues={issues}
         onDirty={onDirty}
-        onSave={onSave}
+        onSave={(draft) =>
+          apply(createCard(selection.moduleId, selection.topicId, draft), (cardId) => ({
+            kind: "card",
+            moduleId: selection.moduleId,
+            topicId: selection.topicId,
+            cardId,
+          }))
+        }
       />
     );
   }
@@ -362,7 +336,22 @@ function Editor({
       initial={cardToDraft(card)}
       issues={issues}
       onDirty={onDirty}
-      onSave={onSave}
+      onSave={(draft) =>
+        apply(
+          updateCard(
+            selection.moduleId,
+            selection.topicId,
+            selection.cardId,
+            draft,
+          ),
+          (cardId) => ({
+            kind: "card",
+            moduleId: selection.moduleId,
+            topicId: selection.topicId,
+            cardId,
+          }),
+        )
+      }
       onRemove={onRemove}
     />
   );

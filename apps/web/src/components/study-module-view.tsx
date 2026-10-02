@@ -12,11 +12,13 @@ export function StudyModuleView() {
   const params = useParams<{ moduleId: string }>();
   const { locale } = useLocale();
   const copy = studyCopy[locale];
-  const { selected, finished, unlockAll, redirect } = useStudyGate({
+  const gate = useStudyGate({
     moduleId: params.moduleId,
   });
 
-  if (redirect || !selected) return <StudyPending />;
+  if (gate.status !== "ready" || gate.depth !== "module") return <StudyPending />;
+
+  const { selected, finished, unlockAll } = gate;
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">

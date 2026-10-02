@@ -32,9 +32,6 @@ export const adminCopy: Record<
     status: string;
     statusOpen: string;
     statusLater: string;
-    topicKind: string;
-    kindTheory: string;
-    kindExercises: string;
     bodyEn: string;
     bodyPt: string;
     sampleApex: string;
@@ -99,9 +96,6 @@ export const adminCopy: Record<
     status: "Map status",
     statusOpen: "Open",
     statusLater: "Coming later",
-    topicKind: "Student-map label",
-    kindTheory: "Theory",
-    kindExercises: "Exercises",
     bodyEn: "Theory body (English)",
     bodyPt: "Theory body (Portuguese)",
     sampleApex: "Read-only Apex sample (English)",
@@ -160,6 +154,8 @@ export const adminCopy: Record<
           return `Hidden test ${n}: English student message is required.`;
         case "test_message_pt":
           return `Hidden test ${n}: Portuguese student message is required.`;
+        case "missing":
+          return "This item is no longer in the curriculum.";
       }
     },
   },
@@ -193,9 +189,6 @@ export const adminCopy: Record<
     status: "Status no mapa",
     statusOpen: "Aberto",
     statusLater: "Em breve",
-    topicKind: "Rótulo no mapa do aluno",
-    kindTheory: "Teoria",
-    kindExercises: "Exercícios",
     bodyEn: "Corpo da teoria (inglês)",
     bodyPt: "Corpo da teoria (português)",
     sampleApex: "Amostra Apex somente leitura (inglês)",
@@ -255,6 +248,8 @@ export const adminCopy: Record<
           return `Teste oculto ${n}: a mensagem em inglês é obrigatória.`;
         case "test_message_pt":
           return `Teste oculto ${n}: a mensagem em português é obrigatória.`;
+        case "missing":
+          return "Este item não está mais no currículo.";
       }
     },
   },

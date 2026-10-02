@@ -5,17 +5,20 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
 import { sessionIsAdmin } from "@/lib/mock-auth";
-import {
-  cardAvailability,
-  getCard,
-  getModule,
-  getTopic,
-  type TopicLock,
-} from "@/lib/curriculum";
+import { getCard, getModule, getTopic } from "@/lib/curriculum";
 import { useCurriculumModules } from "@/lib/curriculum-store";
 import { chromeCopy } from "@/lib/locale";
-import { studyRedirect, type StudyDepth } from "@/lib/study-route";
+import {
+  resolveStudyTarget,
+  type StudyDepth,
+  type StudyTarget,
+} from "@/lib/study-route";
 import { useFinishedCards } from "@/lib/study-progress";
+
+export type StudyGate = StudyTarget & {
+  finished: ReadonlySet<string>;
+  unlockAll: boolean;
+};
 
 export function StudyPending() {
   const { locale } = useLocale();
@@ -34,7 +37,7 @@ export function useStudyGate(ids: {
   moduleId: string;
   topicId?: string;
   cardId?: string;
-}) {
+}): StudyGate {
   const router = useRouter();
   const modules = useCurriculumModules();
   const finished = useFinishedCards();
@@ -44,17 +47,21 @@ export function useStudyGate(ids: {
   const topic =
     ids.topicId === undefined ? undefined : getTopic(selected, ids.topicId);
   const topicIndex =
-    ids.topicId === undefined
+    ids.topicId === undefined || !selected
       ? undefined
-      : (selected?.topics.findIndex((item) => item.id === ids.topicId) ?? -1);
+      : selected.topics.findIndex((item) => item.id === ids.topicId);
   const card =
     ids.cardId === undefined ? undefined : getCard(topic, ids.cardId);
   const cardIndex =
-    ids.cardId === undefined
+    ids.cardId === undefined || !topic
       ? undefined
-      : (topic?.cards.findIndex((item) => item.id === ids.cardId) ?? -1);
-  const depth: StudyDepth = ids.cardId ? "card" : ids.topicId ? "topic" : "module";
-  const redirect = studyRedirect({
+      : topic.cards.findIndex((item) => item.id === ids.cardId);
+  const depth: StudyDepth = ids.cardId
+    ? "card"
+    : ids.topicId
+      ? "topic"
+      : "module";
+  const target = resolveStudyTarget({
     selected,
     topic,
     topicIndex,
@@ -64,24 +71,11 @@ export function useStudyGate(ids: {
     depth,
     unlockAll,
   });
-  const cardLock: TopicLock | undefined =
-    topic && cardIndex !== undefined && cardIndex >= 0
-      ? cardAvailability(topic, cardIndex, finished, unlockAll)
-      : undefined;
+  const redirectHref = target.status === "redirect" ? target.href : null;
 
   useEffect(() => {
-    if (redirect) router.replace(redirect);
-  }, [redirect, router]);
+    if (redirectHref) router.replace(redirectHref);
+  }, [redirectHref, router]);
 
-  return {
-    selected,
-    topic,
-    topicIndex,
-    card,
-    cardIndex: cardIndex ?? -1,
-    cardLock,
-    finished,
-    unlockAll,
-    redirect,
-  };
+  return { ...target, finished, unlockAll };
 }

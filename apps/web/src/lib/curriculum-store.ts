@@ -15,7 +15,6 @@ import {
   type ModuleStatus,
   type TheoryCard,
   type Topic,
-  type TopicKind,
 } from "@/lib/curriculum";
 
 export type SaveIssue = {
@@ -30,7 +29,8 @@ export type SaveIssue = {
     | "test_check"
     | "test_match"
     | "test_message_en"
-    | "test_message_pt";
+    | "test_message_pt"
+    | "missing";
   testIndex?: number;
 };
 
@@ -45,7 +45,6 @@ export type ModuleDraft = {
 
 export type TopicDraft = {
   names: LocalizedText;
-  kind: TopicKind;
 };
 
 export type TheoryDraft = Omit<TheoryCard, "id">;
@@ -128,6 +127,10 @@ export function moveById<T extends { id: string }>(
   const [item] = copy.splice(index, 1);
   copy.splice(nextIndex, 0, item);
   return copy;
+}
+
+function missingResult(): StoreResult {
+  return { ok: false, issues: [{ code: "missing" }] };
 }
 
 function withModule(
@@ -296,7 +299,7 @@ export function updateModule(moduleId: string, draft: ModuleDraft): StoreResult 
     selected.names = trimText(draft.names);
     selected.status = draft.status;
   });
-  if (!found) return { ok: false, issues: [] };
+  if (!found) return missingResult();
   return { ok: true, id: moduleId };
 }
 
@@ -320,11 +323,10 @@ export function createTopic(moduleId: string, draft: TopicDraft): StoreResult {
     selected.topics.push({
       id,
       names: trimText(draft.names),
-      kind: draft.kind,
       cards: [],
     });
   });
-  if (!found) return { ok: false, issues: [] };
+  if (!found) return missingResult();
   return { ok: true, id };
 }
 
@@ -337,9 +339,8 @@ export function updateTopic(
   if (issues.length > 0) return { ok: false, issues };
   const found = withTopic(moduleId, topicId, (topic) => {
     topic.names = trimText(draft.names);
-    topic.kind = draft.kind;
   });
-  if (!found) return { ok: false, issues: [] };
+  if (!found) return missingResult();
   return { ok: true, id: topicId };
 }
 
@@ -370,7 +371,7 @@ export function createCard(
   const found = withTopic(moduleId, topicId, (topic) => {
     topic.cards.push(toCard(id, draft));
   });
-  if (!found) return { ok: false, issues: [] };
+  if (!found) return missingResult();
   return { ok: true, id };
 }
 
@@ -388,7 +389,7 @@ export function updateCard(
       card.id === cardId ? toCard(cardId, draft) : card,
     );
   });
-  if (!found) return { ok: false, issues: [] };
+  if (!found) return missingResult();
   return { ok: true, id: cardId };
 }
 
