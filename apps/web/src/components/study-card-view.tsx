@@ -68,7 +68,7 @@ function ExerciseUnavailable({
       >
         ← {topic.names[locale]}
       </Link>
-      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-ink">
+      <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
         {copy.exercise}
       </h1>
       {prompt ? (

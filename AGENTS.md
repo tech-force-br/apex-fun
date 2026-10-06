@@ -11,7 +11,7 @@ Next.js-specific agent notes: `apps/web/AGENTS.md`.
 | Piece | Choice |
 |---|---|
 | Web | `apps/web` — Next.js + TypeScript |
-| Styles | Tailwind + custom space theme |
+| Styles | Tailwind + custom theme. The whole site uses the light page in `specs/10-visual-design.md`. |
 | Auth / DB | Supabase Auth + Postgres |
 | Editor | CodeMirror 6 |
 | Runner | `apps/runner` — TypeScript service that will shell to `aer` |

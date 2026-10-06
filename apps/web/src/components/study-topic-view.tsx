@@ -35,7 +35,7 @@ export function StudyTopicView() {
       >
         ← {selected.names[locale]}
       </Link>
-      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-ink">
+      <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
         {topic.names[locale]}
       </h1>
       <p className="mt-2 text-muted">

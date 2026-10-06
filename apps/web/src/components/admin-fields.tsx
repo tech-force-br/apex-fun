@@ -4,7 +4,7 @@ import { useId, type ReactNode } from "react";
 import type { LocalizedText } from "@/lib/curriculum";
 
 export const fieldClassName =
-  "mt-1.5 w-full rounded-lg border border-white/10 bg-space px-3 py-2.5 text-ink outline-none placeholder:text-muted/70 focus:border-accent/70 focus:ring-2 focus:ring-accent/25";
+  "mt-1.5 w-full rounded-md border border-line bg-white px-3 py-2.5 text-ink outline-none placeholder:text-muted/80 focus:border-accent focus:ring-2 focus:ring-accent/30";
 
 export const textareaClassName = `${fieldClassName} min-h-32 resize-y`;
 
@@ -161,7 +161,7 @@ export function AdminForm({
         onSave();
       }}
     >
-      <h2 className="text-xl font-semibold tracking-tight text-ink">{title}</h2>
+      <h2 className="text-xl font-bold tracking-tight text-ink">{title}</h2>
       {children}
       <IssueList messages={issueMessages} />
       <AdminFormActions
@@ -190,7 +190,7 @@ export function AdminFormActions({
       <button
         type="button"
         onClick={onSave}
-        className="cursor-pointer rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-space"
+        className="cursor-pointer rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
       >
         {saveLabel}
       </button>
@@ -198,7 +198,7 @@ export function AdminFormActions({
         <button
           type="button"
           onClick={onRemove}
-          className="cursor-pointer rounded-lg border border-white/15 bg-space px-4 py-2.5 text-sm font-medium text-ink hover:border-accent/40"
+          className="cursor-pointer rounded-md border border-line bg-white px-4 py-2.5 text-sm font-bold text-ink hover:bg-space"
         >
           {removeLabel}
         </button>
@@ -210,7 +210,7 @@ export function AdminFormActions({
 export function IssueList({ messages }: { messages: string[] }) {
   if (messages.length === 0) return null;
   return (
-    <ul className="space-y-1 text-sm text-red-300" role="alert">
+    <ul className="space-y-1 text-sm font-bold text-[#ba0517]" role="alert">
       {messages.map((message) => (
         <li key={message}>{message}</li>
       ))}
@@ -234,7 +234,7 @@ export function MoveButtons({
   disableDown?: boolean;
 }) {
   const btn =
-    "cursor-pointer rounded-md border border-white/10 bg-space px-1.5 py-0.5 text-xs text-muted hover:border-accent/40 hover:text-ink disabled:opacity-40";
+    "cursor-pointer rounded-md border border-line bg-white px-1.5 py-0.5 text-xs text-muted hover:border-accent hover:text-ink disabled:opacity-40";
   return (
     <span className="flex shrink-0 gap-1">
       <button

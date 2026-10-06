@@ -7,9 +7,14 @@ import {
   indentWithTab,
 } from "@codemirror/commands";
 import { java } from "@codemirror/lang-java";
-import { bracketMatching, indentOnInput } from "@codemirror/language";
+import {
+  bracketMatching,
+  HighlightStyle,
+  indentOnInput,
+  syntaxHighlighting,
+} from "@codemirror/language";
 import { EditorState, Prec, type Extension } from "@codemirror/state";
-import { oneDark } from "@codemirror/theme-one-dark";
+import { tags } from "@lezer/highlight";
 import {
   drawSelection,
   EditorView,
@@ -47,12 +52,20 @@ function blockClipboardInsert(event: Event) {
   return false;
 }
 
+const apexHighlight = HighlightStyle.define([
+  { tag: [tags.keyword, tags.typeName, tags.className], color: "#032d60", fontWeight: "600" },
+  { tag: [tags.string, tags.special(tags.string)], color: "#032d60" },
+  { tag: [tags.number, tags.bool, tags.null], color: "#0176d3" },
+  { tag: [tags.comment, tags.lineComment, tags.blockComment], color: "#706e6b", fontStyle: "italic" },
+  { tag: [tags.operator, tags.punctuation, tags.variableName, tags.propertyName], color: "#181818" },
+]);
+
 function editorTheme(minHeight: string): Extension {
   return Prec.highest(
     EditorView.theme(
       {
         "&.cm-editor": {
-          backgroundColor: "var(--color-space)",
+          backgroundColor: "#ffffff",
           color: "var(--color-ink)",
           fontSize: "0.875rem",
         },
@@ -65,13 +78,13 @@ function editorTheme(minHeight: string): Extension {
           caretColor: "var(--color-accent)",
         },
         "& .cm-gutters": {
-          backgroundColor: "var(--color-space-mid)",
+          backgroundColor: "var(--color-space)",
           color: "var(--color-muted)",
-          borderRight: "1px solid rgba(255, 255, 255, 0.08)",
+          borderRight: "1px solid var(--color-line)",
           minHeight,
         },
         "& .cm-activeLine": {
-          backgroundColor: "color-mix(in srgb, var(--color-accent) 8%, transparent)",
+          backgroundColor: "var(--color-highlight)",
         },
         "& .cm-activeLineGutter": {
           backgroundColor: "var(--color-space-card)",
@@ -84,7 +97,7 @@ function editorTheme(minHeight: string): Extension {
           outlineOffset: "-2px",
         },
       },
-      { dark: true },
+      { dark: false },
     ),
   );
 }
@@ -147,7 +160,7 @@ export function CodeEditor({
       bracketMatching(),
       EditorView.lineWrapping,
       java(),
-      oneDark,
+      syntaxHighlighting(apexHighlight),
       keymap.of([
         ...historyKeymap,
         ...defaultKeymap,
@@ -197,7 +210,7 @@ export function CodeEditor({
   return (
     <div
       ref={hostRef}
-      className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-space"
+      className="min-w-0 overflow-hidden rounded-lg border border-line bg-white"
     />
   );
 }

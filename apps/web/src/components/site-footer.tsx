@@ -30,7 +30,7 @@ export function SiteFooter() {
   return (
     <footer
       ref={footerRef}
-      className="relative z-30 shrink-0 border-t border-white/10 px-6 py-4 text-center text-xs leading-relaxed text-muted"
+      className="relative z-30 shrink-0 border-t border-line bg-white px-6 py-4 text-center text-xs leading-relaxed text-muted"
     >
       {chromeCopy[locale].footer}
     </footer>

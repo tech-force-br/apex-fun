@@ -58,7 +58,7 @@ export function AdminTree({
 
   return (
     <nav
-      className="rounded-2xl border border-white/10 bg-space-card/95 p-4"
+      className="rounded-lg border border-line bg-white p-4"
       aria-label={copy.modules}
     >
       <div className="flex items-center justify-between gap-2">
@@ -68,7 +68,7 @@ export function AdminTree({
         <button
           type="button"
           onClick={onAddModule}
-          className="cursor-pointer rounded-lg border border-accent/30 bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent hover:border-accent/60"
+          className="cursor-pointer rounded-md border border-line bg-highlight px-2.5 py-1 text-xs font-bold text-accent-deep hover:border-accent"
         >
           {copy.addModule}
         </button>
@@ -226,7 +226,7 @@ function TreeLevel({
             />
           </TreeRow>
           {item.expanded ? (
-            <div className="mt-2 ml-3 border-l border-white/10 pl-3">
+            <div className="mt-2 ml-3 border-l border-line pl-3">
               {item.expanded}
             </div>
           ) : null}
@@ -247,7 +247,7 @@ function GhostButton({
     <button
       type="button"
       onClick={onClick}
-      className="cursor-pointer rounded-lg border border-dashed border-white/20 px-2.5 py-1 text-xs font-medium text-muted hover:border-accent/40 hover:text-ink"
+      className="cursor-pointer rounded-md border border-dashed border-line px-2.5 py-1 text-xs font-bold text-muted hover:border-accent hover:text-ink"
     >
       {children}
     </button>
@@ -273,8 +273,8 @@ function TreeRow({
     <div
       className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 ${
         selected
-          ? "border-accent/40 bg-accent/10"
-          : "border-transparent bg-space/40 hover:border-white/10"
+          ? "border-accent bg-highlight"
+          : "border-transparent bg-space hover:border-line"
       }`}
     >
       <button

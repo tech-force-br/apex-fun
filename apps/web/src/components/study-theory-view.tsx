@@ -16,7 +16,7 @@ import { finishCard } from "@/lib/study-progress";
 import { theoryAdvance } from "@/lib/study-route";
 
 const actionClass =
-  "pointer-events-auto max-w-full cursor-pointer rounded-lg border border-accent/40 bg-space-card px-4 py-2.5 text-left text-sm font-medium text-accent hover:border-accent";
+  "pointer-events-auto max-w-full cursor-pointer rounded-md bg-accent px-4 py-2.5 text-left text-sm font-bold text-white hover:bg-[#014486]";
 
 export function StudyTheoryView({
   selected,
@@ -100,7 +100,7 @@ function TheoryBody({
         index === 0 ? (
           <h1
             key={index}
-            className="mt-2 text-2xl font-semibold tracking-tight text-ink sm:text-3xl"
+            className="mt-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl"
           >
             {paragraph}
           </h1>
@@ -117,7 +117,7 @@ function TheoryBody({
           key={src}
           src={src}
           alt=""
-          className="mt-6 max-w-full rounded-xl border border-white/10"
+          className="mt-6 max-w-full rounded-lg border border-line"
         />
       ))}
       {card.sampleApex ? (

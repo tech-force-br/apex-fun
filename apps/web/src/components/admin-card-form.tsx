@@ -130,7 +130,7 @@ function TheoryFields({
                     imageRefs: draft.imageRefs.filter((_, i) => i !== index),
                   })
                 }
-                className="cursor-pointer rounded-lg border border-white/15 px-3 text-sm text-muted hover:text-ink"
+                className="cursor-pointer rounded-md border border-line bg-white px-3 text-sm font-bold text-muted hover:text-ink"
               >
                 {copy.remove}
               </button>
@@ -142,7 +142,7 @@ function TheoryFields({
           onClick={() =>
             onChange({ ...draft, imageRefs: [...draft.imageRefs, ""] })
           }
-          className="mt-2 cursor-pointer rounded-lg border border-dashed border-white/20 px-3 py-1.5 text-xs font-medium text-muted hover:border-accent/40 hover:text-ink"
+          className="mt-2 cursor-pointer rounded-md border border-dashed border-line bg-white px-3 py-1.5 text-xs font-bold text-muted hover:border-accent hover:text-ink"
         >
           {copy.addImage}
         </button>
@@ -203,7 +203,7 @@ function ExerciseFields({
                 hiddenTests: [...draft.hiddenTests, emptyHiddenTest()],
               })
             }
-            className="cursor-pointer rounded-lg border border-dashed border-white/20 px-2.5 py-1 text-xs font-medium text-muted hover:border-accent/40 hover:text-ink"
+            className="cursor-pointer rounded-md border border-dashed border-line bg-white px-2.5 py-1 text-xs font-bold text-muted hover:border-accent hover:text-ink"
           >
             {copy.addTest}
           </button>
@@ -213,7 +213,7 @@ function ExerciseFields({
           {draft.hiddenTests.map((test, index) => (
             <li
               key={test.id}
-              className="space-y-3 rounded-xl border border-white/10 bg-space/50 p-4"
+              className="space-y-3 rounded-lg border border-line bg-space p-4"
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-sm font-medium text-ink">
@@ -256,10 +256,10 @@ function ExerciseFields({
                           key={mode}
                           type="button"
                           onClick={() => patchTest(index, { ...test, mode })}
-                          className={`cursor-pointer rounded-lg px-3 py-2 text-left text-sm ${
+                          className={`cursor-pointer rounded-md px-3 py-2 text-left text-sm font-bold ${
                             active
-                              ? "bg-accent/15 text-accent ring-1 ring-accent/40"
-                              : "border border-white/10 text-muted hover:text-ink"
+                              ? "bg-highlight text-accent-deep ring-1 ring-accent"
+                              : "border border-line bg-white text-muted hover:text-ink"
                           }`}
                         >
                           {mode === "run_clean"
@@ -317,7 +317,7 @@ function ExerciseFields({
         </ol>
       </div>
 
-      <div className="space-y-3 rounded-xl border border-white/10 bg-space/50 p-4">
+      <div className="space-y-3 rounded-lg border border-line bg-space p-4">
         <h3 className="text-sm font-medium tracking-wide text-muted uppercase">
           {copy.preview}
         </h3>
@@ -336,12 +336,12 @@ function ExerciseFields({
         <button
           type="button"
           onClick={onPreview}
-          className="cursor-pointer rounded-lg border border-white/15 bg-space px-3 py-2 text-sm font-medium text-ink hover:border-accent/40"
+          className="cursor-pointer rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-ink hover:bg-space"
         >
           {copy.previewRun}
         </button>
         <p
-          className="rounded-lg border border-white/10 bg-space px-3 py-2 font-mono text-xs text-muted"
+          className="rounded-md border border-line bg-white px-3 py-2 font-mono text-xs text-muted"
           role="status"
         >
           {previewResult}

@@ -28,7 +28,7 @@ export function StudyModuleView() {
       >
         ← {copy.backToMap}
       </Link>
-      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-ink">
+      <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
         {selected.names[locale]}
       </h1>
       <p className="mt-2 text-muted">{copy.topicsIntro}</p>

@@ -30,8 +30,8 @@ export function SegmentedControl<T extends string>({
       aria-label={ariaLabel}
       className={[
         pill
-          ? "inline-flex rounded-full border border-white/10 bg-space p-1"
-          : "grid grid-cols-2 rounded-lg border border-white/10 bg-space p-1",
+          ? "inline-flex rounded-full border border-line bg-space p-1"
+          : "grid grid-cols-2 rounded-lg border border-line bg-space p-1",
         className,
       ]
         .filter(Boolean)
@@ -48,7 +48,7 @@ export function SegmentedControl<T extends string>({
             className={`cursor-pointer font-medium transition disabled:opacity-60 ${
               pill
                 ? `rounded-full px-3 py-1 text-xs ${
-                    active ? "bg-accent text-space" : "text-muted hover:text-ink"
+                    active ? "bg-accent text-white" : "text-muted hover:text-ink"
                   }`
                 : `rounded-md px-3 py-2 text-sm ${
                     active

@@ -153,10 +153,10 @@ export function AdminView() {
         />
       </div>
 
-      <section className="min-w-0 rounded-2xl border border-white/10 bg-space-card/95 p-6">
+      <section className="min-w-0 rounded-lg border border-line bg-white p-6">
         <p className="mb-6 text-xs text-muted">{copy.memoryNote}</p>
         {saved ? (
-          <p className="mb-4 text-sm text-accent" role="status">
+          <p className="mb-4 text-sm font-bold text-accent-deep" role="status">
             {copy.saved}
           </p>
         ) : null}
@@ -207,7 +207,7 @@ function Editor({
   if (selection.kind === "pick") {
     return (
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-ink">
+        <h1 className="text-2xl font-bold tracking-tight text-ink">
           {copy.title}
         </h1>
         <p className="mt-2 text-muted">{copy.intro}</p>

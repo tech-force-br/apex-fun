@@ -20,15 +20,15 @@ export function FolderIcon({
 }) {
   return (
     <span
-      className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-        active ? "bg-accent/15 text-accent" : "bg-space text-muted"
+      className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${
+        active ? "bg-highlight text-accent-deep" : "border border-line bg-white text-muted"
       }`}
     >
       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden>
         <path d="M3.75 6.5A1.75 1.75 0 0 1 5.5 4.75h3.1c.3 0 .58.14.76.38l.9 1.12h8.24A1.75 1.75 0 0 1 20.25 8v9.5A1.75 1.75 0 0 1 18.5 19.25h-13A1.75 1.75 0 0 1 3.75 17.5z" />
       </svg>
       {locked ? (
-        <span className="absolute -right-1 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full bg-space-card text-muted ring-1 ring-white/10">
+        <span className="absolute -right-1 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-muted ring-1 ring-line">
           <svg viewBox="0 0 16 16" className="h-2.5 w-2.5" fill="none" aria-hidden>
             <rect
               x="3.5"
@@ -61,8 +61,8 @@ export function CardIndex({
 }) {
   return (
     <span
-      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm font-medium ${
-        active ? "bg-accent/15 text-accent" : "bg-space text-muted"
+      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-sm font-bold ${
+        active ? "bg-highlight text-accent-deep" : "border border-line bg-white text-muted"
       }`}
     >
       {label}
@@ -91,12 +91,12 @@ export function StudyRow({
 }: StudyRowProps) {
   const locked = lock === "locked";
   const current = lock === "current";
-  const className = `flex w-full items-center gap-3 rounded-xl border px-4 py-3.5 text-left transition ${
+  const className = `flex w-full items-center gap-3 rounded-lg border px-4 py-3.5 text-left transition ${
     locked
-      ? "border-white/10 bg-space-card/60"
+      ? "border-line bg-white"
       : current
-        ? "border-accent/40 bg-accent/10 hover:border-accent/70"
-        : "border-white/10 bg-space-card/95 hover:border-accent/40"
+        ? "border-accent bg-highlight hover:border-accent-deep"
+        : "border-line bg-white hover:border-accent"
   }`;
 
   const inner = (
@@ -113,8 +113,8 @@ export function StudyRow({
         {meta ? <span className="mt-0.5 block text-xs text-muted">{meta}</span> : null}
       </span>
       <span
-        className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
-          locked ? "bg-white/5 text-muted" : "bg-accent/15 text-accent"
+        className={`shrink-0 rounded-md px-3 py-1 text-xs font-bold ${
+          locked ? "bg-space text-muted" : "bg-highlight text-accent-deep"
         }`}
       >
         {badge}

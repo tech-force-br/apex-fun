@@ -23,7 +23,7 @@ export function StudyHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-space/80 backdrop-blur-md">
+    <header className="sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur-md">
       <div
         className={`mx-auto flex w-full flex-wrap items-center justify-between gap-3 px-6 py-4 ${
           admin ? "max-w-6xl" : "max-w-3xl"
@@ -31,7 +31,7 @@ export function StudyHeader() {
       >
         <Link
           href="/study"
-          className="cursor-pointer text-sm font-medium tracking-[0.22em] text-accent uppercase hover:text-ink"
+          className="cursor-pointer text-xl font-bold tracking-tight text-accent-deep"
         >
           {chrome.wordmark}
         </Link>
@@ -39,7 +39,7 @@ export function StudyHeader() {
           <LanguageToggle />
           <Link
             href={admin ? "/study" : "/admin"}
-            className="cursor-pointer text-sm font-medium text-muted hover:text-accent"
+            className="cursor-pointer text-sm font-bold text-accent-deep hover:text-accent"
           >
             {admin ? chrome.studyMap : chrome.admin}
           </Link>
@@ -47,7 +47,7 @@ export function StudyHeader() {
           <button
             type="button"
             onClick={onSignOut}
-            className="cursor-pointer rounded-lg border border-white/15 bg-space px-3 py-1.5 text-sm font-medium text-ink hover:border-accent/40"
+            className="cursor-pointer rounded-md border border-line bg-white px-3 py-1.5 text-sm font-bold text-ink hover:bg-space"
           >
             {chrome.signOut}
           </button>
