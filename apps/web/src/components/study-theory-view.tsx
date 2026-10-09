@@ -18,6 +18,24 @@ import { theoryAdvance } from "@/lib/study-route";
 const actionClass =
   "pointer-events-auto max-w-full cursor-pointer rounded-md bg-accent px-4 py-2.5 text-left text-sm font-bold text-white hover:bg-[#014486]";
 
+export function StudyAdvanceBar({
+  label,
+  onAdvance,
+}: {
+  label: string;
+  onAdvance: () => void;
+}) {
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-height)+1rem)] z-20">
+      <div className="mx-auto flex w-full max-w-3xl justify-center px-6 py-3">
+        <button type="button" onClick={onAdvance} className={actionClass}>
+          {label}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function StudyTheoryView({
   selected,
   topic,
@@ -61,20 +79,13 @@ export function StudyTheoryView({
       <p className="mt-4 text-sm text-muted">{copy.theory}</p>
       <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
       {destination ? (
-        <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-height)+1rem)] z-20">
-          <div className="mx-auto flex w-full max-w-3xl justify-center px-6 py-3">
-            <button
-              type="button"
-              onClick={() => {
-                finishCard(card.id);
-                router.push(destination.href);
-              }}
-              className={actionClass}
-            >
-              {destination.label}
-            </button>
-          </div>
-        </div>
+        <StudyAdvanceBar
+          label={destination.label}
+          onAdvance={() => {
+            finishCard(card.id);
+            router.push(destination.href);
+          }}
+        />
       ) : null}
     </main>
   );

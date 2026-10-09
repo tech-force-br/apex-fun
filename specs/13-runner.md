@@ -26,9 +26,9 @@ if (age != 20) {
 }
 ```
 
-Compile-fail tests may glue a check that is **meant** not to compile (for example declaring the same name again).
+Compile-fail tests do not glue a check snippet. They compile the student snippet alone and pass when the compiler error contains any match text on that test. The site runs one only when the card has that test.
 
-Run hidden tests in order. Stop at the first failure from the site’s point of view. Implementation may run one glued program per test so compile-fail tests do not pollute run-clean tests.
+Run every compile-fail test first, in card order, then every run-clean test, in card order. Stop at the first failure from the site’s point of view. Each test is one program, so a compile-fail test does not change the run-clean glue.
 
 ## Runner service
 

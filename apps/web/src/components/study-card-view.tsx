@@ -1,13 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { CodeEditor } from "@/components/code-editor";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
-import { StudyTheoryView } from "@/components/study-theory-view";
+import {
+  StudyAdvanceBar,
+  StudyTheoryView,
+} from "@/components/study-theory-view";
 import { useLocale } from "@/components/locale-provider";
 import type { CurriculumModule, ExerciseCard, Topic } from "@/lib/curriculum";
 import { studyCopy } from "@/lib/study-copy";
+import { finishCard } from "@/lib/study-progress";
+import { theoryAdvance } from "@/lib/study-route";
 
 export function StudyCardView() {
   const params = useParams<{
@@ -27,10 +33,13 @@ export function StudyCardView() {
 
   if (gate.card.type === "exercise") {
     return (
-      <ExerciseUnavailable
+      <StudyExerciseView
+        key={gate.card.id}
         selected={gate.selected}
         topic={gate.topic}
+        topicIndex={gate.topicIndex}
         card={gate.card}
+        cardIndex={gate.cardIndex}
       />
     );
   }
@@ -47,21 +56,41 @@ export function StudyCardView() {
   );
 }
 
-function ExerciseUnavailable({
+function StudyExerciseView({
   selected,
   topic,
+  topicIndex,
   card,
+  cardIndex,
 }: {
   selected: CurriculumModule;
   topic: Topic;
+  topicIndex: number;
   card: ExerciseCard;
+  cardIndex: number;
 }) {
+  const router = useRouter();
   const { locale } = useLocale();
   const copy = studyCopy[locale];
+  const [validated, setValidated] = useState(false);
   const prompt = card.prompts[locale].trim();
+  const destination = theoryAdvance(
+    selected,
+    topic,
+    topicIndex,
+    cardIndex,
+    "current",
+    locale,
+    copy,
+  );
+  const showAdvance = validated && destination !== undefined;
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
+    <main
+      className={`mx-auto w-full max-w-3xl flex-1 px-6 pt-10 ${
+        showAdvance ? "pb-32" : "pb-10"
+      }`}
+    >
       <Link
         href={`/study/${selected.id}/${topic.id}`}
         className="cursor-pointer text-sm text-muted hover:text-accent"
@@ -89,7 +118,23 @@ function ExerciseUnavailable({
           minHeight="12rem"
         />
       </div>
+      <button
+        type="button"
+        onClick={() => setValidated(true)}
+        className="mt-4 cursor-pointer rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
+      >
+        {copy.validate}
+      </button>
       <p className="mt-4 text-sm text-muted">{copy.exerciseUnavailable}</p>
+      {showAdvance ? (
+        <StudyAdvanceBar
+          label={destination.label}
+          onAdvance={() => {
+            finishCard(card.id);
+            router.push(destination.href);
+          }}
+        />
+      ) : null}
     </main>
   );
 }

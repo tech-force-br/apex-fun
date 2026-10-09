@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { adminCopy } from "@/lib/admin-copy";
 import {
+  emptyCompileMatch,
   emptyHiddenTest,
   moveById,
   type CardDraft,
@@ -10,7 +11,11 @@ import {
   type SaveIssue,
   type TheoryDraft,
 } from "@/lib/curriculum-store";
-import type { HiddenTest, HiddenTestMode } from "@/lib/curriculum";
+import type {
+  CompileFailMatch,
+  HiddenTest,
+  HiddenTestMode,
+} from "@/lib/curriculum";
 import {
   AdminForm,
   Field,
@@ -40,7 +45,6 @@ export function AdminCardForm({
   const { locale } = useLocale();
   const copy = adminCopy[locale];
   const [draft, setDraft] = useState(initial);
-  const [previewResult, setPreviewResult] = useState(copy.previewIdle);
 
   function setTheory(next: TheoryDraft) {
     onDirty();
@@ -64,12 +68,7 @@ export function AdminCardForm({
       {draft.type === "theory" ? (
         <TheoryFields draft={draft} onChange={setTheory} />
       ) : (
-        <ExerciseFields
-          draft={draft}
-          previewResult={previewResult}
-          onChange={setExercise}
-          onPreview={() => setPreviewResult(copy.previewUnavailable)}
-        />
+        <ExerciseFields draft={draft} onChange={setExercise} />
       )}
     </AdminForm>
   );
@@ -153,18 +152,16 @@ function TheoryFields({
 
 function ExerciseFields({
   draft,
-  previewResult,
   onChange,
-  onPreview,
 }: {
   draft: ExerciseDraft;
-  previewResult: string;
   onChange: (draft: ExerciseDraft) => void;
-  onPreview: () => void;
 }) {
   const { locale } = useLocale();
   const copy = adminCopy[locale];
-  const previewId = useId();
+  const [previewResults, setPreviewResults] = useState<Record<string, string>>(
+    {},
+  );
 
   function patchTest(index: number, next: HiddenTest) {
     const hiddenTests = draft.hiddenTests.slice();
@@ -177,6 +174,14 @@ function ExerciseFields({
       ...draft,
       hiddenTests: moveById(draft.hiddenTests, id, direction),
     });
+  }
+
+  function setMode(index: number, test: HiddenTest, mode: HiddenTestMode) {
+    const matches =
+      mode === "compile_fail" && test.matches.length === 0
+        ? [emptyCompileMatch()]
+        : test.matches;
+    patchTest(index, { ...test, mode, matches });
   }
 
   return (
@@ -255,7 +260,7 @@ function ExerciseFields({
                         <button
                           key={mode}
                           type="button"
-                          onClick={() => patchTest(index, { ...test, mode })}
+                          onClick={() => setMode(index, test, mode)}
                           className={`cursor-pointer rounded-md px-3 py-2 text-left text-sm font-bold ${
                             active
                               ? "bg-highlight text-accent-deep ring-1 ring-accent"
@@ -272,81 +277,175 @@ function ExerciseFields({
                 </div>
               </fieldset>
 
-              <Field
-                label={copy.checkApex}
-                htmlFor={`${test.id}-check`}
-                hint={copy.checkApexHelp}
-              >
-                <TextArea
-                  id={`${test.id}-check`}
-                  value={test.checkApex}
-                  mono
-                  rows={5}
-                  onChange={(checkApex) =>
-                    patchTest(index, { ...test, checkApex })
-                  }
-                />
-              </Field>
-
-              {test.mode === "compile_fail" ? (
-                <Field
-                  label={copy.compileMatch}
-                  htmlFor={`${test.id}-match`}
-                  hint={copy.compileMatchHelp}
-                >
-                  <TextInput
-                    id={`${test.id}-match`}
-                    value={test.compileFailMatch}
-                    onChange={(compileFailMatch) =>
-                      patchTest(index, { ...test, compileFailMatch })
+              {test.mode === "run_clean" ? (
+                <>
+                  <Field
+                    label={copy.checkApex}
+                    htmlFor={`${test.id}-check`}
+                    hint={copy.checkApexHelp}
+                  >
+                    <TextArea
+                      id={`${test.id}-check`}
+                      value={test.checkApex}
+                      mono
+                      rows={5}
+                      onChange={(checkApex) =>
+                        patchTest(index, { ...test, checkApex })
+                      }
+                    />
+                  </Field>
+                  <LocalizedFields
+                    enLabel={copy.testMessageEn}
+                    ptLabel={copy.testMessagePt}
+                    value={test.messages}
+                    multiline
+                    rows={3}
+                    onChange={(messages) =>
+                      patchTest(index, { ...test, messages })
                     }
                   />
-                </Field>
-              ) : null}
+                </>
+              ) : (
+                <CompileMatchSets
+                  test={test}
+                  onChange={(matches) => patchTest(index, { ...test, matches })}
+                />
+              )}
 
-              <LocalizedFields
-                enLabel={copy.testMessageEn}
-                ptLabel={copy.testMessagePt}
-                value={test.messages}
-                multiline
-                rows={3}
-                onChange={(messages) => patchTest(index, { ...test, messages })}
+              <TestPreview
+                test={test}
+                result={previewResults[test.id] ?? copy.previewIdle}
+                onChange={(previewCode) =>
+                  patchTest(index, { ...test, previewCode })
+                }
+                onRun={() =>
+                  setPreviewResults((current) => ({
+                    ...current,
+                    [test.id]: copy.previewUnavailable,
+                  }))
+                }
               />
             </li>
           ))}
         </ol>
       </div>
-
-      <div className="space-y-3 rounded-lg border border-line bg-space p-4">
-        <h3 className="text-sm font-medium tracking-wide text-muted uppercase">
-          {copy.preview}
-        </h3>
-        <p className="text-xs text-muted">{copy.previewHelp}</p>
-        <Field label={copy.previewCode} htmlFor={previewId}>
-          <div className="mt-1.5">
-            <CodeEditor
-              id={previewId}
-              initialValue={draft.previewCode}
-              label={copy.previewCode}
-              minHeight="9rem"
-              onChange={(previewCode) => onChange({ ...draft, previewCode })}
-            />
-          </div>
-        </Field>
-        <button
-          type="button"
-          onClick={onPreview}
-          className="cursor-pointer rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-ink hover:bg-space"
-        >
-          {copy.previewRun}
-        </button>
-        <p
-          className="rounded-md border border-line bg-white px-3 py-2 font-mono text-xs text-muted"
-          role="status"
-        >
-          {previewResult}
-        </p>
-      </div>
     </>
+  );
+}
+
+function CompileMatchSets({
+  test,
+  onChange,
+}: {
+  test: HiddenTest;
+  onChange: (matches: CompileFailMatch[]) => void;
+}) {
+  const { locale } = useLocale();
+  const copy = adminCopy[locale];
+
+  function patchMatch(index: number, next: CompileFailMatch) {
+    const matches = test.matches.slice();
+    matches[index] = next;
+    onChange(matches);
+  }
+
+  return (
+    <div className="space-y-3">
+      {test.matches.map((match, index) => (
+        <div
+          key={match.id}
+          className="space-y-3 rounded-md border border-line bg-white p-3"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-medium text-ink">{copy.matchN(index + 1)}</p>
+            <button
+              type="button"
+              onClick={() =>
+                onChange(test.matches.filter((item) => item.id !== match.id))
+              }
+              className="cursor-pointer text-xs text-muted hover:text-ink"
+            >
+              {copy.remove}
+            </button>
+          </div>
+          <Field
+            label={copy.compileMatch}
+            htmlFor={`${match.id}-match`}
+            hint={copy.compileMatchHelp}
+          >
+            <TextInput
+              id={`${match.id}-match`}
+              value={match.text}
+              onChange={(text) => patchMatch(index, { ...match, text })}
+            />
+          </Field>
+          <LocalizedFields
+            enLabel={copy.testMessageEn}
+            ptLabel={copy.testMessagePt}
+            value={match.messages}
+            multiline
+            rows={3}
+            onChange={(messages) => patchMatch(index, { ...match, messages })}
+          />
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={() => onChange([...test.matches, emptyCompileMatch()])}
+        className="cursor-pointer rounded-md border border-dashed border-line bg-white px-2.5 py-1 text-xs font-bold text-muted hover:border-accent hover:text-ink"
+      >
+        {copy.addMatch}
+      </button>
+    </div>
+  );
+}
+
+function TestPreview({
+  test,
+  result,
+  onChange,
+  onRun,
+}: {
+  test: HiddenTest;
+  result: string;
+  onChange: (previewCode: string) => void;
+  onRun: () => void;
+}) {
+  const { locale } = useLocale();
+  const copy = adminCopy[locale];
+  const previewId = useId();
+
+  return (
+    <div className="space-y-3 rounded-md border border-line bg-white p-3">
+      <h4 className="text-sm font-medium tracking-wide text-muted uppercase">
+        {copy.preview}
+      </h4>
+      <p className="text-xs text-muted">{copy.previewHelp}</p>
+      <Field label={copy.previewCode} htmlFor={previewId}>
+        <div className="mt-1.5">
+          <CodeEditor
+            id={previewId}
+            key={test.id}
+            initialValue={test.previewCode}
+            label={copy.previewCode}
+            minHeight="9rem"
+            onChange={onChange}
+          />
+        </div>
+      </Field>
+      <button
+        type="button"
+        onClick={onRun}
+        className="cursor-pointer rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-ink hover:bg-space"
+      >
+        {copy.previewRun}
+      </button>
+      <p
+        className="rounded-md border border-line bg-white px-3 py-2 font-mono text-xs text-muted"
+        role="status"
+      >
+        {result}
+      </p>
+    </div>
   );
 }

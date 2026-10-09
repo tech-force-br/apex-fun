@@ -22,21 +22,20 @@ Blocked until filled:
 
 - English and Portuguese for every theory card body
 - English and Portuguese for every exercise prompt
-- English and Portuguese student messages on **every** hidden test
+- English and Portuguese student messages on every run-clean test, and on every compile-fail match set
+- At least one match set on every compile-fail test, each with match text
 - At least one hidden test per exercise
 
-Apex samples and hidden-check Apex stay English.
+Apex samples and run-clean hidden-check Apex stay English. Compile-fail tests have no check Apex.
 
 ## Builder fields on an exercise (v1)
 
 - Prompt EN / Prompt pt-BR
 - Hidden tests (one or more), each with:
   - Mode: run-clean or compile-fail
-  - Check Apex (English)
-  - Compile-fail match text (if that mode)
-  - Student message EN
-  - Student message pt-BR
-- Preview box (sample student code + last run result)
+  - Run-clean: Check Apex (English), student message EN, student message pt-BR
+  - Compile-fail: one or more sets of compile-fail match text, student message EN, and student message pt-BR. The owner can add another set.
+  - Preview box (sample student code + last run result), same box on both modes
 
 No debug-match switch.
 
@@ -46,7 +45,7 @@ Owner admin lives at `/admin` after mock sign-in. The builder creates and edits 
 
 Edits apply only in the browser tab’s memory. Refresh restores the seed curriculum. Not stored in Supabase yet.
 
-Not in this slice: student progress view, live preview against the runner (the preview box is on the exercise form; Run preview does not call aer yet).
+Not in this slice: student progress view, live preview against the runner (each hidden test has a preview box; Run preview does not call aer yet).
 
 ## Related
 

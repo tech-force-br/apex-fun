@@ -43,6 +43,7 @@ export const studyCopy: Record<
     sample: string;
     editor: string;
     exerciseUnavailable: string;
+    validate: string;
   }
 > = {
   en: {
@@ -71,6 +72,7 @@ export const studyCopy: Record<
     sample: "Sample",
     editor: "Apex editor",
     exerciseUnavailable: "Running this exercise is not in this demo yet.",
+    validate: "Validate",
   },
   "pt-BR": {
     title: "Seu mapa",
@@ -98,5 +100,6 @@ export const studyCopy: Record<
     sample: "Amostra",
     editor: "Editor de Apex",
     exerciseUnavailable: "Rodar este exercício ainda não está nesta demonstração.",
+    validate: "Validar",
   },
 };

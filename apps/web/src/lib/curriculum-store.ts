@@ -10,6 +10,7 @@ import {
   type Card,
   type CurriculumModule,
   type ExerciseCard,
+  type CompileFailMatch,
   type HiddenTest,
   type LocalizedText,
   type ModuleStatus,
@@ -27,11 +28,13 @@ export type SaveIssue = {
     | "prompt_pt"
     | "need_hidden_test"
     | "test_check"
+    | "need_match"
     | "test_match"
     | "test_message_en"
     | "test_message_pt"
     | "missing";
   testIndex?: number;
+  matchIndex?: number;
 };
 
 export type StoreResult =
@@ -182,18 +185,34 @@ export function validateCard(draft: CardDraft): SaveIssue[] {
   }
 
   draft.hiddenTests.forEach((test, testIndex) => {
-    if (isBlank(test.checkApex)) {
-      issues.push({ code: "test_check", testIndex });
+    if (test.mode === "run_clean") {
+      if (isBlank(test.checkApex)) {
+        issues.push({ code: "test_check", testIndex });
+      }
+      if (isBlank(test.messages.en)) {
+        issues.push({ code: "test_message_en", testIndex });
+      }
+      if (isBlank(test.messages["pt-BR"])) {
+        issues.push({ code: "test_message_pt", testIndex });
+      }
+      return;
     }
-    if (test.mode === "compile_fail" && isBlank(test.compileFailMatch)) {
-      issues.push({ code: "test_match", testIndex });
+
+    if (test.matches.length === 0) {
+      issues.push({ code: "need_match", testIndex });
+      return;
     }
-    if (isBlank(test.messages.en)) {
-      issues.push({ code: "test_message_en", testIndex });
-    }
-    if (isBlank(test.messages["pt-BR"])) {
-      issues.push({ code: "test_message_pt", testIndex });
-    }
+    test.matches.forEach((match, matchIndex) => {
+      if (isBlank(match.text)) {
+        issues.push({ code: "test_match", testIndex, matchIndex });
+      }
+      if (isBlank(match.messages.en)) {
+        issues.push({ code: "test_message_en", testIndex, matchIndex });
+      }
+      if (isBlank(match.messages["pt-BR"])) {
+        issues.push({ code: "test_message_pt", testIndex, matchIndex });
+      }
+    });
   });
   return issues;
 }
@@ -213,13 +232,29 @@ function toExerciseCard(id: string, draft: ExerciseDraft): ExerciseCard {
     id,
     type: "exercise",
     prompts: trimText(draft.prompts),
-    previewCode: draft.previewCode,
-    hiddenTests: draft.hiddenTests.map((test) => ({
-      ...test,
-      checkApex: test.checkApex.trim(),
-      compileFailMatch: test.compileFailMatch.trim(),
-      messages: trimText(test.messages),
-    })),
+    hiddenTests: draft.hiddenTests.map((test) =>
+      test.mode === "run_clean"
+        ? {
+            id: test.id,
+            mode: test.mode,
+            checkApex: test.checkApex.trim(),
+            matches: [],
+            messages: trimText(test.messages),
+            previewCode: test.previewCode,
+          }
+        : {
+            id: test.id,
+            mode: test.mode,
+            checkApex: "",
+            matches: test.matches.map((match) => ({
+              id: match.id,
+              text: match.text.trim(),
+              messages: trimText(match.messages),
+            })),
+            messages: { ...emptyLocalizedText },
+            previewCode: test.previewCode,
+          },
+    ),
   };
 }
 
@@ -229,13 +264,22 @@ function toCard(id: string, draft: CardDraft): Card {
     : toExerciseCard(id, draft);
 }
 
+export function emptyCompileMatch(): CompileFailMatch {
+  return {
+    id: crypto.randomUUID(),
+    text: "",
+    messages: { ...emptyLocalizedText },
+  };
+}
+
 export function emptyHiddenTest(): HiddenTest {
   return {
     id: crypto.randomUUID(),
     mode: "run_clean",
     checkApex: "",
-    compileFailMatch: "",
+    matches: [emptyCompileMatch()],
     messages: { ...emptyLocalizedText },
+    previewCode: "",
   };
 }
 
@@ -253,7 +297,6 @@ export function emptyExerciseDraft(): ExerciseDraft {
     type: "exercise",
     prompts: { ...emptyLocalizedText },
     hiddenTests: [emptyHiddenTest()],
-    previewCode: "",
   };
 }
 
@@ -270,7 +313,6 @@ export function cardToDraft(card: Card): CardDraft {
     type: "exercise",
     prompts: { ...card.prompts },
     hiddenTests: structuredClone(card.hiddenTests),
-    previewCode: card.previewCode,
   };
 }
 

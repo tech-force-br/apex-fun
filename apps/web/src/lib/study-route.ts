@@ -113,7 +113,7 @@ export function resolveStudyTarget(args: {
 }
 
 /**
- * Where the theory card's button goes.
+ * Where a card's advance button goes.
  * An earlier card opens the next card.
  * The current last card opens the next topic, or the module on the last topic.
  * Re-reading the last card has no button.

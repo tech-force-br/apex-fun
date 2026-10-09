@@ -39,6 +39,8 @@ Modules are folders on the map. Topics are folders inside a module. Cards live i
 
 The owner chooses how many theory cards and exercise cards each topic has, and can add or remove either. The next topic opens when the student finishes the last card on the current topic.
 
+The seed places one Integer exercise after the Integer theory cards. The prompt asks the student to declare `seatCount` and store `3`. The first hidden test is compile-fail, with no check Apex. Its one match set looks for `Duplicate variable: seatCount`. The second is run-clean and checks that the value is 3. Each test has the sample preview `Integer seatCount = 3;`.
+
 Writing guide, not a required count: about 10 exercises on Integer, String, Boolean, Decimal, Date, and Concatenation, and about 50 on mixed review. Those figures do not decide when the next topic opens.
 
 ## Exercise totals

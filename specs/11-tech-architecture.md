@@ -42,11 +42,10 @@ Do not run student Apex in Supabase Edge Functions either.
 
 1. Confirm the user is logged in
 2. Load the exercise and hidden tests
-3. Glue student snippet + checks (see [13-runner.md](13-runner.md))
-4. POST the glued Apex to the runner with a shared secret
-5. Score compile + hidden tests
-6. Save pass / first-try / passing code in Supabase
-7. Return log + pass/fail + the first student message if any
+3. Take hidden tests in run order: every compile-fail test on the card, then every run-clean test. A card with no compile-fail test skips that part.
+4. For each test, until one fails: build that test's program (see [13-runner.md](13-runner.md)), POST it to the runner with a shared secret, and score it.
+5. Save pass / first-try / passing code in Supabase
+6. Return log + pass/fail + the first student message if any
 
 ## Related
 

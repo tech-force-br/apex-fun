@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/locale";
+import { integerSeatCount } from "@/lib/variables-exercises";
 import { variablesTheoryCards } from "@/lib/variables-theory";
 
 export type LocalizedText = Record<Locale, string>;
@@ -9,12 +10,23 @@ export type ModuleStatus = "open" | "coming_later";
 
 export type HiddenTestMode = "run_clean" | "compile_fail";
 
+/** One acceptable compiler error on a compile-fail test, with the message shown if the test fails. */
+export type CompileFailMatch = {
+  id: string;
+  text: string;
+  messages: LocalizedText;
+};
+
 export type HiddenTest = {
   id: string;
   mode: HiddenTestMode;
+  /** Run-clean snippet. Empty on compile-fail tests. */
   checkApex: string;
-  compileFailMatch: string;
+  /** Compile-fail match sets. Empty on run-clean tests. */
+  matches: CompileFailMatch[];
+  /** Run-clean student message. Empty on compile-fail tests. */
   messages: LocalizedText;
+  previewCode: string;
 };
 
 export type TheoryCard = {
@@ -30,7 +42,6 @@ export type ExerciseCard = {
   type: "exercise";
   prompts: LocalizedText;
   hiddenTests: HiddenTest[];
-  previewCode: string;
 };
 
 export type Card = TheoryCard | ExerciseCard;
@@ -118,7 +129,10 @@ export const curriculum: CurriculumModule[] = [
     topics: variablesTopicIds.map((id) => ({
       id,
       ...variablesTopicMeta[id],
-      cards: variablesTheoryCards[id],
+      cards:
+        id === "integer"
+          ? [...variablesTheoryCards[id], integerSeatCount]
+          : variablesTheoryCards[id],
     })),
   },
   {

@@ -51,6 +51,8 @@ export const adminCopy: Record<
     checkApexHelp: string;
     compileMatch: string;
     compileMatchHelp: string;
+    addMatch: string;
+    matchN: (n: number) => string;
     testMessageEn: string;
     testMessagePt: string;
     preview: string;
@@ -116,6 +118,8 @@ export const adminCopy: Record<
       "Small snippet that runs after the student code, in the same scope.",
     compileMatch: "Compile-fail match text",
     compileMatchHelp: "The real Apex error must contain this text.",
+    addMatch: "Add match",
+    matchN: (n) => `Match ${n}`,
     testMessageEn: "Student message (English)",
     testMessagePt: "Student message (Portuguese)",
     preview: "Preview",
@@ -131,6 +135,10 @@ export const adminCopy: Record<
     exerciseBadge: "Exercise",
     issue: (issue) => {
       const n = (issue.testIndex ?? 0) + 1;
+      const where =
+        issue.matchIndex == null
+          ? `Hidden test ${n}`
+          : `Hidden test ${n}, match ${issue.matchIndex + 1}`;
       switch (issue.code) {
         case "name_en":
           return "English name is required.";
@@ -148,12 +156,14 @@ export const adminCopy: Record<
           return "Add at least one hidden test.";
         case "test_check":
           return `Hidden test ${n}: check Apex is required.`;
+        case "need_match":
+          return `Hidden test ${n}: add a compile-fail match.`;
         case "test_match":
-          return `Hidden test ${n}: compile-fail match text is required.`;
+          return `${where}: compile-fail match text is required.`;
         case "test_message_en":
-          return `Hidden test ${n}: English student message is required.`;
+          return `${where}: English student message is required.`;
         case "test_message_pt":
-          return `Hidden test ${n}: Portuguese student message is required.`;
+          return `${where}: Portuguese student message is required.`;
         case "missing":
           return "This item is no longer in the curriculum.";
       }
@@ -209,6 +219,8 @@ export const adminCopy: Record<
       "Trecho curto que roda depois do código do aluno, no mesmo escopo.",
     compileMatch: "Texto da falha de compilação",
     compileMatchHelp: "O erro real do Apex precisa conter este texto.",
+    addMatch: "Adicionar texto",
+    matchN: (n) => `Texto ${n}`,
     testMessageEn: "Mensagem ao aluno (inglês)",
     testMessagePt: "Mensagem ao aluno (português)",
     preview: "Prévia",
@@ -225,6 +237,10 @@ export const adminCopy: Record<
     exerciseBadge: "Exercício",
     issue: (issue) => {
       const n = (issue.testIndex ?? 0) + 1;
+      const where =
+        issue.matchIndex == null
+          ? `Teste oculto ${n}`
+          : `Teste oculto ${n}, texto ${issue.matchIndex + 1}`;
       switch (issue.code) {
         case "name_en":
           return "O nome em inglês é obrigatório.";
@@ -242,12 +258,14 @@ export const adminCopy: Record<
           return "Adicione pelo menos um teste oculto.";
         case "test_check":
           return `Teste oculto ${n}: o Apex de verificação é obrigatório.`;
+        case "need_match":
+          return `Teste oculto ${n}: adicione um texto de falha de compilação.`;
         case "test_match":
-          return `Teste oculto ${n}: o texto da falha de compilação é obrigatório.`;
+          return `${where}: o texto da falha de compilação é obrigatório.`;
         case "test_message_en":
-          return `Teste oculto ${n}: a mensagem em inglês é obrigatória.`;
+          return `${where}: a mensagem em inglês é obrigatória.`;
         case "test_message_pt":
-          return `Teste oculto ${n}: a mensagem em português é obrigatória.`;
+          return `${where}: a mensagem em português é obrigatória.`;
         case "missing":
           return "Este item não está mais no currículo.";
       }
