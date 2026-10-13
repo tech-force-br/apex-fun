@@ -40,6 +40,38 @@ export type MockAuthInput = PasswordInput | GoogleInput;
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SESSION_STORAGE_KEY = "apexfun.mock-session";
+export const MOCK_SESSION_COOKIE = "apexfun.mock-session";
+
+function parseSessionJson(value: string): MockSession | null {
+  try {
+    const parsed: unknown = JSON.parse(value);
+    return isMockSession(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+export function parseMockSessionCookie(value: string | undefined): MockSession | null {
+  if (!value) return null;
+  const direct = parseSessionJson(value);
+  if (direct) return direct;
+  try {
+    return parseSessionJson(decodeURIComponent(value));
+  } catch {
+    return null;
+  }
+}
+
+/** Lets a Server Action see the mock session. The browser sends this cookie. */
+export function syncSessionCookie(session: MockSession | null) {
+  if (typeof document === "undefined") return;
+  if (!session) {
+    document.cookie = `${MOCK_SESSION_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax`;
+    return;
+  }
+  const value = encodeURIComponent(JSON.stringify(session));
+  document.cookie = `${MOCK_SESSION_COOKIE}=${value}; Path=/; Max-Age=2592000; SameSite=Lax`;
+}
 
 function isLocale(value: unknown): value is Locale {
   return value === "en" || value === "pt-BR";
@@ -71,6 +103,7 @@ export function readStoredSession(): MockSession | null {
 
 export function writeStoredSession(session: MockSession | null) {
   if (typeof window === "undefined") return;
+  syncSessionCookie(session);
   if (!session) {
     window.localStorage.removeItem(SESSION_STORAGE_KEY);
     return;

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { AdminCardForm } from "@/components/admin-card-form";
+import { AdminCompileFailForm } from "@/components/admin-compile-fail-form";
 import {
   AdminModuleForm,
   AdminTopicForm,
@@ -21,6 +22,7 @@ import {
   emptyExerciseDraft,
   emptyTheoryDraft,
   moveCard,
+  saveCompileFailTests,
   moveModule,
   moveTopic,
   removeCard,
@@ -29,6 +31,7 @@ import {
   updateCard,
   updateModule,
   updateTopic,
+  useCompileFailTests,
   useCurriculumModules,
   type SaveIssue,
   type StoreResult,
@@ -44,6 +47,7 @@ export function AdminView() {
   const { locale } = useLocale();
   const copy = adminCopy[locale];
   const modules = useCurriculumModules();
+  const compileFail = useCompileFailTests();
   const [selection, setSelection] = useState<AdminSelection>({ kind: "pick" });
   const [issues, setIssues] = useState<SaveIssue[]>([]);
   const [saved, setSaved] = useState(false);
@@ -128,6 +132,7 @@ export function AdminView() {
           modules={modules}
           selection={selection}
           onSelect={requestSelect}
+          onOpenCompileFail={() => requestSelect({ kind: "compile-fail" })}
           onAddModule={() =>
             requestSelect({ kind: "new-module", nonce: nextNonce() })
           }
@@ -165,6 +170,7 @@ export function AdminView() {
           key={editorKey}
           selection={selection}
           modules={modules}
+          compileFail={compileFail}
           issues={issues}
           onDirty={markDirty}
           onReject={setIssues}
@@ -179,6 +185,7 @@ export function AdminView() {
 function Editor({
   selection,
   modules,
+  compileFail,
   issues,
   onDirty,
   onReject,
@@ -187,6 +194,7 @@ function Editor({
 }: {
   selection: AdminSelection;
   modules: ReturnType<typeof useCurriculumModules>;
+  compileFail: ReturnType<typeof useCompileFailTests>;
   issues: SaveIssue[];
   onDirty: () => void;
   onReject: (issues: SaveIssue[]) => void;
@@ -202,6 +210,19 @@ function Editor({
       return;
     }
     onSaved(next(result.id));
+  }
+
+  if (selection.kind === "compile-fail") {
+    return (
+      <AdminCompileFailForm
+        initial={structuredClone(compileFail)}
+        issues={issues}
+        onDirty={onDirty}
+        onSave={(draft) =>
+          apply(saveCompileFailTests(draft), () => ({ kind: "compile-fail" }))
+        }
+      />
+    );
   }
 
   if (selection.kind === "pick") {

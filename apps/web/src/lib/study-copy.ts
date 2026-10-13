@@ -42,8 +42,11 @@ export const studyCopy: Record<
     continue: string;
     sample: string;
     editor: string;
-    exerciseUnavailable: string;
     validate: string;
+    validating: string;
+    log: string;
+    theoryHint: string;
+    topicProgress: string;
   }
 > = {
   en: {
@@ -71,8 +74,11 @@ export const studyCopy: Record<
     continue: "Continue",
     sample: "Sample",
     editor: "Apex editor",
-    exerciseUnavailable: "Running this exercise is not in this demo yet.",
     validate: "Validate",
+    validating: "Checking…",
+    log: "Log",
+    theoryHint: "Two checks missed. Read the theory for this topic, then try again.",
+    topicProgress: "Topic progress",
   },
   "pt-BR": {
     title: "Seu mapa",
@@ -99,7 +105,10 @@ export const studyCopy: Record<
     continue: "Continuar",
     sample: "Amostra",
     editor: "Editor de Apex",
-    exerciseUnavailable: "Rodar este exercício ainda não está nesta demonstração.",
     validate: "Validar",
+    validating: "Verificando…",
+    log: "Log",
+    theoryHint: "Duas tentativas erradas. Leia a teoria deste tópico e tente de novo.",
+    topicProgress: "Progresso do tópico",
   },
 };

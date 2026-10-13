@@ -2,9 +2,11 @@
 
 ## What can pass an exercise (v1)
 
-**Every hidden test** on that card passes.
+The student snippet compiles, and **every run-clean hidden test** on that card passes.
 
-A compile-fail test runs only when the owner created one. The site does not add one on its own. A run-clean test passes when that test's glued program compiles and runs with no error.
+Compile-fail tests are one shared list. Every exercise uses that list. They explain a compile error. They do not have to fail for the exercise to pass. A run-clean test passes when that test's glued program compiles and runs with no error.
+
+The site does not invent compile-fail tests. An empty shared list means a compile error shows the Apex error only.
 
 There is **no debug-match** switch in the v1 builder. `System.debug` is taught as theory (topic 5). Students may still print to the log. The log never decides pass/fail in v1.
 
@@ -23,26 +25,26 @@ The log is a tool.
 
 Stop at the first problem. The student sees only that first problem.
 
-1. Compile-fail tests, in their order on the card. Skip this when the card has none. These run before every run-clean test, even when a run-clean test is higher in the list.
-2. Run-clean tests, in their order on the card.
+1. Compile the student snippet on its own. If it does not compile, stop. Walk the shared compile-fail tests in list order, and each test's match sets in order. The student sees the Apex error and the first set whose match text is contained in that error. If no set matches, the student sees the Apex error only. An empty snippet does not compile, so the run-clean tests do not run.
+2. Run-clean tests, in their order on the card. These run only after the student snippet compiles.
 
-Each test is its own program. See [13-runner.md](13-runner.md).
+Each run-clean test is its own program. See [13-runner.md](13-runner.md).
 
 (Debug-match is gone, so it is not in this list.)
 
 ## Hidden tests — required
 
-Every exercise card must have **at least one** hidden test. The builder will not save an exercise without one.
+Every exercise card must have **at least one** run-clean hidden test. The builder will not save an exercise without one.
 
-A card may have many hidden tests. Save is blocked when a required student message is blank.
+A card may have many run-clean tests. Save is blocked when a required student message is blank.
 
-A run-clean test has one student message in English and one in Portuguese. A compile-fail test has those two messages on every match set.
+A run-clean test has one student message in English and one in Portuguese. Hidden-check Apex stays English.
 
-Hidden-check Apex stays English. Compile-fail tests do not have check Apex.
+Compile-fail tests are not stored on the card.
 
 ## How a run-clean test is written
 
-Admin writes a **small snippet** that runs **after** the student snippet, in the **same scope**, so it can read the student’s variables. Compile-fail tests do not use this snippet.
+Admin writes a **small snippet** that runs **after** the student snippet, in the **same scope**, so it can read the student’s variables.
 
 The site wraps student code + check in one method. Admin does not write a full test method.
 
@@ -56,48 +58,45 @@ if (someCondition) {
 
 Later modules may wrap as a class or method without changing this v1 rule.
 
-## Two modes
+## Shared compile-fail tests
 
-Each hidden test has a mode:
+One list for the whole site. The owner adds, edits, reorders, and removes tests in that list's own place in the content admin. Not on an exercise card.
 
-1. **Pass if this Apex runs clean**
-2. **Pass if this Apex fails to compile** — must match a **specific** error, not any failure
-
-### Compile-fail mode
-
-No check Apex. The student’s code is compiled on its own.
-
-The test has one or more match sets. Each set is:
+A test has one or more match sets. Each set is:
 
 - Compile-fail match text
 - Student message (English)
 - Student message (Portuguese)
 
-The builder will not save a compile-fail test with no set, or with a blank match text or blank message.
+The builder will not save a test with no set, or with a blank match text or blank message. The list itself may be empty.
 
-The test passes when the compiler error **contains** any set’s match text. If the code compiles, or the error contains none of those texts, the test fails. The student sees only the first set’s student message.
+No check Apex. The match is against the compiler text from the student snippet alone.
 
-Superseded: a compile-fail check that declares the same name again to force a duplicate-variable error. Compile-fail tests no longer glue a second snippet.
+The student sees the matching set's own message, not the first set on the test unless that set is the one that matched.
+
+Superseded: a compile-fail mode on each hidden test that passed only when the code failed to compile. A correct solution compiles, so that mode could not be shared by every exercise. Superseded: a compile-fail check that declares the same name again to force a duplicate-variable error.
 
 ### If the hidden check itself cannot run
 
-This applies to run-clean checks only. Missing name, duplicate name, or other compile problem **in that check**: treat it as **that hidden test failing**. Show only that test’s student message.
+This applies to run-clean checks only, and only after the student snippet has compiled. Missing name, duplicate name, or other compile problem **in that check**: treat it as **that hidden test failing**. Show only that test’s student message.
 
 ## Fail messages the student sees
 
 | Situation | What to show |
 |---|---|
-| Compile error (student code) | Apex error + short plain-language explanation |
-| Hidden test fails | Run-clean: that test’s student message only. Compile-fail: the first match set’s student message only |
+| Compile error (student code) | Apex error. When a shared match set hits, also that set's student message |
+| Hidden test fails | That run-clean test’s student message only |
 | After 2 failed Runs | Also suggest opening the Theory pane |
 
 Do not dump later checks after the first failure.
 
 ## Preview in the builder
 
-Every hidden test, run-clean or compile-fail, has the same preview box: sample student code, a Run preview control, and the last result.
+Every run-clean hidden test has a preview box: sample student code, a Run preview control, and the last result. That preview follows the check order above for the sample and that one test. It uses the compile-fail list saved in this tab. A compile error stops on the first matching set and does not run the check. The check runs only after the sample compiles.
 
-Run preview does not call aer yet. The control does not run the sample.
+Every shared compile-fail test has the same box. Run preview compiles that sample alone and scores that test only. If a match set on that test hits, the result shows that set's student message. If the sample compiles, the result says this explanation would be skipped. If the sample fails and no match text on that test is in the error, the result says so.
+
+Run preview uses the same runner as a student check. While the preview runs, the sample editor and the check editor on that screen are read-only, and the button shows a spinner.
 
 ## Related
 

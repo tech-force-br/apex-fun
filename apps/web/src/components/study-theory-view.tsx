@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CodeEditor } from "@/components/code-editor";
 import { useLocale } from "@/components/locale-provider";
+import { TopicProgress } from "@/components/study-topic-progress";
 import type {
   CurriculumModule,
   TheoryCard,
@@ -76,6 +77,11 @@ export function StudyTheoryView({
       >
         ← {topic.names[locale]}
       </Link>
+      <TopicProgress
+        cardIndex={cardIndex}
+        cardCount={topic.cards.length}
+        label={copy.topicProgress}
+      />
       <p className="mt-4 text-sm text-muted">{copy.theory}</p>
       <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
       {destination ? (

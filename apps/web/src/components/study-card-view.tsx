@@ -3,14 +3,20 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { CheckResult, RunSpinner } from "@/components/check-result";
 import { CodeEditor } from "@/components/code-editor";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
+import { TopicProgress } from "@/components/study-topic-progress";
 import {
   StudyAdvanceBar,
   StudyTheoryView,
 } from "@/components/study-theory-view";
 import { useLocale } from "@/components/locale-provider";
+import { useMockAuth } from "@/components/mock-auth-provider";
 import type { CurriculumModule, ExerciseCard, Topic } from "@/lib/curriculum";
+import { validateExercise } from "@/lib/exercise-check-action";
+import { syncSessionCookie } from "@/lib/mock-auth";
+import type { ExerciseCheck } from "@/lib/score-run";
 import { studyCopy } from "@/lib/study-copy";
 import { finishCard } from "@/lib/study-progress";
 import { theoryAdvance } from "@/lib/study-route";
@@ -71,8 +77,12 @@ function StudyExerciseView({
 }) {
   const router = useRouter();
   const { locale } = useLocale();
+  const { session } = useMockAuth();
   const copy = studyCopy[locale];
-  const [validated, setValidated] = useState(false);
+  const [code, setCode] = useState("");
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState<ExerciseCheck | null>(null);
+  const [misses, setMisses] = useState(0);
   const prompt = card.prompts[locale].trim();
   const destination = theoryAdvance(
     selected,
@@ -83,7 +93,23 @@ function StudyExerciseView({
     locale,
     copy,
   );
-  const showAdvance = validated && destination !== undefined;
+  const showAdvance =
+    result?.passed === true && !running && destination !== undefined;
+
+  async function onValidate() {
+    if (running) return;
+    syncSessionCookie(session);
+    setRunning(true);
+    try {
+      const next = await validateExercise(card.id, code, locale);
+      setResult(next);
+      if (!next.passed && !next.unavailable) {
+        setMisses((count) => count + 1);
+      }
+    } finally {
+      setRunning(false);
+    }
+  }
 
   return (
     <main
@@ -97,6 +123,11 @@ function StudyExerciseView({
       >
         ← {topic.names[locale]}
       </Link>
+      <TopicProgress
+        cardIndex={cardIndex}
+        cardCount={topic.cards.length}
+        label={copy.topicProgress}
+      />
       <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
         {copy.exercise}
       </h1>
@@ -110,22 +141,46 @@ function StudyExerciseView({
           {prompt}
         </p>
       ) : null}
-      <div className="mt-6">
+      <div
+        className={`mt-6 ${running ? "pointer-events-none opacity-60" : ""}`}
+        aria-busy={running}
+      >
         <CodeEditor
           key={card.id}
           blockClipboard
+          readOnly={running}
           label={copy.editor}
           minHeight="12rem"
+          onChange={(value) => {
+            setCode(value);
+            setResult(null);
+          }}
         />
       </div>
       <button
         type="button"
-        onClick={() => setValidated(true)}
-        className="mt-4 cursor-pointer rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
+        onClick={() => void onValidate()}
+        disabled={running}
+        aria-busy={running}
+        className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
       >
-        {copy.validate}
+        {running ? <RunSpinner /> : null}
+        {running ? copy.validating : copy.validate}
       </button>
-      <p className="mt-4 text-sm text-muted">{copy.exerciseUnavailable}</p>
+      {result && !running ? (
+        <div className="mt-4">
+          <CheckResult
+            passed={result.passed}
+            unavailable={result.unavailable}
+            message={result.message}
+            log={result.log}
+            logLabel={copy.log}
+          />
+        </div>
+      ) : null}
+      {misses >= 2 && result && !result.passed && !result.unavailable && !running ? (
+        <p className="mt-4 text-sm text-ink">{copy.theoryHint}</p>
+      ) : null}
       {showAdvance ? (
         <StudyAdvanceBar
           label={destination.label}

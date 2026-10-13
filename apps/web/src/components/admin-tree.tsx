@@ -16,6 +16,7 @@ export function AdminTree({
   modules,
   selection,
   onSelect,
+  onOpenCompileFail,
   onAddModule,
   onAddTopic,
   onAddCard,
@@ -26,6 +27,7 @@ export function AdminTree({
   modules: CurriculumModule[];
   selection: AdminSelection;
   onSelect: (next: AdminSelection) => void;
+  onOpenCompileFail: () => void;
   onAddModule: () => void;
   onAddTopic: (moduleId: string) => void;
   onAddCard: (
@@ -46,7 +48,9 @@ export function AdminTree({
   const copy = adminCopy[locale];
 
   const selectedModuleId =
-    selection.kind === "pick" || selection.kind === "new-module"
+    selection.kind === "pick" ||
+    selection.kind === "new-module" ||
+    selection.kind === "compile-fail"
       ? undefined
       : selection.moduleId;
   const selectedTopicId =
@@ -61,6 +65,20 @@ export function AdminTree({
       className="rounded-lg border border-line bg-white p-4"
       aria-label={copy.modules}
     >
+      <button
+        type="button"
+        onClick={onOpenCompileFail}
+        className={`mb-4 w-full cursor-pointer rounded-lg border px-3 py-2 text-left ${
+          selection.kind === "compile-fail"
+            ? "border-accent bg-highlight"
+            : "border-line bg-space hover:border-accent"
+        }`}
+      >
+        <span className="block text-sm font-medium text-ink">
+          {copy.compileFailTests}
+        </span>
+      </button>
+
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-medium tracking-wide text-muted uppercase">
           {copy.modules}

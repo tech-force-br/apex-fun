@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { compileFailTests } from "@/lib/compile-fail-tests";
 import {
   curriculum,
   emptyLocalizedText,
@@ -8,9 +9,10 @@ import {
   getModule,
   getTopic,
   type Card,
+  type CompileFailMatch,
+  type CompileFailTest,
   type CurriculumModule,
   type ExerciseCard,
-  type CompileFailMatch,
   type HiddenTest,
   type LocalizedText,
   type ModuleStatus,
@@ -28,10 +30,12 @@ export type SaveIssue = {
     | "prompt_pt"
     | "need_hidden_test"
     | "test_check"
-    | "need_match"
-    | "test_match"
     | "test_message_en"
     | "test_message_pt"
+    | "compile_need_match"
+    | "compile_match"
+    | "compile_message_en"
+    | "compile_message_pt"
     | "missing";
   testIndex?: number;
   matchIndex?: number;
@@ -56,6 +60,7 @@ export type CardDraft = TheoryDraft | ExerciseDraft;
 
 const listeners = new Set<() => void>();
 let snapshot: CurriculumModule[] = curriculum;
+let compileFailSnapshot: CompileFailTest[] = compileFailTests;
 
 function notify() {
   for (const listener of listeners) listener();
@@ -90,6 +95,22 @@ export function useCurriculumModules() {
     subscribeCurriculum,
     getCurriculumSnapshot,
     getCurriculumServerSnapshot,
+  );
+}
+
+export function getCompileFailSnapshot() {
+  return compileFailSnapshot;
+}
+
+export function getCompileFailServerSnapshot() {
+  return compileFailTests;
+}
+
+export function useCompileFailTests() {
+  return useSyncExternalStore(
+    subscribeCurriculum,
+    getCompileFailSnapshot,
+    getCompileFailServerSnapshot,
   );
 }
 
@@ -185,32 +206,37 @@ export function validateCard(draft: CardDraft): SaveIssue[] {
   }
 
   draft.hiddenTests.forEach((test, testIndex) => {
-    if (test.mode === "run_clean") {
-      if (isBlank(test.checkApex)) {
-        issues.push({ code: "test_check", testIndex });
-      }
-      if (isBlank(test.messages.en)) {
-        issues.push({ code: "test_message_en", testIndex });
-      }
-      if (isBlank(test.messages["pt-BR"])) {
-        issues.push({ code: "test_message_pt", testIndex });
-      }
-      return;
+    if (isBlank(test.checkApex)) {
+      issues.push({ code: "test_check", testIndex });
     }
+    if (isBlank(test.messages.en)) {
+      issues.push({ code: "test_message_en", testIndex });
+    }
+    if (isBlank(test.messages["pt-BR"])) {
+      issues.push({ code: "test_message_pt", testIndex });
+    }
+  });
+  return issues;
+}
 
+export function validateCompileFailTests(
+  tests: readonly CompileFailTest[],
+): SaveIssue[] {
+  const issues: SaveIssue[] = [];
+  tests.forEach((test, testIndex) => {
     if (test.matches.length === 0) {
-      issues.push({ code: "need_match", testIndex });
+      issues.push({ code: "compile_need_match", testIndex });
       return;
     }
     test.matches.forEach((match, matchIndex) => {
       if (isBlank(match.text)) {
-        issues.push({ code: "test_match", testIndex, matchIndex });
+        issues.push({ code: "compile_match", testIndex, matchIndex });
       }
       if (isBlank(match.messages.en)) {
-        issues.push({ code: "test_message_en", testIndex, matchIndex });
+        issues.push({ code: "compile_message_en", testIndex, matchIndex });
       }
       if (isBlank(match.messages["pt-BR"])) {
-        issues.push({ code: "test_message_pt", testIndex, matchIndex });
+        issues.push({ code: "compile_message_pt", testIndex, matchIndex });
       }
     });
   });
@@ -232,29 +258,12 @@ function toExerciseCard(id: string, draft: ExerciseDraft): ExerciseCard {
     id,
     type: "exercise",
     prompts: trimText(draft.prompts),
-    hiddenTests: draft.hiddenTests.map((test) =>
-      test.mode === "run_clean"
-        ? {
-            id: test.id,
-            mode: test.mode,
-            checkApex: test.checkApex.trim(),
-            matches: [],
-            messages: trimText(test.messages),
-            previewCode: test.previewCode,
-          }
-        : {
-            id: test.id,
-            mode: test.mode,
-            checkApex: "",
-            matches: test.matches.map((match) => ({
-              id: match.id,
-              text: match.text.trim(),
-              messages: trimText(match.messages),
-            })),
-            messages: { ...emptyLocalizedText },
-            previewCode: test.previewCode,
-          },
-    ),
+    hiddenTests: draft.hiddenTests.map((test) => ({
+      id: test.id,
+      checkApex: test.checkApex.trim(),
+      messages: trimText(test.messages),
+      previewCode: test.previewCode,
+    })),
   };
 }
 
@@ -275,12 +284,38 @@ export function emptyCompileMatch(): CompileFailMatch {
 export function emptyHiddenTest(): HiddenTest {
   return {
     id: crypto.randomUUID(),
-    mode: "run_clean",
     checkApex: "",
-    matches: [emptyCompileMatch()],
     messages: { ...emptyLocalizedText },
     previewCode: "",
   };
+}
+
+export function emptyCompileFailTest(): CompileFailTest {
+  return {
+    id: crypto.randomUUID(),
+    matches: [emptyCompileMatch()],
+    previewCode: "",
+  };
+}
+
+function toCompileFailTest(test: CompileFailTest): CompileFailTest {
+  return {
+    id: test.id,
+    previewCode: test.previewCode,
+    matches: test.matches.map((match) => ({
+      id: match.id,
+      text: match.text.trim(),
+      messages: trimText(match.messages),
+    })),
+  };
+}
+
+export function saveCompileFailTests(drafts: CompileFailTest[]): StoreResult {
+  const issues = validateCompileFailTests(drafts);
+  if (issues.length > 0) return { ok: false, issues };
+  compileFailSnapshot = drafts.map(toCompileFailTest);
+  notify();
+  return { ok: true, id: "compile-fail" };
 }
 
 export function emptyTheoryDraft(): TheoryDraft {

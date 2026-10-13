@@ -44,9 +44,11 @@ export const adminCopy: Record<
     hiddenTests: string;
     addTest: string;
     testN: (n: number) => string;
-    testMode: string;
-    modeRunClean: string;
-    modeCompileFail: string;
+    compileFailTests: string;
+    compileFailIntro: string;
+    compileFailEmpty: string;
+    addCompileFail: string;
+    compileFailN: (n: number) => string;
     checkApex: string;
     checkApexHelp: string;
     compileMatch: string;
@@ -60,7 +62,8 @@ export const adminCopy: Record<
     previewCode: string;
     previewRun: string;
     previewIdle: string;
-    previewUnavailable: string;
+    previewChecking: string;
+    log: string;
     moveUp: string;
     moveDown: string;
     theoryBadge: string;
@@ -70,7 +73,8 @@ export const adminCopy: Record<
 > = {
   en: {
     title: "Content admin",
-    intro: "Create and edit modules, topic folders, and cards.",
+    intro:
+      "Create and edit modules, topic folders, cards, and the shared compile-fail tests.",
     memoryNote:
       "Saves apply in this tab only. Refresh restores the seed curriculum.",
     saved: "Saved in this tab.",
@@ -110,25 +114,30 @@ export const adminCopy: Record<
     hiddenTests: "Hidden tests",
     addTest: "Add hidden test",
     testN: (n) => `Hidden test ${n}`,
-    testMode: "Mode",
-    modeRunClean: "Pass if this Apex runs clean",
-    modeCompileFail: "Pass if this Apex fails to compile",
+    compileFailTests: "Compile-fail tests",
+    compileFailIntro:
+      "Shared by every exercise. If the student's code compiles, these are skipped. If it does not compile, the student sees the first matching explanation.",
+    compileFailEmpty:
+      "No compile-fail tests yet. A compile error still shows the Apex error.",
+    addCompileFail: "Add compile-fail test",
+    compileFailN: (n) => `Compile-fail test ${n}`,
     checkApex: "Check Apex (English)",
     checkApexHelp:
       "Small snippet that runs after the student code, in the same scope.",
     compileMatch: "Compile-fail match text",
-    compileMatchHelp: "The real Apex error must contain this text.",
+    compileMatchHelp:
+      "Used when the student's code fails to compile. The Apex error must contain this text.",
     addMatch: "Add match",
     matchN: (n) => `Match ${n}`,
     testMessageEn: "Student message (English)",
     testMessagePt: "Student message (Portuguese)",
     preview: "Preview",
-    previewHelp: "Paste sample student code. Live run against aer is not wired yet.",
+    previewHelp: "Sample student code for this test. Run preview checks it on the local runner.",
     previewCode: "Sample student code",
     previewRun: "Run preview",
     previewIdle: "No preview run yet.",
-    previewUnavailable:
-      "Runner is not connected yet. Preview will call aer when that slice lands.",
+    previewChecking: "Checking…",
+    log: "Log",
     moveUp: "Move up",
     moveDown: "Move down",
     theoryBadge: "Theory",
@@ -156,14 +165,18 @@ export const adminCopy: Record<
           return "Add at least one hidden test.";
         case "test_check":
           return `Hidden test ${n}: check Apex is required.`;
-        case "need_match":
-          return `Hidden test ${n}: add a compile-fail match.`;
-        case "test_match":
-          return `${where}: compile-fail match text is required.`;
         case "test_message_en":
           return `${where}: English student message is required.`;
         case "test_message_pt":
           return `${where}: Portuguese student message is required.`;
+        case "compile_need_match":
+          return `Compile-fail test ${n}: add a match.`;
+        case "compile_match":
+          return `Compile-fail test ${n}, match ${(issue.matchIndex ?? 0) + 1}: match text is required.`;
+        case "compile_message_en":
+          return `Compile-fail test ${n}, match ${(issue.matchIndex ?? 0) + 1}: English student message is required.`;
+        case "compile_message_pt":
+          return `Compile-fail test ${n}, match ${(issue.matchIndex ?? 0) + 1}: Portuguese student message is required.`;
         case "missing":
           return "This item is no longer in the curriculum.";
       }
@@ -171,7 +184,8 @@ export const adminCopy: Record<
   },
   "pt-BR": {
     title: "Admin de conteúdo",
-    intro: "Crie e edite módulos, pastas de tópicos e cards.",
+    intro:
+      "Crie e edite módulos, pastas de tópicos, cards e os testes de falha de compilação compartilhados.",
     memoryNote:
       "As alterações valem só nesta aba. Atualizar a página volta o currículo inicial.",
     saved: "Salvo nesta aba.",
@@ -211,26 +225,31 @@ export const adminCopy: Record<
     hiddenTests: "Testes ocultos",
     addTest: "Adicionar teste oculto",
     testN: (n) => `Teste oculto ${n}`,
-    testMode: "Modo",
-    modeRunClean: "Passa se este Apex rodar limpo",
-    modeCompileFail: "Passa se este Apex falhar na compilação",
+    compileFailTests: "Testes de falha de compilação",
+    compileFailIntro:
+      "Valem para todos os exercícios. Se o código do aluno compilar, eles são pulados. Se não compilar, o aluno vê a primeira explicação que combinar.",
+    compileFailEmpty:
+      "Ainda não há testes de falha de compilação. Um erro de compilação ainda mostra o erro do Apex.",
+    addCompileFail: "Adicionar teste de falha de compilação",
+    compileFailN: (n) => `Teste de falha de compilação ${n}`,
     checkApex: "Apex de verificação (inglês)",
     checkApexHelp:
       "Trecho curto que roda depois do código do aluno, no mesmo escopo.",
     compileMatch: "Texto da falha de compilação",
-    compileMatchHelp: "O erro real do Apex precisa conter este texto.",
+    compileMatchHelp:
+      "Usado quando o código do aluno não compila. O erro do Apex precisa conter este texto.",
     addMatch: "Adicionar texto",
     matchN: (n) => `Texto ${n}`,
     testMessageEn: "Mensagem ao aluno (inglês)",
     testMessagePt: "Mensagem ao aluno (português)",
     preview: "Prévia",
     previewHelp:
-      "Cole um código de exemplo. A execução ao vivo no aer ainda não está ligada.",
+      "Código de exemplo deste teste. Rodar prévia verifica no runner local.",
     previewCode: "Código de exemplo do aluno",
     previewRun: "Rodar prévia",
     previewIdle: "Nenhuma prévia rodada ainda.",
-    previewUnavailable:
-      "O runner ainda não está ligado. A prévia vai chamar o aer quando essa fatia existir.",
+    previewChecking: "Verificando…",
+    log: "Log",
     moveUp: "Subir",
     moveDown: "Descer",
     theoryBadge: "Teoria",
@@ -258,14 +277,18 @@ export const adminCopy: Record<
           return "Adicione pelo menos um teste oculto.";
         case "test_check":
           return `Teste oculto ${n}: o Apex de verificação é obrigatório.`;
-        case "need_match":
-          return `Teste oculto ${n}: adicione um texto de falha de compilação.`;
-        case "test_match":
-          return `${where}: o texto da falha de compilação é obrigatório.`;
         case "test_message_en":
           return `${where}: a mensagem em inglês é obrigatória.`;
         case "test_message_pt":
           return `${where}: a mensagem em português é obrigatória.`;
+        case "compile_need_match":
+          return `Teste de falha de compilação ${n}: adicione um texto.`;
+        case "compile_match":
+          return `Teste de falha de compilação ${n}, texto ${(issue.matchIndex ?? 0) + 1}: o texto é obrigatório.`;
+        case "compile_message_en":
+          return `Teste de falha de compilação ${n}, texto ${(issue.matchIndex ?? 0) + 1}: a mensagem em inglês é obrigatória.`;
+        case "compile_message_pt":
+          return `Teste de falha de compilação ${n}, texto ${(issue.matchIndex ?? 0) + 1}: a mensagem em português é obrigatória.`;
         case "missing":
           return "Este item não está mais no currículo.";
       }

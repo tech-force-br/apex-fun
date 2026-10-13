@@ -1,5 +1,6 @@
 export type AdminSelection =
   | { kind: "pick" }
+  | { kind: "compile-fail" }
   | { kind: "module"; moduleId: string }
   | { kind: "topic"; moduleId: string; topicId: string }
   | { kind: "card"; moduleId: string; topicId: string; cardId: string }
@@ -11,6 +12,8 @@ export function selectionKey(selection: AdminSelection) {
   switch (selection.kind) {
     case "pick":
       return "pick";
+    case "compile-fail":
+      return "compile-fail";
     case "module":
       return `module:${selection.moduleId}`;
     case "topic":

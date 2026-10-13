@@ -14,32 +14,28 @@ The website decides pass/fail and which student message to show.
 
 Student snippet and hidden check share one method / one scope.
 
-Conceptual shape (exact wrapper can be refined when aer is wired):
+The program is an anonymous Apex block. There is no wrapper class. The site puts the student snippet first and, for a run-clean test, the check immediately after it:
 
 ```apex
-// site-generated wrapper
-// --- student snippet ---
 Integer age = 20;
-// --- hidden check 1 ---
 if (age != 20) {
     System.assert(false);
 }
 ```
 
-Compile-fail tests do not glue a check snippet. They compile the student snippet alone and pass when the compiler error contains any match text on that test. The site runs one only when the card has that test.
+The site sends the student snippet alone first. If the runner reports that it did not compile, the site matches that raw compiler text against the shared compile-fail list and stops. It does not glue a check. If the snippet compiled, the site discards that result and runs every run-clean test, in card order, each as its own program. Stop at the first failure from the site’s point of view. A compile-fail explanation does not change the run-clean glue.
 
-Run every compile-fail test first, in card order, then every run-clean test, in card order. Stop at the first failure from the site’s point of view. Each test is one program, so a compile-fail test does not change the run-clean glue.
+Superseded: running a compile-fail test as its own program that passed only when the code failed to compile, in card order, and only when that card had one.
 
 ## Runner service
 
 - TypeScript
 - Lives on the aer box
 - Accepts only requests that have the site’s secret
-- Writes the snippet to a temp file or stdin
-- Calls `aer exec` (or the equivalent documented command)
-- Enforces a timeout
-- Deletes temp files
-- Returns JSON
+- Writes the snippet to stdin
+- Calls `aer exec -q`
+- Enforces a timeout of 10 seconds (`RUNNER_TIMEOUT_SECONDS`)
+- Returns JSON (`compiled`, `clean`, `log`, `raw`)
 
 Do not expose aer to the public internet without that secret.
 

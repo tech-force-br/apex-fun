@@ -32,14 +32,18 @@ After a successful sign-in, the student is taken to `/study` (the map).
 8. Finish the last card in the topic → the next topic unlocks. Adding or removing cards changes which card that is
 9. Finished topics stay fully open
 
+## Progress on a card
+
+On a card, a progress bar sits under the back link. It shows the card’s place in its topic: the first card is 0%, and a later card is its index divided by the number of cards in the topic, as a whole percent. A topic with two cards shows 0% on the first card and 50% on the second. The bar is on theory cards and exercise cards. It is not on the map, the module list, or the card list.
+
 ## Exercise card
 
 Exactly:
 
 - One prompt (English + Portuguese)
 - One editor
-- One set of hidden tests
-- Compile always on
+- One set of run-clean hidden tests
+- Compile always on. Compile-fail explanations are one shared list, not stored on the card. See [06-exercise-checks.md](06-exercise-checks.md)
 
 ## Theory card
 

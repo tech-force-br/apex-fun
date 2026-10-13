@@ -40,6 +40,8 @@ Admin screens may paste.
 
 Under the editor. Updates on every Run. See [06-exercise-checks.md](06-exercise-checks.md).
 
+While a Run is in progress, the editor is read-only and the Validate button shows a spinner. The editor accepts typing again when the run returns.
+
 ## Results and complete screens
 
 See [04-progress-and-scoring.md](04-progress-and-scoring.md).

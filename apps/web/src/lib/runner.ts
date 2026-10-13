@@ -1,12 +1,14 @@
+import type { RunnerBody } from "@/lib/score-run";
+
 /**
- * The Next.js site calls the aer box over HTTPS. It does not run aer itself.
+ * The Next.js site calls the aer box over HTTP. It does not run aer itself.
  * Spec: specs/11-tech-architecture.md
  */
-export async function postToRunner(apex: string) {
+export async function postToRunner(apex: string): Promise<RunnerBody> {
   const url = process.env.RUNNER_URL;
   const secret = process.env.RUNNER_SECRET;
   if (!url || !secret) {
-    throw new Error("Missing RUNNER_URL or RUNNER_SECRET");
+    return { compiled: false, clean: false, log: "", raw: "", error: "config" };
   }
 
   const response = await fetch(`${url}/run`, {
@@ -16,12 +18,18 @@ export async function postToRunner(apex: string) {
       "x-runner-secret": secret,
     },
     body: JSON.stringify({ apex }),
+    signal: AbortSignal.timeout(15_000),
   });
 
-  return response.json() as Promise<{
-    compiled: boolean;
-    log: string;
-    raw: string;
-    error?: string;
-  }>;
+  const body = (await response.json()) as RunnerBody;
+  if (!response.ok) {
+    return {
+      compiled: false,
+      clean: false,
+      log: "",
+      raw: "",
+      error: body.error ?? "runner",
+    };
+  }
+  return body;
 }

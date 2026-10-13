@@ -16,27 +16,8 @@ export const integerSeatCount: ExerciseCard = {
   },
   hiddenTests: [
     {
-      id: "integer-seat-count-declared",
-      mode: "compile_fail",
-      checkApex: "",
-      matches: [
-        {
-          id: "integer-seat-count-duplicate",
-          text: "Duplicate variable: seatCount",
-          messages: {
-            en: "Declare an Integer named seatCount.",
-            "pt-BR": "Declare um Integer chamado seatCount.",
-          },
-        },
-      ],
-      messages: { en: "", "pt-BR": "" },
-      previewCode: passingPreview,
-    },
-    {
       id: "integer-seat-count-is-3",
-      mode: "run_clean",
       checkApex: "if (seatCount != 3) {\n    System.assert(false);\n}",
-      matches: [],
       messages: {
         en: "seatCount needs to be an Integer with the value 3.",
         "pt-BR": "seatCount precisa ser um Integer com o valor 3.",

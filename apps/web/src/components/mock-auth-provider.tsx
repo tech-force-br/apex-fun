@@ -3,6 +3,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useSyncExternalStore,
   type ReactNode,
@@ -13,6 +14,7 @@ import {
   getMockSessionSnapshot,
   setMockSession,
   subscribeMockSession,
+  syncSessionCookie,
   type MockSession,
 } from "@/lib/mock-auth";
 
@@ -41,6 +43,11 @@ export function MockAuthProvider({ children }: { children: ReactNode }) {
     () => true,
     () => false,
   );
+
+  useEffect(() => {
+    if (!ready) return;
+    syncSessionCookie(session);
+  }, [ready, session]);
 
   const value = useMemo<MockAuthContextValue>(
     () => ({

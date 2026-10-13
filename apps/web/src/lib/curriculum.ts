@@ -8,23 +8,23 @@ export type TopicLock = "open" | "current" | "locked";
 
 export type ModuleStatus = "open" | "coming_later";
 
-export type HiddenTestMode = "run_clean" | "compile_fail";
-
-/** One acceptable compiler error on a compile-fail test, with the message shown if the test fails. */
+/** One compiler error text, with the message shown when the student's code fails to compile and the error contains `text`. */
 export type CompileFailMatch = {
   id: string;
   text: string;
   messages: LocalizedText;
 };
 
+/** Shared by every exercise. Explains a compile error. It is not stored on a card. */
+export type CompileFailTest = {
+  id: string;
+  matches: CompileFailMatch[];
+  previewCode: string;
+};
+
 export type HiddenTest = {
   id: string;
-  mode: HiddenTestMode;
-  /** Run-clean snippet. Empty on compile-fail tests. */
   checkApex: string;
-  /** Compile-fail match sets. Empty on run-clean tests. */
-  matches: CompileFailMatch[];
-  /** Run-clean student message. Empty on compile-fail tests. */
   messages: LocalizedText;
   previewCode: string;
 };

@@ -13,8 +13,6 @@ Not decided. Do not invent an answer in code without asking.
 ## Tech
 
 - i18n library inside Next.js (`next-intl` vs other)
-- Exact aer CLI flags and wrapper class name
-- Runner timeout seconds
 - How hard to isolate student processes on the aer box
 - Whether content lives only in Supabase or also as seed files in the repo
 

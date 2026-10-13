@@ -1,21 +1,22 @@
 "use client";
 
 import { useId, useState } from "react";
+import { CheckResult, RunSpinner } from "@/components/check-result";
+import { useMockAuth } from "@/components/mock-auth-provider";
 import { adminCopy } from "@/lib/admin-copy";
+import { previewHiddenTest } from "@/lib/exercise-check-action";
+import { syncSessionCookie } from "@/lib/mock-auth";
+import type { ExerciseCheck } from "@/lib/score-run";
 import {
-  emptyCompileMatch,
   emptyHiddenTest,
   moveById,
+  useCompileFailTests,
   type CardDraft,
   type ExerciseDraft,
   type SaveIssue,
   type TheoryDraft,
 } from "@/lib/curriculum-store";
-import type {
-  CompileFailMatch,
-  HiddenTest,
-  HiddenTestMode,
-} from "@/lib/curriculum";
+import type { HiddenTest } from "@/lib/curriculum";
 import {
   AdminForm,
   Field,
@@ -158,10 +159,26 @@ function ExerciseFields({
   onChange: (draft: ExerciseDraft) => void;
 }) {
   const { locale } = useLocale();
+  const { session } = useMockAuth();
+  const compileFail = useCompileFailTests();
   const copy = adminCopy[locale];
-  const [previewResults, setPreviewResults] = useState<Record<string, string>>(
-    {},
-  );
+  const [runningId, setRunningId] = useState<string | null>(null);
+  const [previewResults, setPreviewResults] = useState<
+    Record<string, ExerciseCheck>
+  >({});
+  const locked = runningId !== null;
+
+  async function runPreview(test: HiddenTest) {
+    if (locked) return;
+    syncSessionCookie(session);
+    setRunningId(test.id);
+    try {
+      const next = await previewHiddenTest(test, compileFail, locale);
+      setPreviewResults((current) => ({ ...current, [test.id]: next }));
+    } finally {
+      setRunningId(null);
+    }
+  }
 
   function patchTest(index: number, next: HiddenTest) {
     const hiddenTests = draft.hiddenTests.slice();
@@ -174,14 +191,6 @@ function ExerciseFields({
       ...draft,
       hiddenTests: moveById(draft.hiddenTests, id, direction),
     });
-  }
-
-  function setMode(index: number, test: HiddenTest, mode: HiddenTestMode) {
-    const matches =
-      mode === "compile_fail" && test.matches.length === 0
-        ? [emptyCompileMatch()]
-        : test.matches;
-    patchTest(index, { ...test, mode, matches });
   }
 
   return (
@@ -250,80 +259,49 @@ function ExerciseFields({
                 </div>
               </div>
 
-              <fieldset>
-                <legend className="text-sm text-muted">{copy.testMode}</legend>
-                <div className="mt-2 grid gap-2">
-                  {(["run_clean", "compile_fail"] as HiddenTestMode[]).map(
-                    (mode) => {
-                      const active = test.mode === mode;
-                      return (
-                        <button
-                          key={mode}
-                          type="button"
-                          onClick={() => setMode(index, test, mode)}
-                          className={`cursor-pointer rounded-md px-3 py-2 text-left text-sm font-bold ${
-                            active
-                              ? "bg-highlight text-accent-deep ring-1 ring-accent"
-                              : "border border-line bg-white text-muted hover:text-ink"
-                          }`}
-                        >
-                          {mode === "run_clean"
-                            ? copy.modeRunClean
-                            : copy.modeCompileFail}
-                        </button>
-                      );
-                    },
-                  )}
-                </div>
-              </fieldset>
-
-              {test.mode === "run_clean" ? (
-                <>
-                  <Field
-                    label={copy.checkApex}
-                    htmlFor={`${test.id}-check`}
-                    hint={copy.checkApexHelp}
+              <Field
+                label={copy.checkApex}
+                htmlFor={`${test.id}-check`}
+                hint={copy.checkApexHelp}
+              >
+                <div className="mt-1.5">
+                  <div
+                    className={locked ? "pointer-events-none opacity-60" : undefined}
+                    aria-busy={locked}
                   >
-                    <TextArea
+                    <CodeEditor
                       id={`${test.id}-check`}
-                      value={test.checkApex}
-                      mono
-                      rows={5}
+                      key={`${test.id}-check`}
+                      initialValue={test.checkApex}
+                      readOnly={locked}
+                      label={copy.checkApex}
+                      minHeight="9rem"
                       onChange={(checkApex) =>
                         patchTest(index, { ...test, checkApex })
                       }
                     />
-                  </Field>
-                  <LocalizedFields
-                    enLabel={copy.testMessageEn}
-                    ptLabel={copy.testMessagePt}
-                    value={test.messages}
-                    multiline
-                    rows={3}
-                    onChange={(messages) =>
-                      patchTest(index, { ...test, messages })
-                    }
-                  />
-                </>
-              ) : (
-                <CompileMatchSets
-                  test={test}
-                  onChange={(matches) => patchTest(index, { ...test, matches })}
-                />
-              )}
+                  </div>
+                </div>
+              </Field>
+              <LocalizedFields
+                enLabel={copy.testMessageEn}
+                ptLabel={copy.testMessagePt}
+                value={test.messages}
+                multiline
+                rows={3}
+                onChange={(messages) => patchTest(index, { ...test, messages })}
+              />
 
               <TestPreview
-                test={test}
-                result={previewResults[test.id] ?? copy.previewIdle}
+                editorKey={test.id}
+                previewCode={test.previewCode}
+                busy={runningId === test.id}
+                locked={locked}
+                result={previewResults[test.id]}
                 onChange={(previewCode) =>
                   patchTest(index, { ...test, previewCode })
                 }
-                onRun={() =>
-                  setPreviewResults((current) => ({
-                    ...current,
-                    [test.id]: copy.previewUnavailable,
-                  }))
-                }
+                onRun={() => void runPreview(test)}
               />
             </li>
           ))}
@@ -333,81 +311,20 @@ function ExerciseFields({
   );
 }
 
-function CompileMatchSets({
-  test,
-  onChange,
-}: {
-  test: HiddenTest;
-  onChange: (matches: CompileFailMatch[]) => void;
-}) {
-  const { locale } = useLocale();
-  const copy = adminCopy[locale];
-
-  function patchMatch(index: number, next: CompileFailMatch) {
-    const matches = test.matches.slice();
-    matches[index] = next;
-    onChange(matches);
-  }
-
-  return (
-    <div className="space-y-3">
-      {test.matches.map((match, index) => (
-        <div
-          key={match.id}
-          className="space-y-3 rounded-md border border-line bg-white p-3"
-        >
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-medium text-ink">{copy.matchN(index + 1)}</p>
-            <button
-              type="button"
-              onClick={() =>
-                onChange(test.matches.filter((item) => item.id !== match.id))
-              }
-              className="cursor-pointer text-xs text-muted hover:text-ink"
-            >
-              {copy.remove}
-            </button>
-          </div>
-          <Field
-            label={copy.compileMatch}
-            htmlFor={`${match.id}-match`}
-            hint={copy.compileMatchHelp}
-          >
-            <TextInput
-              id={`${match.id}-match`}
-              value={match.text}
-              onChange={(text) => patchMatch(index, { ...match, text })}
-            />
-          </Field>
-          <LocalizedFields
-            enLabel={copy.testMessageEn}
-            ptLabel={copy.testMessagePt}
-            value={match.messages}
-            multiline
-            rows={3}
-            onChange={(messages) => patchMatch(index, { ...match, messages })}
-          />
-        </div>
-      ))}
-      <button
-        type="button"
-        onClick={() => onChange([...test.matches, emptyCompileMatch()])}
-        className="cursor-pointer rounded-md border border-dashed border-line bg-white px-2.5 py-1 text-xs font-bold text-muted hover:border-accent hover:text-ink"
-      >
-        {copy.addMatch}
-      </button>
-    </div>
-  );
-}
-
-function TestPreview({
-  test,
+export function TestPreview({
+  editorKey,
+  previewCode,
+  busy,
+  locked,
   result,
   onChange,
   onRun,
 }: {
-  test: HiddenTest;
-  result: string;
+  editorKey: string;
+  previewCode: string;
+  busy: boolean;
+  locked: boolean;
+  result: ExerciseCheck | undefined;
   onChange: (previewCode: string) => void;
   onRun: () => void;
 }) {
@@ -422,11 +339,15 @@ function TestPreview({
       </h4>
       <p className="text-xs text-muted">{copy.previewHelp}</p>
       <Field label={copy.previewCode} htmlFor={previewId}>
-        <div className="mt-1.5">
+        <div
+          className={`mt-1.5 ${locked ? "pointer-events-none opacity-60" : ""}`}
+          aria-busy={locked}
+        >
           <CodeEditor
             id={previewId}
-            key={test.id}
-            initialValue={test.previewCode}
+            key={editorKey}
+            initialValue={previewCode}
+            readOnly={locked}
             label={copy.previewCode}
             minHeight="9rem"
             onChange={onChange}
@@ -436,16 +357,30 @@ function TestPreview({
       <button
         type="button"
         onClick={onRun}
-        className="cursor-pointer rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-ink hover:bg-space"
+        disabled={locked}
+        aria-busy={busy}
+        className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-ink hover:bg-space"
       >
-        {copy.previewRun}
+        {busy ? <RunSpinner /> : null}
+        {busy ? copy.previewChecking : copy.previewRun}
       </button>
-      <p
-        className="rounded-md border border-line bg-white px-3 py-2 font-mono text-xs text-muted"
-        role="status"
-      >
-        {result}
-      </p>
+      {busy ? (
+        <p className="text-sm text-muted" role="status">
+          {copy.previewChecking}
+        </p>
+      ) : result ? (
+        <CheckResult
+          passed={result.passed}
+          unavailable={result.unavailable}
+          message={result.message}
+          log={result.log}
+          logLabel={copy.log}
+        />
+      ) : (
+        <p className="text-sm text-muted" role="status">
+          {copy.previewIdle}
+        </p>
+      )}
     </div>
   );
 }

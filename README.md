@@ -39,4 +39,4 @@ aer is proprietary. Use it only to build and test privately until October Swimme
 
 ## Not decided yet
 
-See `specs/15-open-questions.md` — including which i18n library to use, exact aer CLI flags, and runner timeout.
+See `specs/15-open-questions.md` — including which i18n library to use, and how hard to isolate student processes.

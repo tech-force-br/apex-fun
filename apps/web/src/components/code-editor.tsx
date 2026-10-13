@@ -13,7 +13,7 @@ import {
   indentOnInput,
   syntaxHighlighting,
 } from "@codemirror/language";
-import { EditorState, Prec, type Extension } from "@codemirror/state";
+import { Compartment, EditorState, Prec, type Extension } from "@codemirror/state";
 import { tags } from "@lezer/highlight";
 import {
   drawSelection,
@@ -60,6 +60,13 @@ const apexHighlight = HighlightStyle.define([
   { tag: [tags.operator, tags.punctuation, tags.variableName, tags.propertyName], color: "#181818" },
 ]);
 
+function readOnlyExtensions(readOnly: boolean): Extension {
+  if (!readOnly) {
+    return [highlightActiveLine(), highlightActiveLineGutter()];
+  }
+  return [EditorState.readOnly.of(true), EditorView.editable.of(false)];
+}
+
 function editorTheme(minHeight: string): Extension {
   return Prec.highest(
     EditorView.theme(
@@ -68,6 +75,7 @@ function editorTheme(minHeight: string): Extension {
           backgroundColor: "#ffffff",
           color: "var(--color-ink)",
           fontSize: "0.875rem",
+          cursor: "text",
         },
         "& .cm-scroller": {
           fontFamily: "var(--font-geist-mono), ui-monospace, monospace",
@@ -82,6 +90,7 @@ function editorTheme(minHeight: string): Extension {
           color: "var(--color-muted)",
           borderRight: "1px solid var(--color-line)",
           minHeight,
+          cursor: "default",
         },
         "& .cm-activeLine": {
           backgroundColor: "var(--color-highlight)",
@@ -135,6 +144,8 @@ export function CodeEditor({
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
+  const readOnlySlot = useRef(new Compartment());
+  const readOnlyRef = useRef(readOnly);
   const labelRef = useRef(label);
   const idRef = useRef(id);
   const onChangeRef = useRef(onChange);
@@ -145,8 +156,8 @@ export function CodeEditor({
     labelRef.current = label;
     idRef.current = id;
     onChangeRef.current = onChange;
-    docRef.current = initialValue;
-  }, [id, initialValue, label, onChange]);
+    readOnlyRef.current = readOnly;
+  }, [id, label, onChange, readOnly]);
 
   useEffect(() => {
     const parent = hostRef.current;
@@ -161,26 +172,21 @@ export function CodeEditor({
       EditorView.lineWrapping,
       java(),
       syntaxHighlighting(apexHighlight),
-      keymap.of([
-        ...historyKeymap,
-        ...defaultKeymap,
-        ...(readOnly ? [] : [indentWithTab]),
-      ]),
+      keymap.of([...historyKeymap, ...defaultKeymap, indentWithTab]),
       editorTheme(minHeight),
       EditorView.contentAttributes.of({
         "aria-label": labelRef.current,
         "aria-multiline": "true",
         spellcheck: "false",
         ...(idRef.current ? { id: idRef.current } : {}),
-        ...(readOnly ? { "aria-readonly": "true" } : {}),
       }),
       EditorView.updateListener.of((update) => {
         if (!update.docChanged) return;
-        onChangeRef.current?.(update.state.doc.toString());
+        const next = update.state.doc.toString();
+        docRef.current = next;
+        onChangeRef.current?.(next);
       }),
-      ...(readOnly
-        ? [EditorState.readOnly.of(true), EditorView.editable.of(false)]
-        : [highlightActiveLine(), highlightActiveLineGutter()]),
+      readOnlySlot.current.of(readOnlyExtensions(readOnlyRef.current)),
       ...(blockClipboard ? [clipboardBlock()] : []),
     ];
 
@@ -197,7 +203,17 @@ export function CodeEditor({
       view.destroy();
       viewRef.current = null;
     };
-  }, [blockClipboard, minHeight, readOnly]);
+  }, [blockClipboard, minHeight]);
+
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+    view.dispatch({
+      effects: readOnlySlot.current.reconfigure(readOnlyExtensions(readOnly)),
+    });
+    if (readOnly) view.contentDOM.setAttribute("aria-readonly", "true");
+    else view.contentDOM.removeAttribute("aria-readonly");
+  }, [readOnly]);
 
   useEffect(() => {
     const content = viewRef.current?.contentDOM;
