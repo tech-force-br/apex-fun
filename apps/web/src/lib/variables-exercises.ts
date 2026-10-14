@@ -10,9 +10,8 @@ export const integerSeatCount: ExerciseCard = {
   id: "integer-seat-count",
   type: "exercise",
   prompts: {
-    en: "Declare an Integer named seatCount and store 3.\n\nWrite the type, the name, and the number on one line.",
-    "pt-BR":
-      "Declare um Integer chamado seatCount e guarde 3.\n\nEscreva o tipo, o nome e o número na mesma linha.",
+    en: "Declare an Integer named seatCount and store 3.",
+    "pt-BR": "Declare um Integer chamado seatCount e guarde 3.",
   },
   hiddenTests: [
     {
