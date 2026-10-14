@@ -98,6 +98,16 @@ function editorTheme(minHeight: string): Extension {
         "& .cm-activeLineGutter": {
           backgroundColor: "var(--color-space-card)",
         },
+        // Selection is drawn behind the text, and CodeMirror sets that
+        // z-index inline. The opaque active-line tint then hides a
+        // selection that stays on the current line. Lift the layer and
+        // darken the whole layer so the purple shows on the tint and
+        // the glyphs stay readable.
+        "& .cm-selectionLayer": {
+          zIndex: "1 !important",
+          pointerEvents: "none",
+          mixBlendMode: "darken",
+        },
         "& .cm-cursor, & .cm-dropCursor": {
           borderLeftColor: "var(--color-accent)",
         },
