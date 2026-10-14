@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { CheckResult, RunSpinner } from "@/components/check-result";
 import { CodeEditor } from "@/components/code-editor";
@@ -10,7 +10,9 @@ import { TopicProgress } from "@/components/study-topic-progress";
 import {
   StudyAdvanceBar,
   StudyTheoryView,
+  useCardAdvance,
 } from "@/components/study-theory-view";
+import { ConfettiBurst } from "@/components/study-confetti";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
 import type { CurriculumModule, ExerciseCard, Topic } from "@/lib/curriculum";
@@ -18,7 +20,6 @@ import { validateExercise } from "@/lib/exercise-check-action";
 import { syncSessionCookie } from "@/lib/mock-auth";
 import type { ExerciseCheck } from "@/lib/score-run";
 import { studyCopy } from "@/lib/study-copy";
-import { finishCard } from "@/lib/study-progress";
 import { theoryAdvance } from "@/lib/study-route";
 
 export function StudyCardView() {
@@ -75,7 +76,6 @@ function StudyExerciseView({
   card: ExerciseCard;
   cardIndex: number;
 }) {
-  const router = useRouter();
   const { locale } = useLocale();
   const { session } = useMockAuth();
   const copy = studyCopy[locale];
@@ -90,11 +90,11 @@ function StudyExerciseView({
     topicIndex,
     cardIndex,
     "current",
-    locale,
     copy,
   );
+  const { held, onAdvance, onNext } = useCardAdvance(card.id, destination);
   const showAdvance =
-    result?.passed === true && !running && destination !== undefined;
+    result?.passed === true && !running && (destination !== undefined || held !== null);
 
   async function onValidate() {
     if (running) return;
@@ -127,6 +127,7 @@ function StudyExerciseView({
         cardIndex={cardIndex}
         cardCount={topic.cards.length}
         label={copy.topicProgress}
+        percent={held ? 100 : undefined}
       />
       <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
         {copy.exercise}
@@ -181,13 +182,12 @@ function StudyExerciseView({
       {misses >= 2 && result && !result.passed && !result.unavailable && !running ? (
         <p className="mt-4 text-sm text-ink">{copy.theoryHint}</p>
       ) : null}
+      {held ? <ConfettiBurst /> : null}
       {showAdvance ? (
         <StudyAdvanceBar
-          label={destination.label}
-          onAdvance={() => {
-            finishCard(card.id);
-            router.push(destination.href);
-          }}
+          label={held?.label ?? copy.continue}
+          variant={held ? "next" : "continue"}
+          onAdvance={held ? onNext : onAdvance}
         />
       ) : null}
     </main>

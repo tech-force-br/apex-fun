@@ -7,7 +7,6 @@ import {
   type Topic,
   type TopicLock,
 } from "@/lib/curriculum";
-import type { Locale } from "@/lib/locale";
 
 export type StudyDepth = "module" | "topic" | "card";
 
@@ -115,7 +114,8 @@ export function resolveStudyTarget(args: {
 /**
  * Where a card's advance button goes.
  * An earlier card opens the next card.
- * The current last card opens the next topic, or the module on the last topic.
+ * The current last card completes the topic. A later click opens the next topic,
+ * or the module on the last topic.
  * Re-reading the last card has no button.
  */
 export function theoryAdvance(
@@ -124,14 +124,14 @@ export function theoryAdvance(
   topicIndex: number,
   cardIndex: number,
   cardLock: TopicLock,
-  locale: Locale,
-  copy: { continue: string; nextTopic: (name: string) => string },
-): { href: string; label: string } | undefined {
+  copy: { continue: string; nextTopic: string; topicsTitle: string },
+): { href: string; label: string; completesTopic: boolean } | undefined {
   const nextCard = topic.cards[cardIndex + 1];
   if (nextCard) {
     return {
       href: `/study/${selected.id}/${topic.id}/${nextCard.id}`,
       label: copy.continue,
+      completesTopic: false,
     };
   }
   if (cardLock !== "current") return undefined;
@@ -139,8 +139,13 @@ export function theoryAdvance(
   if (nextTopic) {
     return {
       href: `/study/${selected.id}/${nextTopic.id}`,
-      label: copy.nextTopic(nextTopic.names[locale]),
+      label: copy.nextTopic,
+      completesTopic: true,
     };
   }
-  return { href: `/study/${selected.id}`, label: copy.continue };
+  return {
+    href: `/study/${selected.id}`,
+    label: copy.topicsTitle,
+    completesTopic: true,
+  };
 }

@@ -27,7 +27,6 @@ export const studyCopy: Record<
     locked: string;
     theory: string;
     exercises: (count: number) => string;
-    nextTopic: (name: string) => string;
     mockNote: string;
     backToMap: string;
     topicsTitle: string;
@@ -40,6 +39,7 @@ export const studyCopy: Record<
     emptyCards: string;
     card: string;
     continue: string;
+    nextTopic: string;
     sample: string;
     editor: string;
     validate: string;
@@ -59,7 +59,6 @@ export const studyCopy: Record<
     locked: "Locked",
     theory: "Theory",
     exercises: (count) => exerciseLine(count, "Exercise", "Exercises"),
-    nextTopic: (name) => `Next topic: ${name}`,
     mockNote: "Demo only. Progress is not saved yet.",
     backToMap: "All modules",
     topicsTitle: "Topics",
@@ -72,6 +71,7 @@ export const studyCopy: Record<
     emptyCards: "This topic has no cards yet.",
     card: "Card",
     continue: "Continue",
+    nextTopic: "Next topic",
     sample: "Sample",
     editor: "Apex editor",
     validate: "Validate",
@@ -90,7 +90,6 @@ export const studyCopy: Record<
     locked: "Bloqueado",
     theory: "Teoria",
     exercises: (count) => exerciseLine(count, "exercício", "exercícios"),
-    nextTopic: (name) => `Próximo tópico: ${name}`,
     mockNote: "Só uma demonstração. O progresso ainda não é salvo.",
     backToMap: "Todos os módulos",
     topicsTitle: "Tópicos",
@@ -103,6 +102,7 @@ export const studyCopy: Record<
     emptyCards: "Este tópico ainda não tem cards.",
     card: "Card",
     continue: "Continuar",
+    nextTopic: "Próximo tópico",
     sample: "Amostra",
     editor: "Editor de Apex",
     validate: "Validar",

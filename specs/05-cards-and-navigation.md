@@ -36,6 +36,8 @@ After a successful sign-in, the student is taken to `/study` (the map).
 
 On a card, a progress bar sits under the back link. It shows the card’s place in its topic: the first card is 0%, and a later card is its index divided by the number of cards in the topic, as a whole percent. A topic with two cards shows 0% on the first card and 50% on the second. The bar is on theory cards and exercise cards. It is not on the map, the module list, or the card list.
 
+The advance button on every card says Continue. On an earlier card, Continue opens the next card and the bar stays at that card’s percent. On the current last card, Continue fills the bar to 100% and shows confetti. The page stays on that card. Continue is replaced by a Next topic button: same size, with a white face, accent text, and an accent border. The student clicks it when ready, and it opens the next topic. On the last topic in the module, that button opens the module’s topic list. Re-reading a finished last card shows no button, and the bar stays at that card’s place in the topic.
+
 ## Exercise card
 
 Exactly:
