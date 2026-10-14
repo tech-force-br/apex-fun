@@ -8,9 +8,11 @@ Shown in v1:
 - Operators (locked — Coming later)
 - If and else (locked)
 - Lists (locked)
+- Sets (locked)
 - Loops (locked)
 - Methods (locked)
 - sObjects (locked)
+- Maps (locked)
 - SOQL (locked)
 - DML (locked)
 

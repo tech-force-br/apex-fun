@@ -154,6 +154,12 @@ export const curriculum: CurriculumModule[] = [
     topics: [],
   },
   {
+    id: "sets",
+    names: { en: "Sets", "pt-BR": "Conjuntos" },
+    status: "coming_later",
+    topics: [],
+  },
+  {
     id: "loops",
     names: { en: "Loops", "pt-BR": "Laços" },
     status: "coming_later",
@@ -168,6 +174,12 @@ export const curriculum: CurriculumModule[] = [
   {
     id: "sobjects",
     names: { en: "sObjects", "pt-BR": "sObjects" },
+    status: "coming_later",
+    topics: [],
+  },
+  {
+    id: "maps",
+    names: { en: "Maps", "pt-BR": "Mapas" },
     status: "coming_later",
     topics: [],
   },
