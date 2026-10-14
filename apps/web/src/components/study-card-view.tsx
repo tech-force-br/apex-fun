@@ -149,26 +149,25 @@ function StudyExerciseView({
           readOnly={running}
           label={copy.editor}
           minHeight="12rem"
-          onChange={(value) => {
-            setCode(value);
-            setResult((current) => (current?.passed === true ? null : current));
-          }}
+          onChange={setCode}
         />
       </div>
       {showValidate ? (
-        <button
-          type="button"
-          onClick={() => void onValidate()}
-          disabled={running}
-          aria-busy={running}
-          className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
-        >
-          {running ? <RunSpinner /> : null}
-          {running ? copy.validating : copy.validate}
-        </button>
+        <div className="mt-4 flex justify-end">
+          <button
+            type="button"
+            onClick={() => void onValidate()}
+            disabled={running}
+            aria-busy={running}
+            className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
+          >
+            {running ? <RunSpinner /> : null}
+            {running ? copy.validating : copy.validate}
+          </button>
+        </div>
       ) : null}
       {result && !running ? (
-        <div className="mt-4">
+        <div className="mt-4 rounded-lg border border-line bg-white p-4">
           <CheckResult
             passed={result.passed}
             unavailable={result.unavailable}
