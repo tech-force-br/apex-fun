@@ -38,6 +38,8 @@ On a card, a progress bar sits under the back link. It shows the card’s place 
 
 The advance button on every card says Continue. On an earlier card, Continue opens the next card and the bar stays at that card’s percent. On the current last card, Continue fills the bar to 100% and shows confetti. The page stays on that card. Continue is replaced by a Next topic button: same size, with a white face, accent text, and an accent border. The student clicks it when ready, and it opens the next topic. On the last topic in the module, that button opens the module’s topic list. Re-reading a finished last card shows no button, and the bar stays at that card’s place in the topic.
 
+On an exercise, Continue appears after Validate passes. If the student validates again and that run fails, Continue or Next topic stays on the card. A failed retry does not take the button away.
+
 ## Exercise card
 
 Exactly:

@@ -82,6 +82,7 @@ function StudyExerciseView({
   const [code, setCode] = useState("");
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<ExerciseCheck | null>(null);
+  const [earnedAdvance, setEarnedAdvance] = useState(false);
   const prompt = card.prompts[locale].trim();
   const destination = theoryAdvance(
     selected,
@@ -93,7 +94,7 @@ function StudyExerciseView({
   );
   const { held, onAdvance, onNext } = useCardAdvance(card.id, destination);
   const showAdvance =
-    result?.passed === true && !running && (destination !== undefined || held !== null);
+    earnedAdvance && (destination !== undefined || held !== null);
   const showValidate = code.trim().length > 0;
 
   async function onValidate() {
@@ -102,6 +103,7 @@ function StudyExerciseView({
     setRunning(true);
     try {
       const next = await validateExercise(card.id, code, locale);
+      if (next.passed) setEarnedAdvance(true);
       setResult(next);
     } finally {
       setRunning(false);
