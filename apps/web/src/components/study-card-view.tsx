@@ -82,7 +82,6 @@ function StudyExerciseView({
   const [code, setCode] = useState("");
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<ExerciseCheck | null>(null);
-  const [misses, setMisses] = useState(0);
   const prompt = card.prompts[locale].trim();
   const destination = theoryAdvance(
     selected,
@@ -103,9 +102,6 @@ function StudyExerciseView({
     try {
       const next = await validateExercise(card.id, code, locale);
       setResult(next);
-      if (!next.passed && !next.unavailable) {
-        setMisses((count) => count + 1);
-      }
     } finally {
       setRunning(false);
     }
@@ -178,9 +174,6 @@ function StudyExerciseView({
             logLabel={copy.log}
           />
         </div>
-      ) : null}
-      {misses >= 2 && result && !result.passed && !result.unavailable && !running ? (
-        <p className="mt-4 text-sm text-ink">{copy.theoryHint}</p>
       ) : null}
       {held ? <ConfettiBurst /> : null}
       {showAdvance ? (

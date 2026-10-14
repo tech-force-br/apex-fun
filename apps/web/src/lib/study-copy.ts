@@ -45,7 +45,6 @@ export const studyCopy: Record<
     validate: string;
     validating: string;
     log: string;
-    theoryHint: string;
     topicProgress: string;
   }
 > = {
@@ -77,7 +76,6 @@ export const studyCopy: Record<
     validate: "Validate",
     validating: "Checking…",
     log: "Log",
-    theoryHint: "Two checks missed. Read the theory for this topic, then try again.",
     topicProgress: "Topic progress",
   },
   "pt-BR": {
@@ -108,7 +106,6 @@ export const studyCopy: Record<
     validate: "Validar",
     validating: "Verificando…",
     log: "Log",
-    theoryHint: "Duas tentativas erradas. Leia a teoria deste tópico e tente de novo.",
     topicProgress: "Progresso do tópico",
   },
 };

@@ -19,7 +19,7 @@ Explanations on the website stay simple. Early variable theory may use a few met
 
 - The editor starts empty. They type the full snippet.
 - They cannot copy or paste in theory samples, prompts, or the student editor. Admin screens may paste.
-- After two failed Runs on an exercise, suggest opening the Theory pane. There is no hint button and no per-card hint text in v1.
+- There is no hint button and no per-card hint text in v1. A failed Run does not add a prompt to open Theory.
 - Failed Runs show the Apex error plus a short plain-language explanation.
 - They may Retry a passed exercise for practice. A failed retry does not un-pass it.
 

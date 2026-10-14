@@ -86,7 +86,6 @@ This applies to run-clean checks only, and only after the student snippet has co
 |---|---|
 | Compile error (student code) | Apex error. When a shared match set hits, also that set's student message |
 | Hidden test fails | That run-clean test’s student message only |
-| After 2 failed Runs | Also suggest opening the Theory pane |
 
 Do not dump later checks after the first failure.
 

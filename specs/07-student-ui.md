@@ -15,7 +15,6 @@ Language is chosen at signup. Change later in settings and from a control on eve
 - **Theory pane** on the left. Starts **closed**.
 - **Editor + log** on the right.
 - Open the pane with a **Theory** button.
-- After 2 failed Runs, prompt them to open Theory.
 - Editor stays usable while Theory is open.
 
 ### What the Theory pane lists

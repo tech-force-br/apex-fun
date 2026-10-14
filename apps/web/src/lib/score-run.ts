@@ -102,6 +102,9 @@ export async function scoreTest(
 /**
  * Compile the student snippet alone. A compile failure stops the check and
  * uses the shared list. Run-clean tests run only after that snippet compiles.
+ *
+ * When the snippet compiles, the card log stays that run's debug lines.
+ * A hidden test can pass or fail without replacing them.
  */
 export async function scoreExercise(
   compileFailTests: readonly CompileFailTest[],
@@ -126,14 +129,17 @@ export async function scoreExercise(
     return missed(compileRun.log, compileRun.log);
   }
 
+  const studentLog = compileRun.log;
   let last: ExerciseCheck = {
     passed: true,
     unavailable: false,
     message: "",
-    log: "",
+    log: studentLog,
   };
   for (const test of tests) {
-    last = await scoreTest(test, studentCode, locale, runApex);
+    const scored = await scoreTest(test, studentCode, locale, runApex);
+    if (scored.unavailable) return scored;
+    last = { ...scored, log: studentLog };
     if (!last.passed) return last;
   }
   return last;
