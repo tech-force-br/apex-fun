@@ -15,7 +15,12 @@ import {
 import { ConfettiBurst } from "@/components/study-confetti";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
-import type { CurriculumModule, ExerciseCard, Topic } from "@/lib/curriculum";
+import type {
+  CurriculumModule,
+  ExerciseCard,
+  Topic,
+  TopicLock,
+} from "@/lib/curriculum";
 import { validateExercise } from "@/lib/exercise-check-action";
 import { syncSessionCookie } from "@/lib/mock-auth";
 import type { ExerciseCheck } from "@/lib/score-run";
@@ -47,12 +52,14 @@ export function StudyCardView() {
         topicIndex={gate.topicIndex}
         card={gate.card}
         cardIndex={gate.cardIndex}
+        cardLock={gate.cardLock}
       />
     );
   }
 
   return (
     <StudyTheoryView
+      key={gate.card.id}
       selected={gate.selected}
       topic={gate.topic}
       topicIndex={gate.topicIndex}
@@ -69,12 +76,14 @@ function StudyExerciseView({
   topicIndex,
   card,
   cardIndex,
+  cardLock,
 }: {
   selected: CurriculumModule;
   topic: Topic;
   topicIndex: number;
   card: ExerciseCard;
   cardIndex: number;
+  cardLock: TopicLock;
 }) {
   const { locale } = useLocale();
   const { session } = useMockAuth();
@@ -89,7 +98,7 @@ function StudyExerciseView({
     topic,
     topicIndex,
     cardIndex,
-    "current",
+    cardLock,
     copy,
   );
   const { held, onAdvance, onNext } = useCardAdvance(card.id, destination);

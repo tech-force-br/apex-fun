@@ -53,27 +53,36 @@ export function useCardAdvance(
   destination: { href: string; label: string; completesTopic: boolean } | undefined,
 ) {
   const router = useRouter();
-  const [held, setHeld] = useState<{ href: string; label: string } | null>(null);
-  const started = useRef(false);
+  const [held, setHeld] = useState<{
+    cardId: string;
+    href: string;
+    label: string;
+  } | null>(null);
+  const startedFor = useRef<string | null>(null);
+  const active = held?.cardId === cardId ? held : null;
 
   function onAdvance() {
-    if (!destination || started.current) return;
+    if (!destination || startedFor.current === cardId) return;
     if (!destination.completesTopic) {
       finishCard(cardId);
       router.push(destination.href);
       return;
     }
-    started.current = true;
-    setHeld({ href: destination.href, label: destination.label });
+    startedFor.current = cardId;
+    setHeld({ cardId, href: destination.href, label: destination.label });
     finishCard(cardId);
   }
 
   function onNext() {
-    if (!held) return;
-    router.push(held.href);
+    if (!active) return;
+    router.push(active.href);
   }
 
-  return { held, onAdvance, onNext };
+  return {
+    held: active ? { href: active.href, label: active.label } : null,
+    onAdvance,
+    onNext,
+  };
 }
 
 export function StudyTheoryView({
