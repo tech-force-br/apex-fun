@@ -61,10 +61,9 @@ export function firstCompileMatch(
   raw: string,
 ): CompileFailMatch | undefined {
   for (const test of tests) {
-    for (const match of test.matches) {
-      const text = match.text.trim();
-      if (text.length > 0 && raw.includes(text)) return match;
-    }
+    const match = test.match;
+    const text = match?.text.trim() ?? "";
+    if (text.length > 0 && raw.includes(text)) return match;
   }
   return undefined;
 }

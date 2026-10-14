@@ -31,3 +31,4 @@ npm run dev          # Next.js at http://localhost:3000
 npm run dev:runner   # runner at http://127.0.0.1:8787
 npm run build
 ```
+Send an alert notifying me when you are done if vscode is in the background.

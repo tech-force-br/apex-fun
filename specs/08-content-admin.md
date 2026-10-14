@@ -23,8 +23,8 @@ Blocked until filled:
 
 - English and Portuguese for every theory card body
 - English and Portuguese for every exercise prompt
-- English and Portuguese student messages on every run-clean test, and on every compile-fail match set
-- At least one match set on every compile-fail test that exists, each with match text
+- English and Portuguese student messages on every run-clean test, and on every compile-fail test
+- Match text on every compile-fail test that exists
 - At least one run-clean hidden test per exercise
 
 The shared compile-fail list may be empty. Apex samples and run-clean hidden-check Apex stay English. Compile-fail tests have no check Apex.
@@ -44,7 +44,7 @@ Their own place in the content admin, separate from modules, topics, and cards. 
 
 Each test has:
 
-- One or more sets of compile-fail match text, student message EN, and student message pt-BR. The owner can add another set.
+- Exactly one compile-fail match: match text, student message EN, and student message pt-BR. The owner cannot add another match on the same test.
 - Preview box (sample student code + last run result)
 
 ## Current slice (2026-09-18)

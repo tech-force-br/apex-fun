@@ -15,10 +15,10 @@ export type CompileFailMatch = {
   messages: LocalizedText;
 };
 
-/** Shared by every exercise. Explains a compile error. It is not stored on a card. */
+/** Shared by every exercise. Explains one compile error. It is not stored on a card. */
 export type CompileFailTest = {
   id: string;
-  matches: CompileFailMatch[];
+  match: CompileFailMatch;
   previewCode: string;
 };
 

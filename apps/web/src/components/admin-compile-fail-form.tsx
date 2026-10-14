@@ -12,10 +12,9 @@ import {
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
 import { adminCopy } from "@/lib/admin-copy";
-import type { CompileFailMatch, CompileFailTest } from "@/lib/curriculum";
+import type { CompileFailTest } from "@/lib/curriculum";
 import {
   emptyCompileFailTest,
-  emptyCompileMatch,
   moveById,
   type SaveIssue,
 } from "@/lib/curriculum-store";
@@ -118,9 +117,34 @@ export function AdminCompileFailForm({
                   </button>
                 </div>
               </div>
-              <MatchSets
-                test={test}
-                onChange={(matches) => patchTest(index, { ...test, matches })}
+              <Field
+                label={copy.compileMatch}
+                htmlFor={`${test.match.id}-match`}
+                hint={copy.compileMatchHelp}
+              >
+                <TextInput
+                  id={`${test.match.id}-match`}
+                  value={test.match.text}
+                  onChange={(text) =>
+                    patchTest(index, {
+                      ...test,
+                      match: { ...test.match, text },
+                    })
+                  }
+                />
+              </Field>
+              <LocalizedFields
+                enLabel={copy.testMessageEn}
+                ptLabel={copy.testMessagePt}
+                value={test.match.messages}
+                multiline
+                rows={3}
+                onChange={(messages) =>
+                  patchTest(index, {
+                    ...test,
+                    match: { ...test.match, messages },
+                  })
+                }
               />
               <TestPreview
                 editorKey={test.id}
@@ -141,69 +165,4 @@ export function AdminCompileFailForm({
   );
 }
 
-function MatchSets({
-  test,
-  onChange,
-}: {
-  test: CompileFailTest;
-  onChange: (matches: CompileFailMatch[]) => void;
-}) {
-  const { locale } = useLocale();
-  const copy = adminCopy[locale];
 
-  function patchMatch(index: number, next: CompileFailMatch) {
-    const matches = test.matches.slice();
-    matches[index] = next;
-    onChange(matches);
-  }
-
-  return (
-    <div className="space-y-3">
-      {test.matches.map((match, index) => (
-        <div
-          key={match.id}
-          className="space-y-3 rounded-md border border-line bg-white p-3"
-        >
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-medium text-ink">{copy.matchN(index + 1)}</p>
-            <button
-              type="button"
-              onClick={() =>
-                onChange(test.matches.filter((item) => item.id !== match.id))
-              }
-              className="cursor-pointer text-xs text-muted hover:text-ink"
-            >
-              {copy.remove}
-            </button>
-          </div>
-          <Field
-            label={copy.compileMatch}
-            htmlFor={`${match.id}-match`}
-            hint={copy.compileMatchHelp}
-          >
-            <TextInput
-              id={`${match.id}-match`}
-              value={match.text}
-              onChange={(text) => patchMatch(index, { ...match, text })}
-            />
-          </Field>
-          <LocalizedFields
-            enLabel={copy.testMessageEn}
-            ptLabel={copy.testMessagePt}
-            value={match.messages}
-            multiline
-            rows={3}
-            onChange={(messages) => patchMatch(index, { ...match, messages })}
-          />
-        </div>
-      ))}
-      <button
-        type="button"
-        onClick={() => onChange([...test.matches, emptyCompileMatch()])}
-        className="cursor-pointer rounded-md border border-dashed border-line bg-white px-2.5 py-1 text-xs font-bold text-muted hover:border-accent hover:text-ink"
-      >
-        {copy.addMatch}
-      </button>
-    </div>
-  );
-}

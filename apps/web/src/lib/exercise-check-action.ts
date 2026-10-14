@@ -85,24 +85,19 @@ function asText(value: unknown, max: number) {
   return value;
 }
 
-function asMatches(value: unknown): CompileFailMatch[] | null {
-  if (!Array.isArray(value) || value.length > 20) return null;
-  const matches: CompileFailMatch[] = [];
-  for (const item of value) {
-    if (!item || typeof item !== "object") return null;
-    const match = item as {
-      id?: unknown;
-      text?: unknown;
-      messages?: { en?: unknown; "pt-BR"?: unknown };
-    };
-    const matchId = asText(match.id, 200);
-    const text = asText(match.text, 2_000);
-    const en = asText(match.messages?.en, 2_000);
-    const pt = asText(match.messages?.["pt-BR"], 2_000);
-    if (!matchId || text == null || en == null || pt == null) return null;
-    matches.push({ id: matchId, text, messages: { en, "pt-BR": pt } });
-  }
-  return matches;
+function asMatch(value: unknown): CompileFailMatch | null {
+  if (!value || typeof value !== "object") return null;
+  const match = value as {
+    id?: unknown;
+    text?: unknown;
+    messages?: { en?: unknown; "pt-BR"?: unknown };
+  };
+  const matchId = asText(match.id, 200);
+  const text = asText(match.text, 2_000);
+  const en = asText(match.messages?.en, 2_000);
+  const pt = asText(match.messages?.["pt-BR"], 2_000);
+  if (!matchId || text == null || en == null || pt == null) return null;
+  return { id: matchId, text, messages: { en, "pt-BR": pt } };
 }
 
 function asTest(value: unknown): HiddenTest | null {
@@ -128,9 +123,9 @@ function asCompileFailTest(value: unknown): CompileFailTest | null {
   const test = value as CompileFailTest;
   const id = asText(test.id, 200);
   const previewCode = asText(test.previewCode, MAX_SOURCE);
-  const matches = asMatches(test.matches);
-  if (!id || previewCode == null || !matches) return null;
-  return { id, previewCode, matches };
+  const match = asMatch(test.match);
+  if (!id || previewCode == null || !match) return null;
+  return { id, previewCode, match };
 }
 
 function asCompileFailList(value: unknown): CompileFailTest[] | null {
@@ -209,7 +204,7 @@ export async function previewCompileFailTest(
 
   const test = asCompileFailTest(input);
   if (!test) return blocked(copy[lang].runnerDown);
-  if (!test.matches.some((match) => match.text.trim().length > 0)) {
+  if (test.match.text.trim().length === 0) {
     return blocked(copy[lang].needMatch);
   }
 

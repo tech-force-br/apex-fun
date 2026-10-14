@@ -32,13 +32,11 @@ export type SaveIssue = {
     | "test_check"
     | "test_message_en"
     | "test_message_pt"
-    | "compile_need_match"
     | "compile_match"
     | "compile_message_en"
     | "compile_message_pt"
     | "missing";
   testIndex?: number;
-  matchIndex?: number;
 };
 
 export type StoreResult =
@@ -224,21 +222,16 @@ export function validateCompileFailTests(
 ): SaveIssue[] {
   const issues: SaveIssue[] = [];
   tests.forEach((test, testIndex) => {
-    if (test.matches.length === 0) {
-      issues.push({ code: "compile_need_match", testIndex });
-      return;
+    const match = test.match;
+    if (!match || isBlank(match.text)) {
+      issues.push({ code: "compile_match", testIndex });
     }
-    test.matches.forEach((match, matchIndex) => {
-      if (isBlank(match.text)) {
-        issues.push({ code: "compile_match", testIndex, matchIndex });
-      }
-      if (isBlank(match.messages.en)) {
-        issues.push({ code: "compile_message_en", testIndex, matchIndex });
-      }
-      if (isBlank(match.messages["pt-BR"])) {
-        issues.push({ code: "compile_message_pt", testIndex, matchIndex });
-      }
-    });
+    if (!match || isBlank(match.messages.en)) {
+      issues.push({ code: "compile_message_en", testIndex });
+    }
+    if (!match || isBlank(match.messages["pt-BR"])) {
+      issues.push({ code: "compile_message_pt", testIndex });
+    }
   });
   return issues;
 }
@@ -293,7 +286,7 @@ export function emptyHiddenTest(): HiddenTest {
 export function emptyCompileFailTest(): CompileFailTest {
   return {
     id: crypto.randomUUID(),
-    matches: [emptyCompileMatch()],
+    match: emptyCompileMatch(),
     previewCode: "",
   };
 }
@@ -302,11 +295,11 @@ function toCompileFailTest(test: CompileFailTest): CompileFailTest {
   return {
     id: test.id,
     previewCode: test.previewCode,
-    matches: test.matches.map((match) => ({
-      id: match.id,
-      text: match.text.trim(),
-      messages: trimText(match.messages),
-    })),
+    match: {
+      id: test.match.id,
+      text: test.match.text.trim(),
+      messages: trimText(test.match.messages),
+    },
   };
 }
 
