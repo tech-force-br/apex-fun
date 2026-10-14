@@ -44,6 +44,7 @@ export const studyCopy: Record<
     editor: string;
     validate: string;
     validating: string;
+    passed: string;
     log: string;
     topicProgress: string;
   }
@@ -75,6 +76,7 @@ export const studyCopy: Record<
     editor: "Apex editor",
     validate: "Validate",
     validating: "Checking…",
+    passed: "Passed.",
     log: "Log",
     topicProgress: "Topic progress",
   },
@@ -105,6 +107,7 @@ export const studyCopy: Record<
     editor: "Editor de Apex",
     validate: "Validar",
     validating: "Verificando…",
+    passed: "Passou.",
     log: "Log",
     topicProgress: "Progresso do tópico",
   },

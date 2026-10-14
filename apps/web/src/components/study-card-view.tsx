@@ -153,25 +153,23 @@ function StudyExerciseView({
         />
       </div>
       {showValidate ? (
-        <div className="mt-4 flex justify-end">
-          <button
-            type="button"
-            onClick={() => void onValidate()}
-            disabled={running}
-            aria-busy={running}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
-          >
-            {running ? <RunSpinner /> : null}
-            {running ? copy.validating : copy.validate}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => void onValidate()}
+          disabled={running}
+          aria-busy={running}
+          className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
+        >
+          {running ? <RunSpinner /> : null}
+          {running ? copy.validating : copy.validate}
+        </button>
       ) : null}
       {result && !running ? (
         <div className="mt-4 rounded-lg border border-line bg-white p-4">
           <CheckResult
             passed={result.passed}
             unavailable={result.unavailable}
-            message={result.message}
+            message={result.passed ? copy.passed : result.message}
             log={result.log}
             logLabel={copy.log}
           />
