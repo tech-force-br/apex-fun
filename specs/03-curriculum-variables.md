@@ -43,7 +43,7 @@ The owner chooses how many theory cards and exercise cards each topic has, and c
 
 The seed places one Integer exercise after the Integer theory cards. The prompt asks the student to declare `seatCount` and store `3`. Its one hidden test is run-clean and checks that the value is 3. The sample preview is `Integer seatCount = 3;`.
 
-The seed compile-fail list is empty. `integer-seat-count` does not carry a compile-fail test.
+The seed compile-fail list has one shared test, stored in code the same way as the cards. Its match text is `missing ';'`. The English student message is "There is a semicolon (;) missing somewhere." The Portuguese student message is "Tem um ponto e vírgula (;) faltando em algum lugar." The preview sample is `Integer seatCount = 3`. `integer-seat-count` does not carry that test.
 
 Superseded: a compile-fail match on `Duplicate variable: seatCount` stored on that card. A correct declaration compiles. Compile-fail tests are now one shared list of explanations. See [06-exercise-checks.md](06-exercise-checks.md).
 
