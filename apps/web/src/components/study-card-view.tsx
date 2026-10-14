@@ -94,6 +94,7 @@ function StudyExerciseView({
   const { held, onAdvance, onNext } = useCardAdvance(card.id, destination);
   const showAdvance =
     result?.passed === true && !running && (destination !== undefined || held !== null);
+  const showValidate = code.trim().length > 0;
 
   async function onValidate() {
     if (running) return;
@@ -150,20 +151,22 @@ function StudyExerciseView({
           minHeight="12rem"
           onChange={(value) => {
             setCode(value);
-            setResult(null);
+            setResult((current) => (current?.passed === true ? null : current));
           }}
         />
       </div>
-      <button
-        type="button"
-        onClick={() => void onValidate()}
-        disabled={running}
-        aria-busy={running}
-        className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
-      >
-        {running ? <RunSpinner /> : null}
-        {running ? copy.validating : copy.validate}
-      </button>
+      {showValidate ? (
+        <button
+          type="button"
+          onClick={() => void onValidate()}
+          disabled={running}
+          aria-busy={running}
+          className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
+        >
+          {running ? <RunSpinner /> : null}
+          {running ? copy.validating : copy.validate}
+        </button>
+      ) : null}
       {result && !running ? (
         <div className="mt-4">
           <CheckResult
