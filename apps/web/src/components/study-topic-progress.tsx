@@ -1,4 +1,10 @@
-export function topicProgressPercent(cardIndex: number, cardCount: number) {
+/** Place in the topic, or 100 once the last card is finished. */
+export function topicProgressPercent(
+  cardIndex: number,
+  cardCount: number,
+  lastFinished: boolean,
+) {
+  if (lastFinished) return 100;
   if (cardCount <= 0 || cardIndex <= 0) return 0;
   return Math.round((cardIndex / cardCount) * 100);
 }
@@ -7,14 +13,14 @@ export function TopicProgress({
   cardIndex,
   cardCount,
   label,
-  percent: percentOverride,
+  lastFinished,
 }: {
   cardIndex: number;
   cardCount: number;
   label: string;
-  percent?: number;
+  lastFinished: boolean;
 }) {
-  const percent = percentOverride ?? topicProgressPercent(cardIndex, cardCount);
+  const percent = topicProgressPercent(cardIndex, cardCount, lastFinished);
 
   return (
     <div className="mt-3 flex items-center gap-3">

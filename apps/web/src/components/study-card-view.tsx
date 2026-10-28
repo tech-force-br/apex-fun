@@ -16,17 +16,11 @@ import {
 import { ConfettiBurst } from "@/components/study-confetti";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
-import type {
-  CurriculumModule,
-  ExerciseCard,
-  Topic,
-  TopicLock,
-} from "@/lib/curriculum";
+import type { CurriculumModule, ExerciseCard, Topic } from "@/lib/curriculum";
 import { validateExercise } from "@/lib/exercise-check-action";
 import { syncSessionCookie } from "@/lib/mock-auth";
 import type { ExerciseCheck } from "@/lib/score-run";
 import { studyCopy } from "@/lib/study-copy";
-import { theoryAdvance } from "@/lib/study-route";
 
 export function StudyCardView() {
   const params = useParams<{
@@ -53,7 +47,7 @@ export function StudyCardView() {
         topicIndex={gate.topicIndex}
         card={gate.card}
         cardIndex={gate.cardIndex}
-        cardLock={gate.cardLock}
+        finished={gate.finished}
       />
     ) : (
       <StudyTheoryView
@@ -63,7 +57,7 @@ export function StudyCardView() {
         topicIndex={gate.topicIndex}
         card={gate.card}
         cardIndex={gate.cardIndex}
-        cardLock={gate.cardLock}
+        finished={gate.finished}
       />
     );
 
@@ -87,14 +81,14 @@ function StudyExerciseView({
   topicIndex,
   card,
   cardIndex,
-  cardLock,
+  finished,
 }: {
   selected: CurriculumModule;
   topic: Topic;
   topicIndex: number;
   card: ExerciseCard;
   cardIndex: number;
-  cardLock: TopicLock;
+  finished: ReadonlySet<string>;
 }) {
   const { locale } = useLocale();
   const { session } = useMockAuth();
@@ -104,17 +98,16 @@ function StudyExerciseView({
   const [result, setResult] = useState<ExerciseCheck | null>(null);
   const [earnedAdvance, setEarnedAdvance] = useState(false);
   const prompt = card.prompts[locale].trim();
-  const destination = theoryAdvance(
+  const { lastFinished, advance } = useCardAdvance({
     selected,
     topic,
     topicIndex,
+    cardId: card.id,
     cardIndex,
-    cardLock,
+    finished,
     copy,
-  );
-  const { held, onAdvance, onNext } = useCardAdvance(card.id, destination);
-  const showAdvance =
-    earnedAdvance && (destination !== undefined || held !== null);
+  });
+  const visibleAdvance = earnedAdvance ? advance : undefined;
   const showValidate = code.trim().length > 0;
 
   async function onValidate() {
@@ -134,7 +127,7 @@ function StudyExerciseView({
     <div className="flex min-w-0 flex-1 flex-col md:min-h-0">
       <main
         className={`w-full md:min-h-0 md:flex-1 md:overflow-y-auto ${
-          showAdvance ? "pb-28 md:pb-0" : ""
+          visibleAdvance ? "pb-28 md:pb-0" : ""
         }`}
       >
         <Link
@@ -147,7 +140,7 @@ function StudyExerciseView({
           cardIndex={cardIndex}
           cardCount={topic.cards.length}
           label={copy.topicProgress}
-          percent={held ? 100 : undefined}
+          lastFinished={lastFinished}
         />
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
           {copy.exercise}
@@ -198,15 +191,11 @@ function StudyExerciseView({
             />
           </div>
         ) : null}
-        {held ? <ConfettiBurst /> : null}
+        {visibleAdvance?.burst ? (
+          <ConfettiBurst origin={visibleAdvance.burst} />
+        ) : null}
       </main>
-      {showAdvance ? (
-        <StudyAdvanceBar
-          label={held?.label ?? copy.continue}
-          variant={held ? "next" : "continue"}
-          onAdvance={held ? onNext : onAdvance}
-        />
-      ) : null}
+      {visibleAdvance ? <StudyAdvanceBar advance={visibleAdvance} /> : null}
     </div>
   );
 }

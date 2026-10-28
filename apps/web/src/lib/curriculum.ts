@@ -249,6 +249,18 @@ export function topicIsComplete(
   );
 }
 
+/**
+ * The last card on the topic is finished.
+ * The progress bar and Continue use this. An empty card list stays unfinished.
+ */
+export function lastCardFinished(
+  topic: Topic,
+  finished: ReadonlySet<string>,
+) {
+  const last = topic.cards[topic.cards.length - 1];
+  return last !== undefined && finished.has(last.id);
+}
+
 /** Student progress only. The first unfinished step is current. Later steps are locked. */
 function stepLock(index: number, firstUnfinished: number): TopicLock {
   if (firstUnfinished < 0 || index < firstUnfinished) return "open";

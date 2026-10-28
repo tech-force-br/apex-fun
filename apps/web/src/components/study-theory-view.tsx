@@ -5,13 +5,16 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { CodeEditor } from "@/components/code-editor";
 import { useLocale } from "@/components/locale-provider";
-import { ConfettiBurst } from "@/components/study-confetti";
+import {
+  ConfettiBurst,
+  type ConfettiOrigin,
+} from "@/components/study-confetti";
 import { TopicProgress } from "@/components/study-topic-progress";
-import type {
-  CurriculumModule,
-  TheoryCard,
-  Topic,
-  TopicLock,
+import {
+  lastCardFinished,
+  type CurriculumModule,
+  type TheoryCard,
+  type Topic,
 } from "@/lib/curriculum";
 import type { Locale } from "@/lib/locale";
 import { studyCopy } from "@/lib/study-copy";
@@ -24,63 +27,103 @@ const continueClass =
 const nextTopicClass =
   "pointer-events-auto max-w-full cursor-pointer rounded-md border border-accent bg-white px-4 py-2.5 text-left text-sm font-bold text-accent hover:bg-highlight";
 
-export function StudyAdvanceBar({
-  label,
-  variant = "continue",
-  onAdvance,
-}: {
+export type Advance = {
   label: string;
-  variant?: "continue" | "next";
-  onAdvance: () => void;
-}) {
+  tone: "continue" | "next";
+  burst?: ConfettiOrigin;
+  run: (at: ConfettiOrigin) => void;
+};
+
+export function StudyAdvanceBar({ advance }: { advance: Advance }) {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-height)+1rem)] z-20 flex justify-center px-6 md:pointer-events-auto md:static md:z-auto md:shrink-0 md:px-0 md:pt-4">
       <button
         type="button"
-        onClick={onAdvance}
-        className={variant === "next" ? nextTopicClass : continueClass}
+        onClick={(event) => {
+          const rect = event.currentTarget.getBoundingClientRect();
+          advance.run({
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+          });
+        }}
+        className={advance.tone === "next" ? nextTopicClass : continueClass}
       >
-        {label}
+        {advance.label}
       </button>
     </div>
   );
 }
 
-export function useCardAdvance(
-  cardId: string,
-  destination: { href: string; label: string; completesTopic: boolean } | undefined,
-) {
+export function useCardAdvance({
+  selected,
+  topic,
+  topicIndex,
+  cardId,
+  cardIndex,
+  finished,
+  copy,
+}: {
+  selected: CurriculumModule;
+  topic: Topic;
+  topicIndex: number;
+  cardId: string;
+  cardIndex: number;
+  finished: ReadonlySet<string>;
+  copy: { continue: string; nextTopic: string; topicsTitle: string };
+}): { lastFinished: boolean; advance: Advance | undefined } {
   const router = useRouter();
   const [held, setHeld] = useState<{
     cardId: string;
     href: string;
     label: string;
+    origin: ConfettiOrigin;
   } | null>(null);
   const startedFor = useRef<string | null>(null);
   const active = held?.cardId === cardId ? held : null;
+  const destination = theoryAdvance(
+    selected,
+    topic,
+    topicIndex,
+    cardIndex,
+    finished,
+    copy,
+  );
 
-  function onAdvance() {
-    if (!destination || startedFor.current === cardId) return;
-    if (!destination.completesTopic) {
-      finishCard(cardId);
-      router.push(destination.href);
-      return;
-    }
-    startedFor.current = cardId;
-    setHeld({ cardId, href: destination.href, label: destination.label });
-    finishCard(cardId);
+  let advance: Advance | undefined;
+  if (active) {
+    const href = active.href;
+    advance = {
+      label: active.label,
+      tone: "next",
+      burst: active.origin,
+      run: () => router.push(href),
+    };
+  } else if (destination?.completesTopic) {
+    const href = destination.href;
+    const nextLabel = destination.nextLabel;
+    advance = {
+      label: copy.continue,
+      tone: "continue",
+      run: (origin) => {
+        if (startedFor.current === cardId) return;
+        startedFor.current = cardId;
+        setHeld({ cardId, href, label: nextLabel, origin });
+        finishCard(cardId);
+      },
+    };
+  } else if (destination) {
+    const href = destination.href;
+    advance = {
+      label: copy.continue,
+      tone: "continue",
+      run: () => {
+        finishCard(cardId);
+        router.push(href);
+      },
+    };
   }
 
-  function onNext() {
-    if (!active) return;
-    router.push(active.href);
-  }
-
-  return {
-    held: active ? { href: active.href, label: active.label } : null,
-    onAdvance,
-    onNext,
-  };
+  return { lastFinished: lastCardFinished(topic, finished), advance };
 }
 
 export function StudyTheoryView({
@@ -89,33 +132,32 @@ export function StudyTheoryView({
   topicIndex,
   card,
   cardIndex,
-  cardLock,
+  finished,
 }: {
   selected: CurriculumModule;
   topic: Topic;
   topicIndex: number;
   card: TheoryCard;
   cardIndex: number;
-  cardLock: TopicLock;
+  finished: ReadonlySet<string>;
 }) {
   const { locale } = useLocale();
   const copy = studyCopy[locale];
-  const destination = theoryAdvance(
+  const { lastFinished, advance } = useCardAdvance({
     selected,
     topic,
     topicIndex,
+    cardId: card.id,
     cardIndex,
-    cardLock,
+    finished,
     copy,
-  );
-  const { held, onAdvance, onNext } = useCardAdvance(card.id, destination);
-  const showBar = destination !== undefined || held !== null;
+  });
 
   return (
     <div className="flex min-w-0 flex-1 flex-col md:min-h-0">
       <main
         className={`w-full md:min-h-0 md:flex-1 md:overflow-y-auto ${
-          showBar ? "pb-28 md:pb-0" : ""
+          advance ? "pb-28 md:pb-0" : ""
         }`}
       >
         <Link
@@ -128,19 +170,13 @@ export function StudyTheoryView({
           cardIndex={cardIndex}
           cardCount={topic.cards.length}
           label={copy.topicProgress}
-          percent={held ? 100 : undefined}
+          lastFinished={lastFinished}
         />
         <p className="mt-4 text-sm text-muted">{copy.theory}</p>
         <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
-        {held ? <ConfettiBurst /> : null}
+        {advance?.burst ? <ConfettiBurst origin={advance.burst} /> : null}
       </main>
-      {showBar ? (
-        <StudyAdvanceBar
-          label={held?.label ?? copy.continue}
-          variant={held ? "next" : "continue"}
-          onAdvance={held ? onNext : onAdvance}
-        />
-      ) : null}
+      {advance ? <StudyAdvanceBar advance={advance} /> : null}
     </div>
   );
 }

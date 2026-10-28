@@ -1,11 +1,11 @@
 import {
   cardAvailability,
+  lastCardFinished,
   moduleAvailability,
   topicAvailability,
   type Card,
   type CurriculumModule,
   type Topic,
-  type TopicLock,
 } from "@/lib/curriculum";
 
 export type StudyDepth = "module" | "topic" | "card";
@@ -28,7 +28,6 @@ export type StudyTarget =
       topicIndex: number;
       card: Card;
       cardIndex: number;
-      cardLock: TopicLock;
     };
 
 /**
@@ -87,13 +86,10 @@ export function resolveStudyTarget(args: {
       href: `/study/${selected.id}/${topic.id}`,
     };
   }
-  const cardLock = cardAvailability(
-    topic,
-    cardIndex,
-    args.finished,
-    args.unlockAll,
-  );
-  if (cardLock === "locked") {
+  if (
+    cardAvailability(topic, cardIndex, args.finished, args.unlockAll) ===
+    "locked"
+  ) {
     return {
       status: "redirect",
       href: `/study/${selected.id}/${topic.id}`,
@@ -107,46 +103,48 @@ export function resolveStudyTarget(args: {
     topicIndex,
     card: args.card,
     cardIndex,
-    cardLock,
   };
 }
 
 /**
  * Where a card's advance button goes.
  * An earlier card opens the next card.
- * The current last card completes the topic. A later click opens the next topic,
- * or the module on the last topic.
- * Re-reading the last card has no button.
+ * The current last card completes the topic. `nextLabel` is the button after
+ * that click (Next topic, or the topic list on the last topic). The button
+ * before the click still says Continue.
+ * Once the last card is finished, no card shows Continue.
  */
 export function theoryAdvance(
   selected: CurriculumModule,
   topic: Topic,
   topicIndex: number,
   cardIndex: number,
-  cardLock: TopicLock,
-  copy: { continue: string; nextTopic: string; topicsTitle: string },
-): { href: string; label: string; completesTopic: boolean } | undefined {
+  finished: ReadonlySet<string>,
+  copy: { nextTopic: string; topicsTitle: string },
+):
+  | { href: string; completesTopic: false }
+  | { href: string; completesTopic: true; nextLabel: string }
+  | undefined {
+  if (lastCardFinished(topic, finished)) return undefined;
   const nextCard = topic.cards[cardIndex + 1];
   if (nextCard) {
     return {
       href: `/study/${selected.id}/${topic.id}/${nextCard.id}`,
-      label: copy.continue,
       completesTopic: false,
     };
   }
-  if (cardLock !== "current") return undefined;
   const nextTopic = selected.topics[topicIndex + 1];
   if (nextTopic) {
     return {
       href: `/study/${selected.id}/${nextTopic.id}`,
-      label: copy.nextTopic,
       completesTopic: true,
+      nextLabel: copy.nextTopic,
     };
   }
   return {
     href: `/study/${selected.id}`,
-    label: copy.topicsTitle,
     completesTopic: true,
+    nextLabel: copy.topicsTitle,
   };
 }
 

@@ -53,7 +53,7 @@ export const studyCopy: Record<
   }
 > = {
   en: {
-    title: "Your map",
+    title: "Modules",
     intro:
       "Open a module folder. Later modules stay locked until they ship.",
     open: "Open",
@@ -87,7 +87,7 @@ export const studyCopy: Record<
     notDone: "Not done",
   },
   "pt-BR": {
-    title: "Seu mapa",
+    title: "Módulos",
     intro:
       "Abra uma pasta de módulo. Os módulos seguintes ficam bloqueados até serem lançados.",
     open: "Aberto",

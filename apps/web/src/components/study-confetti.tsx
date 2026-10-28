@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+
+export type ConfettiOrigin = { x: number; y: number };
 
 const COLORS = ["#0176d3", "#032d60", "#1b96ff", "#014486", "#fe9339", "#ffffff"];
 
@@ -16,7 +19,7 @@ type Piece = {
   spin: number;
 };
 
-export function ConfettiBurst() {
+export function ConfettiBurst({ origin }: { origin: ConfettiOrigin }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -32,14 +35,12 @@ export function ConfettiBurst() {
     };
     resize();
 
-    const originX = canvas.width / 2;
-    const originY = canvas.height - 120;
     const pieces: Piece[] = Array.from({ length: 110 }, (_, index) => {
       const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI;
       const speed = 9 + Math.random() * 9;
       return {
-        x: originX + (Math.random() - 0.5) * 120,
-        y: originY,
+        x: origin.x + (Math.random() - 0.5) * 28,
+        y: origin.y,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         w: 6 + Math.random() * 5,
@@ -76,13 +77,14 @@ export function ConfettiBurst() {
     raf = requestAnimationFrame(tick);
 
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [origin]);
 
-  return (
+  return createPortal(
     <canvas
       ref={ref}
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-40"
-    />
+      className="pointer-events-none fixed inset-0 z-50"
+    />,
+    document.body,
   );
 }
