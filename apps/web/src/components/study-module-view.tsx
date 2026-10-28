@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
-import { FolderIcon, lockBadge, StudyRow } from "@/components/study-row";
+import { FolderIcon, lockBadge, TopicPathRow } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
 import { topicAvailability, topicListMeta } from "@/lib/curriculum";
 import { studyCopy, topicListLine } from "@/lib/study-copy";
@@ -28,12 +28,18 @@ export function StudyModuleView() {
       >
         ← {copy.backToMap}
       </Link>
-      <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
+      <p
+        id="topic-list-label"
+        className="mt-6 text-xs font-bold tracking-[0.14em] text-accent uppercase"
+      >
+        {copy.topicsTitle}
+      </p>
+      <h1 className="mt-1 text-3xl font-bold tracking-tight text-ink">
         {selected.names[locale]}
       </h1>
       <p className="mt-2 text-muted">{copy.topicsIntro}</p>
 
-      <ol className="mt-8 space-y-3" aria-label={copy.topicsTitle}>
+      <ol className="mt-8" aria-labelledby="topic-list-label">
         {selected.topics.map((topic, topicIndex) => {
           const lock = topicAvailability(
             selected.status,
@@ -46,7 +52,8 @@ export function StudyModuleView() {
 
           return (
             <li key={topic.id}>
-              <StudyRow
+              <TopicPathRow
+                connectBelow={topicIndex < selected.topics.length - 1}
                 name={topic.names[locale]}
                 meta={meta}
                 badge={lockBadge(lock, copy)}

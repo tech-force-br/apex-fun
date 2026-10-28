@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
-import { CardIndex, lockBadge, StudyRow } from "@/components/study-row";
+import { CardIndex, CardSheetRow, lockBadge } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
 import {
   cardAvailability,
@@ -46,30 +46,38 @@ export function StudyTopicView() {
             : copy.cardsIntro}
       </p>
 
-      <ol className="mt-8 space-y-3" aria-label={copy.cardsTitle}>
-        {topic.cards.map((card, cardIndex) => {
-          const lock = cardAvailability(topic, cardIndex, finished, unlockAll);
+      <section className="mt-8 overflow-hidden rounded-lg border border-line bg-white">
+        <div className="border-b border-line bg-space px-4 py-2.5">
+          <p id="card-list-label" className="text-xs font-bold text-accent-deep">
+            {copy.cardsTitle}
+          </p>
+        </div>
+        <ol className="divide-y divide-line" aria-labelledby="card-list-label">
+          {topic.cards.map((card, cardIndex) => {
+            const lock = cardAvailability(topic, cardIndex, finished, unlockAll);
 
-          return (
-            <li key={card.id}>
-              <StudyRow
-                name={cardLabel(card, locale)}
-                meta={card.type === "theory" ? copy.theory : copy.exercise}
-                badge={lockBadge(lock, copy)}
-                accessibleLabel={copy.card}
-                lock={lock}
-                href={`/study/${selected.id}/${topic.id}/${card.id}`}
-                leading={
-                  <CardIndex
-                    label={String(cardIndex + 1)}
-                    active={lock !== "locked"}
-                  />
-                }
-              />
-            </li>
-          );
-        })}
-      </ol>
+            return (
+              <li key={card.id}>
+                <CardSheetRow
+                  name={cardLabel(card, locale)}
+                  meta={card.type === "theory" ? copy.theory : copy.exercise}
+                  badge={lockBadge(lock, copy)}
+                  accessibleLabel={copy.card}
+                  lock={lock}
+                  href={`/study/${selected.id}/${topic.id}/${card.id}`}
+                  leading={
+                    <CardIndex
+                      label={String(cardIndex + 1)}
+                      active={lock !== "locked"}
+                      kind={card.type}
+                    />
+                  }
+                />
+              </li>
+            );
+          })}
+        </ol>
+      </section>
 
       <p className="mt-8 text-center text-xs text-muted">{copy.mockNote}</p>
     </main>
