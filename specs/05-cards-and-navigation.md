@@ -32,6 +32,14 @@ After a successful sign-in, the student is taken to `/study` (the map).
 8. Finish the last card in the topic → the next topic unlocks. Adding or removing cards changes which card that is
 9. Finished topics stay fully open
 
+## Topic cards while you are on a card
+
+On a theory card and on an exercise card, a pane on the left lists every card in that topic. Each row shows the card and whether it is completed. A completed card and the next unfinished card are links. Locked cards stay in the list and are not links. The card on screen is marked. The owner can open every card, including ones that are locked for a student, the same way as on the map.
+
+On a phone the list sits above the lesson and scrolls on its own.
+
+This list is not the theory reference pane. See [07-student-ui.md](07-student-ui.md).
+
 ## Progress on a card
 
 On a card, a progress bar sits under the back link. It shows the card’s place in its topic: the first card is 0%, and a later card is its index divided by the number of cards in the topic, as a whole percent. A topic with two cards shows 0% on the first card and 50% on the second. The bar is on theory cards and exercise cards. It is not on the map, the module list, or the card list.

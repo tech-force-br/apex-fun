@@ -149,3 +149,15 @@ export function theoryAdvance(
     completesTopic: true,
   };
 }
+
+/** Wide chrome lines up with a card page and with admin. Other pages stay narrow. */
+export function studyChromeWidth(pathname: string): "wide" | "narrow" {
+  if (pathname.startsWith("/admin")) return "wide";
+  const [root, moduleId, topicId, cardId, extra] = pathname
+    .split("/")
+    .filter(Boolean);
+  if (root === "study" && moduleId && topicId && cardId && extra === undefined) {
+    return "wide";
+  }
+  return "narrow";
+}

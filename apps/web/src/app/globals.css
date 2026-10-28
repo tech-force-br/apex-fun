@@ -21,6 +21,7 @@ body {
 
 :root {
   --site-footer-height: 4.75rem;
+  --study-header-height: 4.5rem;
 }
 
 button {

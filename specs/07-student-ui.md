@@ -12,9 +12,9 @@ Language is chosen at signup. Change later in settings and from a control on eve
 
 ## Exercise screen (desktop)
 
-- **Theory pane** on the left. Starts **closed**.
-- **Editor + log** on the right.
-- Open the pane with a **Theory** button.
+- **Topic card list** on the left. Every card in the current topic. See [05-cards-and-navigation.md](05-cards-and-navigation.md).
+- **Theory pane** starts **closed**. Open it with a **Theory** button. It is a reference next to the lesson, separate from the card list.
+- **Editor + log** on the right of the lesson.
 - Editor stays usable while Theory is open.
 
 ### What the Theory pane lists

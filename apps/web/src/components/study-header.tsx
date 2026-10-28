@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useLayoutEffect, useRef } from "react";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
 import { chromeCopy } from "@/lib/locale";
+import { studyChromeWidth } from "@/lib/study-route";
 
 export function StudyHeader() {
   const pathname = usePathname();
@@ -14,6 +16,29 @@ export function StudyHeader() {
   const { session, signOut } = useMockAuth();
   const chrome = chromeCopy[locale];
   const admin = pathname.startsWith("/admin");
+  const wide = studyChromeWidth(pathname) === "wide";
+  const headerRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const node = headerRef.current;
+    if (!node) {
+      document.documentElement.style.removeProperty("--study-header-height");
+      return;
+    }
+    const apply = () => {
+      document.documentElement.style.setProperty(
+        "--study-header-height",
+        `${node.offsetHeight}px`,
+      );
+    };
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty("--study-header-height");
+    };
+  }, [session]);
 
   if (!session) return null;
 
@@ -23,10 +48,13 @@ export function StudyHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur-md">
+    <header
+      ref={headerRef}
+      className="sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur-md"
+    >
       <div
         className={`mx-auto flex w-full flex-wrap items-center justify-between gap-3 px-6 py-4 ${
-          admin ? "max-w-6xl" : "max-w-3xl"
+          wide ? "max-w-6xl" : "max-w-3xl"
         }`}
       >
         <Link

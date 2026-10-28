@@ -34,16 +34,14 @@ export function StudyAdvanceBar({
   onAdvance: () => void;
 }) {
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-height)+1rem)] z-20">
-      <div className="mx-auto flex w-full max-w-3xl justify-center px-6 py-3">
-        <button
-          type="button"
-          onClick={onAdvance}
-          className={variant === "next" ? nextTopicClass : continueClass}
-        >
-          {label}
-        </button>
-      </div>
+    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-height)+1rem)] z-20 flex justify-center px-6 md:pointer-events-auto md:static md:z-auto md:shrink-0 md:px-0 md:pt-4">
+      <button
+        type="button"
+        onClick={onAdvance}
+        className={variant === "next" ? nextTopicClass : continueClass}
+      >
+        {label}
+      </button>
     </div>
   );
 }
@@ -114,26 +112,28 @@ export function StudyTheoryView({
   const showBar = destination !== undefined || held !== null;
 
   return (
-    <main
-      className={`mx-auto w-full max-w-3xl flex-1 px-6 pt-10 ${
-        showBar ? "pb-32" : "pb-10"
-      }`}
-    >
-      <Link
-        href={`/study/${selected.id}/${topic.id}`}
-        className="cursor-pointer text-sm text-muted hover:text-accent"
+    <div className="flex min-w-0 flex-1 flex-col md:min-h-0">
+      <main
+        className={`w-full md:min-h-0 md:flex-1 md:overflow-y-auto ${
+          showBar ? "pb-28 md:pb-0" : ""
+        }`}
       >
-        ← {topic.names[locale]}
-      </Link>
-      <TopicProgress
-        cardIndex={cardIndex}
-        cardCount={topic.cards.length}
-        label={copy.topicProgress}
-        percent={held ? 100 : undefined}
-      />
-      <p className="mt-4 text-sm text-muted">{copy.theory}</p>
-      <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
-      {held ? <ConfettiBurst /> : null}
+        <Link
+          href={`/study/${selected.id}/${topic.id}`}
+          className="cursor-pointer text-sm text-muted hover:text-accent"
+        >
+          ← {topic.names[locale]}
+        </Link>
+        <TopicProgress
+          cardIndex={cardIndex}
+          cardCount={topic.cards.length}
+          label={copy.topicProgress}
+          percent={held ? 100 : undefined}
+        />
+        <p className="mt-4 text-sm text-muted">{copy.theory}</p>
+        <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
+        {held ? <ConfettiBurst /> : null}
+      </main>
       {showBar ? (
         <StudyAdvanceBar
           label={held?.label ?? copy.continue}
@@ -141,7 +141,7 @@ export function StudyTheoryView({
           onAdvance={held ? onNext : onAdvance}
         />
       ) : null}
-    </main>
+    </div>
   );
 }
 

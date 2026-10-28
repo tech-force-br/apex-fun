@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { CheckResult, RunSpinner } from "@/components/check-result";
 import { CodeEditor } from "@/components/code-editor";
+import { TopicCardPane } from "@/components/study-card-pane";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
 import { TopicProgress } from "@/components/study-topic-progress";
 import {
@@ -43,8 +44,8 @@ export function StudyCardView() {
     return <StudyPending />;
   }
 
-  if (gate.card.type === "exercise") {
-    return (
+  const lesson =
+    gate.card.type === "exercise" ? (
       <StudyExerciseView
         key={gate.card.id}
         selected={gate.selected}
@@ -54,19 +55,29 @@ export function StudyCardView() {
         cardIndex={gate.cardIndex}
         cardLock={gate.cardLock}
       />
+    ) : (
+      <StudyTheoryView
+        key={gate.card.id}
+        selected={gate.selected}
+        topic={gate.topic}
+        topicIndex={gate.topicIndex}
+        card={gate.card}
+        cardIndex={gate.cardIndex}
+        cardLock={gate.cardLock}
+      />
     );
-  }
 
   return (
-    <StudyTheoryView
-      key={gate.card.id}
-      selected={gate.selected}
-      topic={gate.topic}
-      topicIndex={gate.topicIndex}
-      card={gate.card}
-      cardIndex={gate.cardIndex}
-      cardLock={gate.cardLock}
-    />
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-8 md:h-[calc(100dvh-var(--site-footer-height)-var(--study-header-height))] md:min-h-0 md:flex-row md:overflow-hidden">
+      <TopicCardPane
+        moduleId={gate.selected.id}
+        topic={gate.topic}
+        finished={gate.finished}
+        unlockAll={gate.unlockAll}
+        activeCardId={gate.card.id}
+      />
+      {lesson}
+    </div>
   );
 }
 
@@ -120,73 +131,75 @@ function StudyExerciseView({
   }
 
   return (
-    <main
-      className={`mx-auto w-full max-w-3xl flex-1 px-6 pt-10 ${
-        showAdvance ? "pb-32" : "pb-10"
-      }`}
-    >
-      <Link
-        href={`/study/${selected.id}/${topic.id}`}
-        className="cursor-pointer text-sm text-muted hover:text-accent"
+    <div className="flex min-w-0 flex-1 flex-col md:min-h-0">
+      <main
+        className={`w-full md:min-h-0 md:flex-1 md:overflow-y-auto ${
+          showAdvance ? "pb-28 md:pb-0" : ""
+        }`}
       >
-        ← {topic.names[locale]}
-      </Link>
-      <TopicProgress
-        cardIndex={cardIndex}
-        cardCount={topic.cards.length}
-        label={copy.topicProgress}
-        percent={held ? 100 : undefined}
-      />
-      <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
-        {copy.exercise}
-      </h1>
-      {prompt ? (
-        <p
-          className="mt-4 text-base leading-7 whitespace-pre-wrap text-ink"
-          onCopy={(event) => event.preventDefault()}
-          onCut={(event) => event.preventDefault()}
-          onPaste={(event) => event.preventDefault()}
+        <Link
+          href={`/study/${selected.id}/${topic.id}`}
+          className="cursor-pointer text-sm text-muted hover:text-accent"
         >
-          {prompt}
-        </p>
-      ) : null}
-      <div
-        className={`mt-6 ${running ? "pointer-events-none opacity-60" : ""}`}
-        aria-busy={running}
-      >
-        <CodeEditor
-          key={card.id}
-          blockClipboard
-          readOnly={running}
-          label={copy.editor}
-          minHeight="12rem"
-          onChange={setCode}
+          ← {topic.names[locale]}
+        </Link>
+        <TopicProgress
+          cardIndex={cardIndex}
+          cardCount={topic.cards.length}
+          label={copy.topicProgress}
+          percent={held ? 100 : undefined}
         />
-      </div>
-      {showValidate ? (
-        <button
-          type="button"
-          onClick={() => void onValidate()}
-          disabled={running}
+        <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
+          {copy.exercise}
+        </h1>
+        {prompt ? (
+          <p
+            className="mt-4 text-base leading-7 whitespace-pre-wrap text-ink"
+            onCopy={(event) => event.preventDefault()}
+            onCut={(event) => event.preventDefault()}
+            onPaste={(event) => event.preventDefault()}
+          >
+            {prompt}
+          </p>
+        ) : null}
+        <div
+          className={`mt-6 ${running ? "pointer-events-none opacity-60" : ""}`}
           aria-busy={running}
-          className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
         >
-          {running ? <RunSpinner /> : null}
-          {running ? copy.validating : copy.validate}
-        </button>
-      ) : null}
-      {result && !running ? (
-        <div className="mt-4 rounded-lg border border-line bg-white p-4">
-          <CheckResult
-            passed={result.passed}
-            unavailable={result.unavailable}
-            message={result.passed ? copy.passed : result.message}
-            log={result.log}
-            logLabel={copy.log}
+          <CodeEditor
+            key={card.id}
+            blockClipboard
+            readOnly={running}
+            label={copy.editor}
+            minHeight="12rem"
+            onChange={setCode}
           />
         </div>
-      ) : null}
-      {held ? <ConfettiBurst /> : null}
+        {showValidate ? (
+          <button
+            type="button"
+            onClick={() => void onValidate()}
+            disabled={running}
+            aria-busy={running}
+            className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
+          >
+            {running ? <RunSpinner /> : null}
+            {running ? copy.validating : copy.validate}
+          </button>
+        ) : null}
+        {result && !running ? (
+          <div className="mt-4 rounded-lg border border-line bg-white p-4">
+            <CheckResult
+              passed={result.passed}
+              unavailable={result.unavailable}
+              message={result.passed ? copy.passed : result.message}
+              log={result.log}
+              logLabel={copy.log}
+            />
+          </div>
+        ) : null}
+        {held ? <ConfettiBurst /> : null}
+      </main>
       {showAdvance ? (
         <StudyAdvanceBar
           label={held?.label ?? copy.continue}
@@ -194,6 +207,6 @@ function StudyExerciseView({
           onAdvance={held ? onNext : onAdvance}
         />
       ) : null}
-    </main>
+    </div>
   );
 }

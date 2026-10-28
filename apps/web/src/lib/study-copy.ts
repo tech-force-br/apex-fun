@@ -47,6 +47,9 @@ export const studyCopy: Record<
     passed: string;
     log: string;
     topicProgress: string;
+    topicCards: string;
+    done: string;
+    notDone: string;
   }
 > = {
   en: {
@@ -79,6 +82,9 @@ export const studyCopy: Record<
     passed: "Passed.",
     log: "Log",
     topicProgress: "Topic progress",
+    topicCards: "Cards in this topic",
+    done: "Done",
+    notDone: "Not done",
   },
   "pt-BR": {
     title: "Seu mapa",
@@ -110,5 +116,8 @@ export const studyCopy: Record<
     passed: "Passou.",
     log: "Log",
     topicProgress: "Progresso do tópico",
+    topicCards: "Cards deste tópico",
+    done: "Feito",
+    notDone: "Não feito",
   },
 };
