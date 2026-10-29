@@ -27,7 +27,7 @@ export const chromeCopy: Record<
     signOut: "Sign out",
     loading: "Loading…",
     admin: "Admin",
-    studyMap: "Student map",
+    studyMap: "Student",
   },
   "pt-BR": {
     wordmark: "ApexFun",
@@ -37,6 +37,6 @@ export const chromeCopy: Record<
     signOut: "Sair",
     loading: "Carregando…",
     admin: "Admin",
-    studyMap: "Mapa do aluno",
+    studyMap: "Aluno",
   },
 };

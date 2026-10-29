@@ -10,11 +10,12 @@ Shown in v1:
 - Lists (locked)
 - Sets (locked)
 - Loops (locked)
-- Methods (locked)
 - sObjects (locked)
 - Maps (locked)
 - SOQL (locked)
 - DML (locked)
+- Methods (locked)
+- Classes (locked)
 
 Triggers are not on the v1 map.
 
@@ -43,7 +44,20 @@ The owner chooses how many theory cards and exercise cards each topic has, and c
 
 The seed places one Integer exercise after the Integer theory cards. The prompt asks the student to declare `seatCount` and store `3`. Its one hidden test is run-clean and checks that the value is 3. The sample preview is `Integer seatCount = 3;`.
 
-The seed compile-fail list has one shared test, stored in code the same way as the cards. Its match text is `missing ';'`. The English student message is "There is a semicolon (;) missing somewhere." The Portuguese student message is "Tem um ponto e vírgula (;) faltando em algum lugar." The preview sample is `Integer seatCount = 3`. `integer-seat-count` does not carry that test.
+The seed also places one example exercise after the theory cards on String, Boolean, Decimal, Date, and Concatenation, and one exercise on Mixed review. These are examples. The owner will add more later. Each has one run-clean hidden test, except Concatenation, which has three, and Mixed review, which has two. The previews are:
+
+| Topic | Preview |
+|---|---|
+| String | `String accountName = 'Acme';` |
+| Boolean | `Boolean isActive = true;` |
+| Decimal | `Decimal amount = 19.99;` |
+| Date | `Date closeDate = Date.newInstance(2026, 3, 15);` |
+| Concatenation | `String hello = 'Hello';` then `String name = 'Ana';` then `String greeting = hello + ' ' + name;` |
+| Mixed review | `Integer seatCount = 3;` then `String label = 'Seats: ' + seatCount;` |
+
+String stores Acme. Boolean stores true. Decimal stores 19.99. Date stores 15 March 2026. Concatenation asks for two Strings, `hello` storing Hello and `name` storing Ana, then a third String, `greeting`, that joins hello, a space, and name so it stores Hello Ana. Mixed review checks that seatCount is 3 and that label is Seats: 3.
+
+The seed compile-fail list has two shared tests, stored in code the same way as the cards. The first match text is `missing ';'`. Its English student message is "There is a semicolon (;) missing somewhere." Its Portuguese student message is "Tem um ponto e vírgula (;) faltando em algum lugar." Its preview sample is `Integer seatCount = 3`. The second match text is `token recognition error at: '"'`. Its English student message is "Use single quotes instead of double quotes." Its Portuguese student message is "Use aspas simples em vez de aspas duplas." Its preview sample is `String name = "Carl";`. No exercise card carries these tests.
 
 Superseded: a compile-fail match on `Duplicate variable: seatCount` stored on that card. A correct declaration compiles. Compile-fail tests are now one shared list of explanations. See [06-exercise-checks.md](06-exercise-checks.md).
 

@@ -30,7 +30,7 @@ function theory(
 
 /**
  * Seed theory for Variables. Samples stay English.
- * Mixed review has no cards of its own: its theory pane is every earlier topic.
+ * Mixed review has no theory cards of its own: its theory pane is every earlier topic.
  */
 export const variablesTheoryCards: Record<VariablesTopicId, TheoryCard[]> = {
   "what-a-variable-is": [

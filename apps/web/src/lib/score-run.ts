@@ -55,6 +55,59 @@ function unavailable(): ExerciseCheck {
   return { passed: false, unavailable: true, message: "", log: "" };
 }
 
+function compilePosition(line: string, position: string, locale: Locale) {
+  if (locale === "pt-BR") {
+    return `verificar linha ${line}, posição ${position}:`;
+  }
+  return `check line ${line}, position ${position}:`;
+}
+
+/**
+ * One compiler position: `<anonymous>:1:20` or a bare `1:20`.
+ * The position keeps every digit, so `14:32:01` is not a position.
+ */
+function firstCompilePosition(text: string) {
+  const compilePositionPattern =
+    /<anonymous>:(\d+):(\d+)(?!\d)(?!:\d)|(^|[^A-Za-z0-9_.])(\d+):(\d+)(?!\d)(?!:\d)/g;
+  for (const match of text.matchAll(compilePositionPattern)) {
+    const anonymous = match[1] != null;
+    const prefix = match[3] ?? "";
+    const index = match.index ?? 0;
+    if (
+      !anonymous &&
+      prefix === ":" &&
+      index > 0 &&
+      /\d/.test(text[index - 1] ?? "")
+    ) {
+      continue;
+    }
+    return match;
+  }
+  return undefined;
+}
+
+/**
+ * The compiler writes a position as `<anonymous>:1:20` or `1:20`.
+ * That position is a line above the rest of the error.
+ * The log stays the runner's error text, and matching still uses the raw compiler text.
+ */
+export function compilePositionMessage(text: string, locale: Locale) {
+  const match = firstCompilePosition(text);
+  if (!match || match.index == null) return text;
+  const line = match[1] ?? match[4];
+  const position = match[2] ?? match[5];
+  if (!line || !position) return text;
+  const prefixLength = match[1] != null ? 0 : (match[3] ?? "").length;
+  const start = match.index + prefixLength;
+  let end = match.index + match[0].length;
+  if (text[end] === ":" && !/\d/.test(text[end + 1] ?? "")) end += 1;
+  const error = `${text.slice(0, start)}${text.slice(end)}`
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
+  const heading = compilePosition(line, position, locale);
+  return error.length > 0 ? `${heading}\n${error}` : heading;
+}
+
 /** First shared match whose text is contained in the compiler output. */
 export function firstCompileMatch(
   tests: readonly CompileFailTest[],
@@ -93,7 +146,7 @@ export async function scoreTest(
     return { passed: true, unavailable: false, message: "", log: run.log };
   }
   if (!run.compiled && studentCompile(run.raw, studentLines)) {
-    return missed(run.log, run.log);
+    return missed(compilePositionMessage(run.log, locale), run.log);
   }
   return missed(test.messages[locale]?.trim() ?? "", run.log);
 }
@@ -125,7 +178,7 @@ export async function scoreExercise(
     if (match) {
       return missed(match.messages[locale]?.trim() ?? "", compileRun.log);
     }
-    return missed(compileRun.log, compileRun.log);
+    return missed(compilePositionMessage(compileRun.log, locale), compileRun.log);
   }
 
   const studentLog = compileRun.log;

@@ -18,4 +18,16 @@ export const compileFailTests: CompileFailTest[] = [
     },
     previewCode: "Integer seatCount = 3",
   },
+  {
+    id: "double-quotes",
+    match: {
+      id: "double-quotes",
+      text: `token recognition error at: '"'`,
+      messages: {
+        en: "Use single quotes instead of double quotes.",
+        "pt-BR": "Use aspas simples em vez de aspas duplas.",
+      },
+    },
+    previewCode: 'String name = "Carl";',
+  },
 ];

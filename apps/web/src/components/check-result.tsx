@@ -28,7 +28,9 @@ export function CheckResult({
 
   return (
     <div className="space-y-3" role="status">
-      {message ? <p className={`text-sm font-bold ${tone}`}>{message}</p> : null}
+      {message ? (
+        <p className={`text-sm font-bold whitespace-pre-line ${tone}`}>{message}</p>
+      ) : null}
       {log ? (
         <div>
           <p className="text-xs font-medium tracking-wide text-muted uppercase">

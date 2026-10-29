@@ -86,10 +86,12 @@ This applies to run-clean checks only, and only after the student snippet has co
 
 | Situation | What to show |
 |---|---|
-| Compile error (student code) | Apex error. When a shared test's match text hits, also that test's student message |
+| Compile error (student code) | The Apex error. When a shared test's match text hits, that test's student message only |
 | Hidden test fails | That run-clean test’s student message only |
 
 Do not dump later checks after the first failure.
+
+When the student message is the Apex error, a position written as `1:20` or `<anonymous>:1:20` is taken off that message and shown on its own line above it: `check line 1, position 20:` in English and `verificar linha 1, posição 20:` in Portuguese. The rest of that message stays underneath. The log always shows the raw error log. Matching still uses the raw compiler text.
 
 ## Preview in the builder
 

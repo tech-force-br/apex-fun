@@ -1,5 +1,5 @@
 import type { Locale } from "@/lib/locale";
-import { integerSeatCount } from "@/lib/variables-exercises";
+import { variablesExerciseCards } from "@/lib/variables-exercises";
 import { variablesTheoryCards } from "@/lib/variables-theory";
 
 export type LocalizedText = Record<Locale, string>;
@@ -129,10 +129,7 @@ export const curriculum: CurriculumModule[] = [
     topics: variablesTopicIds.map((id) => ({
       id,
       ...variablesTopicMeta[id],
-      cards:
-        id === "integer"
-          ? [...variablesTheoryCards[id], integerSeatCount]
-          : variablesTheoryCards[id],
+      cards: [...variablesTheoryCards[id], ...variablesExerciseCards[id]],
     })),
   },
   {
@@ -166,12 +163,6 @@ export const curriculum: CurriculumModule[] = [
     topics: [],
   },
   {
-    id: "methods",
-    names: { en: "Methods", "pt-BR": "Métodos" },
-    status: "coming_later",
-    topics: [],
-  },
-  {
     id: "sobjects",
     names: { en: "sObjects", "pt-BR": "sObjects" },
     status: "coming_later",
@@ -192,6 +183,18 @@ export const curriculum: CurriculumModule[] = [
   {
     id: "dml",
     names: { en: "DML", "pt-BR": "DML" },
+    status: "coming_later",
+    topics: [],
+  },
+  {
+    id: "methods",
+    names: { en: "Methods", "pt-BR": "Métodos" },
+    status: "coming_later",
+    topics: [],
+  },
+  {
+    id: "classes",
+    names: { en: "Classes", "pt-BR": "Classes" },
     status: "coming_later",
     topics: [],
   },
