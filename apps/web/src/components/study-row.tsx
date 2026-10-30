@@ -1,16 +1,15 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { drillForward } from "@/components/study-drill-transition";
-import type { TopicLock } from "@/lib/curriculum";
+import { DoneCheck } from "@/components/study-status-mark";
+import type { TopicRowState } from "@/lib/curriculum";
 
-export function lockBadge(
-  lock: TopicLock,
-  copy: { current: string; open: string; locked: string },
-) {
-  if (lock === "current") return copy.current;
-  if (lock === "locked") return copy.locked;
-  return copy.open;
-}
+type TopicStatusCopy = {
+  completed: string;
+  locked: string;
+  open: string;
+  topicCardsDone: (percent: number) => string;
+};
 
 function FolderArt({ locked }: { locked?: boolean }) {
   return (
@@ -43,21 +42,26 @@ function FolderArt({ locked }: { locked?: boolean }) {
   );
 }
 
-/** Bordered folder used on the topic path. */
-export function FolderIcon({
-  active,
-  locked,
-}: {
-  active?: boolean;
-  locked?: boolean;
-}) {
+function folderTone(kind: TopicRowState["kind"]) {
+  switch (kind) {
+    case "done":
+      return "bg-done-soft text-done";
+    case "locked":
+      return "border border-line bg-white text-muted";
+    case "current":
+    case "open":
+      return "bg-highlight text-accent-deep";
+  }
+}
+
+function FolderIcon({ kind }: { kind: TopicRowState["kind"] }) {
+  const tone = folderTone(kind);
+
   return (
     <span
-      className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${
-        active ? "bg-highlight text-accent-deep" : "border border-line bg-white text-muted"
-      }`}
+      className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${tone}`}
     >
-      <FolderArt locked={locked} />
+      <FolderArt locked={kind === "locked"} />
     </span>
   );
 }
@@ -78,30 +82,6 @@ export function FolderMark({
       className={`relative flex h-10 w-10 shrink-0 items-center justify-center ${tone}`}
     >
       <FolderArt locked={locked} />
-    </span>
-  );
-}
-
-export function CardIndex({
-  label,
-  active,
-  kind,
-}: {
-  label: string;
-  active: boolean;
-  kind: "theory" | "exercise";
-}) {
-  const tone = !active
-    ? "border border-line bg-white text-muted"
-    : kind === "exercise"
-      ? "border border-accent bg-white text-accent"
-      : "bg-highlight text-accent-deep";
-
-  return (
-    <span
-      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-xs font-bold ${tone}`}
-    >
-      {label}
     </span>
   );
 }
@@ -166,108 +146,118 @@ function EntryText({
   );
 }
 
-function EntryBadge({ badge, locked }: { badge: string; locked: boolean }) {
+function LockMark() {
   return (
-    <span
-      className={`shrink-0 rounded-md px-3 py-1 text-xs font-bold ${
-        locked ? "bg-space text-muted" : "bg-highlight text-accent-deep"
-      }`}
-    >
-      {badge}
+    <span className="flex h-6 w-6 shrink-0 items-center justify-center text-muted">
+      <svg viewBox="0 0 16 16" className="h-5 w-5" fill="none" aria-hidden>
+        <rect
+          x="3.25"
+          y="7"
+          width="9.5"
+          height="6.5"
+          rx="1.4"
+          stroke="currentColor"
+          strokeWidth="1.4"
+        />
+        <path
+          d="M5.25 7V5.25a2.75 2.75 0 0 1 5.5 0V7"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+      </svg>
     </span>
   );
+}
+
+function TopicStatus({ state }: { state: TopicRowState }) {
+  switch (state.kind) {
+    case "done":
+      return <DoneCheck />;
+    case "current":
+      return (
+        <span className="shrink-0 text-sm font-bold tabular-nums text-ink">
+          {state.percent}%
+        </span>
+      );
+    case "open":
+    case "locked":
+      return <LockMark />;
+  }
+}
+
+function topicStatusLabel(state: TopicRowState, copy: TopicStatusCopy) {
+  switch (state.kind) {
+    case "done":
+      return copy.completed;
+    case "current":
+      return copy.topicCardsDone(state.percent);
+    case "locked":
+      return copy.locked;
+    case "open":
+      return copy.open;
+  }
 }
 
 type StudyEntryProps = {
   name: string;
   meta?: string;
-  badge: string;
+  state: TopicRowState;
   accessibleLabel: string;
-  lock: TopicLock;
+  copy: TopicStatusCopy;
   href: string;
-  leading: ReactNode;
 };
 
-function entryLabel(name: string, accessibleLabel: string) {
-  return `${name}, ${accessibleLabel}`;
+function entryLabel(name: string, accessibleLabel: string, statusLabel: string) {
+  return `${name}, ${accessibleLabel}, ${statusLabel}`;
 }
 
-function pathSurface(locked: boolean, current: boolean) {
-  if (locked) return "border-line bg-white";
-  if (current) return "border-accent bg-highlight hover:border-accent-deep";
-  return "border-line bg-white hover:border-accent";
+function pathSurface(kind: TopicRowState["kind"]) {
+  switch (kind) {
+    case "locked":
+      return "border-line bg-white";
+    case "done":
+      return "border-done bg-done-soft hover:border-done";
+    case "current":
+      return "border-accent bg-highlight hover:border-accent-deep";
+    case "open":
+      return "border-line bg-white hover:border-accent";
+  }
 }
 
 /** Topic row. The icon sits on a line that runs toward the next topic. */
 export function TopicPathRow({
   name,
   meta,
-  badge,
+  state,
   accessibleLabel,
-  lock,
+  copy,
   href,
-  leading,
   connectBelow = false,
 }: StudyEntryProps & { connectBelow?: boolean }) {
-  const locked = lock === "locked";
-  const current = lock === "current";
+  const locked = state.kind === "locked";
 
   return (
     <StudyAction
       locked={locked}
-      current={current}
+      current={state.kind === "current"}
       href={href}
-      label={entryLabel(name, accessibleLabel)}
+      label={entryLabel(name, accessibleLabel, topicStatusLabel(state, copy))}
       className="flex w-full items-stretch gap-3 text-left"
       transitionTypes={drillForward}
     >
       <span className="flex w-12 shrink-0 flex-col items-center">
-        {leading}
+        <FolderIcon kind={state.kind} />
         {connectBelow ? <span aria-hidden className="mt-1.5 w-px flex-1 bg-line" /> : null}
       </span>
       <span
         className={`flex min-w-0 flex-1 items-center gap-3 rounded-lg border px-4 py-3 transition ${pathSurface(
-          locked,
-          current,
+          state.kind,
         )} ${connectBelow ? "mb-3" : ""}`}
       >
         <EntryText name={name} meta={meta} locked={locked} />
-        <EntryBadge badge={badge} locked={locked} />
+        <TopicStatus state={state} />
       </span>
-    </StudyAction>
-  );
-}
-
-/** Card row inside the topic's single bordered list. */
-export function CardSheetRow({
-  name,
-  meta,
-  badge,
-  accessibleLabel,
-  lock,
-  href,
-  leading,
-}: StudyEntryProps) {
-  const locked = lock === "locked";
-  const current = lock === "current";
-  const surface = locked
-    ? "bg-white"
-    : current
-      ? "bg-highlight shadow-[inset_3px_0_0_var(--color-accent)]"
-      : "bg-white hover:bg-highlight";
-
-  return (
-    <StudyAction
-      locked={locked}
-      current={current}
-      href={href}
-      label={entryLabel(name, accessibleLabel)}
-      className={`flex w-full items-center gap-3 px-4 py-3 text-left transition ${surface}`}
-      transitionTypes={drillForward}
-    >
-      {leading}
-      <EntryText name={name} meta={meta} locked={locked} />
-      <EntryBadge badge={badge} locked={locked} />
     </StudyAction>
   );
 }
@@ -303,7 +293,7 @@ export function ModuleStop({
     <StudyAction
       locked={locked}
       href={href}
-      label={entryLabel(name, accessibleLabel)}
+      label={entryLabel(name, accessibleLabel, badge)}
       className={`relative z-10 flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border px-1.5 py-3 text-center transition sm:px-3 ${surface}`}
       transitionTypes={drillForward}
     >

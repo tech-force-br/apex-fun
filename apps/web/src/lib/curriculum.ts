@@ -253,6 +253,21 @@ export function topicIsComplete(
 }
 
 /**
+ * Share of cards finished, as a whole percent at or below the exact rate.
+ * An empty card list is 0%. A finished topic is 100%, and the topic list
+ * shows a check for that topic instead of this percent.
+ */
+export function topicDonePercent(
+  topic: Topic,
+  finished: ReadonlySet<string>,
+) {
+  const total = topic.cards.length;
+  if (total === 0) return 0;
+  const done = topic.cards.filter((card) => finished.has(card.id)).length;
+  return Math.floor((done * 100) / total);
+}
+
+/**
  * The last card on the topic is finished.
  * The progress bar and Continue use this. An empty card list stays unfinished.
  */
@@ -307,6 +322,26 @@ export function topicAvailability(
   return withOwnerAccess(stepLock(topicIndex, firstUnfinished), unlockAll);
 }
 
+/** What one topic row shows. A finished unlocked topic is done. */
+export type TopicRowState =
+  | { kind: "done" }
+  | { kind: "current"; percent: number }
+  | { kind: "open" }
+  | { kind: "locked" };
+
+export function topicRowState(
+  lock: TopicLock,
+  topic: Topic,
+  finished: ReadonlySet<string>,
+): TopicRowState {
+  if (lock !== "locked" && topicIsComplete(topic, finished)) return { kind: "done" };
+  if (lock === "current") {
+    return { kind: "current", percent: topicDonePercent(topic, finished) };
+  }
+  if (lock === "locked") return { kind: "locked" };
+  return { kind: "open" };
+}
+
 /** Finished cards stay open. The next unfinished card is current. The owner can open later cards. */
 export function cardAvailability(
   topic: Topic,
@@ -320,15 +355,35 @@ export function cardAvailability(
   return withOwnerAccess(stepLock(cardIndex, firstUnfinished), unlockAll);
 }
 
+/** Circle on a card row. Ignores owner unlock. The first unfinished card is next. */
+export type CardMark = "done" | "next" | "later";
+
+export function cardMark(
+  topic: Topic,
+  cardIndex: number,
+  finished: ReadonlySet<string>,
+): CardMark {
+  if (finished.has(topic.cards[cardIndex].id)) return "done";
+  const firstUnfinished = topic.cards.findIndex(
+    (card) => !finished.has(card.id),
+  );
+  if (cardIndex === firstUnfinished) return "next";
+  return "later";
+}
+
+/** Card title: the first paragraph of a theory body, or the exercise prompt. */
 export function cardLabel(card: Card, locale: Locale) {
   const text =
     card.type === "theory" ? card.bodies[locale] : card.prompts[locale];
-  const trimmed = text.trim().replace(/\s+/g, " ");
-  if (!trimmed) {
+  const title = text
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.replace(/\s+/g, " ").trim())
+    .find((paragraph) => paragraph.length > 0);
+  if (!title) {
     if (locale === "pt-BR") {
       return card.type === "theory" ? "Card de teoria" : "Card de exercício";
     }
     return card.type === "theory" ? "Theory card" : "Exercise card";
   }
-  return trimmed.length > 48 ? `${trimmed.slice(0, 48)}…` : trimmed;
+  return title;
 }

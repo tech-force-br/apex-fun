@@ -15,13 +15,6 @@ export type StudyTarget =
   | { status: "ready"; depth: "module"; selected: CurriculumModule }
   | {
       status: "ready";
-      depth: "topic";
-      selected: CurriculumModule;
-      topic: Topic;
-      topicIndex: number;
-    }
-  | {
-      status: "ready";
       depth: "card";
       selected: CurriculumModule;
       topic: Topic;
@@ -31,8 +24,34 @@ export type StudyTarget =
     };
 
 /**
+ * The card a topic opens on.
+ * The first unfinished card. The first card when every card is finished.
+ * A topic with no cards has nowhere to open.
+ */
+export function topicEntryHref(
+  moduleId: string,
+  topic: Topic,
+  finished: ReadonlySet<string>,
+): string | undefined {
+  const card =
+    topic.cards.find((item) => !finished.has(item.id)) ?? topic.cards[0];
+  if (!card) return undefined;
+  return `/study/${moduleId}/${topic.id}/${card.id}`;
+}
+
+/** Card the topic opens on, or the module list when the topic has no cards. */
+export function topicLandingHref(
+  moduleId: string,
+  topic: Topic,
+  finished: ReadonlySet<string>,
+) {
+  return topicEntryHref(moduleId, topic, finished) ?? `/study/${moduleId}`;
+}
+
+/**
  * Where this study URL lands.
  * A missing or locked step redirects. An unlocked card stays, including an exercise.
+ * A topic address with no card opens that topic's doing card.
  * topicIndex and cardIndex are omitted when this page has no such id.
  * A negative index means the id is not in the list.
  * `pinnedCardId` keeps that one card on screen after a module wipe.
@@ -85,14 +104,17 @@ export function resolveStudyTarget(args: {
   const topic = args.topic;
 
   if (args.depth === "topic") {
-    return { status: "ready", depth: "topic", selected, topic, topicIndex };
+    return {
+      status: "redirect",
+      href: topicLandingHref(selected.id, topic, args.finished),
+    };
   }
 
   const cardIndex = args.cardIndex;
   if (args.card === undefined || cardIndex === undefined || cardIndex < 0) {
     return {
       status: "redirect",
-      href: `/study/${selected.id}/${topic.id}`,
+      href: topicLandingHref(selected.id, topic, args.finished),
     };
   }
   if (
@@ -102,7 +124,7 @@ export function resolveStudyTarget(args: {
   ) {
     return {
       status: "redirect",
-      href: `/study/${selected.id}/${topic.id}`,
+      href: topicLandingHref(selected.id, topic, args.finished),
     };
   }
   return {
@@ -120,7 +142,7 @@ export function resolveStudyTarget(args: {
  * Where a card's advance button goes.
  * An earlier card opens the next card.
  * The last card of an earlier topic completes that topic. The button after
- * that click opens the next topic. `nextLabel` is that button's text.
+ * that click opens the doing card of the next topic. `nextLabel` is that button's text.
  * The last card of the last topic fills the bar and plays confetti, then opens the module result modal.
  * The button before the click still says Continue.
  * Once the last card is finished, no card shows Continue.
@@ -153,7 +175,7 @@ export function theoryAdvance(
   const nextTopic = selected.topics[topicIndex + 1];
   if (nextTopic) {
     return {
-      href: `/study/${selected.id}/${nextTopic.id}`,
+      href: topicLandingHref(selected.id, nextTopic, finished),
       completesTopic: true,
       next: "topic",
       nextLabel: copy.nextTopic,

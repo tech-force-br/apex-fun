@@ -6,6 +6,7 @@ import {
   drillForward,
 } from "@/components/study-drill-transition";
 import type { ConfettiOrigin } from "@/components/study-confetti";
+import { markTopicProgressMotion } from "@/components/study-topic-progress";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -19,6 +20,7 @@ import {
   finishCard,
   getFirstAttemptSnapshot,
   resetModuleProgress,
+  useReachedIndex,
 } from "@/lib/study-progress";
 import { theoryAdvance } from "@/lib/study-route";
 
@@ -80,6 +82,7 @@ export function useCardAdvance({
   finish: CardFinish | undefined;
 } {
   const router = useRouter();
+  const reached = useReachedIndex(topic.id);
   const [phase, setPhase] = useState<Phase | null>(null);
   const phaseRef = useRef<Phase | null>(null);
   const startedFor = useRef<string | null>(null);
@@ -186,6 +189,13 @@ export function useCardAdvance({
       label: copy.continue,
       tone: "continue",
       run: () => {
+        markTopicProgressMotion({
+          fromIndex: cardIndex,
+          toIndex: cardIndex + 1,
+          reached,
+          cardCount: topic.cards.length,
+          lastFinished: lastCardFinished(topic, finished),
+        });
         finishCard(cardId);
         router.push(href, { transitionTypes: cardForward });
       },

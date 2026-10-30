@@ -1,16 +1,15 @@
 import { ViewTransition, type ReactNode } from "react";
 
-/** Deeper study route: map → module → topic → card. */
+/** Deeper study route: map → module → card. */
 export const drillForward = ["nav-forward"];
 
-/** Shallower study route: card → topic → module → map. */
+/** Shallower study route: card → module → map. */
 export const drillBack = ["nav-back"];
 
 /**
  * A later card in the same topic.
  * `card-switch` keeps the back link, list, bar, and Continue in place.
- * `card-forward` is the only type the lesson boundary animates, so the page
- * boundary stays off.
+ * `card-forward` animates the lesson, so the page boundary stays off.
  */
 export const cardForward = ["card-forward", "card-switch"];
 
@@ -26,7 +25,11 @@ const pageMotion = {
   default: "none",
 } as const;
 
-/** Same-topic card moves only. A drill navigation leaves this name off, so the lesson stays inside the page snapshot. */
+/**
+ * Same-topic card moves only. The name pairs the old and new lesson, and
+ * card-forward / card-back use the page slide classes. Any other navigation
+ * leaves the class at "none", so this boundary stays inside the page snapshot.
+ */
 const lessonMotion = {
   "card-forward": "nav-forward",
   "card-back": "nav-back",
@@ -43,7 +46,14 @@ export function StudyDrillTransition({ children }: { children: ReactNode }) {
 
 export function StudyLessonTransition({ children }: { children: ReactNode }) {
   return (
-    <ViewTransition enter={lessonMotion} exit={lessonMotion} default="none">
+    <ViewTransition
+      name="study-lesson"
+      enter={lessonMotion}
+      exit={lessonMotion}
+      update={lessonMotion}
+      share={lessonMotion}
+      default="none"
+    >
       {children}
     </ViewTransition>
   );

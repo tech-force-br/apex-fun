@@ -7,6 +7,30 @@ import {
   useReachedIndex,
 } from "@/lib/study-progress";
 
+/**
+ * Call before a same-topic card change, before the view transition starts.
+ * The fill eases only when the shown percent rises.
+ */
+export function markTopicProgressMotion(args: {
+  fromIndex: number;
+  toIndex: number;
+  reached: number;
+  cardCount: number;
+  lastFinished: boolean;
+}) {
+  const from = topicProgressPercent(
+    Math.max(args.reached, args.fromIndex),
+    args.cardCount,
+    args.lastFinished,
+  );
+  const to = topicProgressPercent(
+    Math.max(args.reached, args.toIndex),
+    args.cardCount,
+    args.lastFinished,
+  );
+  document.documentElement.dataset.cardProgress = to > from ? "grow" : "still";
+}
+
 /** Furthest card reached, or 100 once the last card is finished. */
 export function topicProgressPercent(
   reachedIndex: number,

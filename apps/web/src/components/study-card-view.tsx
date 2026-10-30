@@ -124,8 +124,8 @@ function StudyExerciseView({
 
   return (
     <StudyCardColumn
-      backHref={`/study/${selected.id}/${topic.id}`}
-      backLabel={topic.names[locale]}
+      backHref={`/study/${selected.id}`}
+      backLabel={selected.names[locale]}
       topicId={topic.id}
       cardId={card.id}
       cardIndex={cardIndex}

@@ -107,6 +107,11 @@ html:active-view-transition-type(card-switch) .study-topic-progress-fill {
   z-index: 21;
 }
 
+/* A card change that leaves the percent put must not keep the transition open. */
+html[data-card-progress="still"]:active-view-transition-type(card-switch)::view-transition-group(study-topic-progress-fill) {
+  animation: none;
+}
+
 ::view-transition-old(study-card-advance),
 ::view-transition-old(study-card-back),
 ::view-transition-old(study-card-pane),
@@ -150,7 +155,7 @@ html:active-view-transition-type(card-switch)::view-transition-new(root) {
 ::view-transition-new(.nav-forward) {
   --slide-offset: 48px;
   animation:
-    180ms ease-out 120ms both study-fade,
+    180ms ease-out both study-fade,
     280ms ease-in-out both study-slide;
 }
 
@@ -164,7 +169,7 @@ html:active-view-transition-type(card-switch)::view-transition-new(root) {
 ::view-transition-new(.nav-back) {
   --slide-offset: -48px;
   animation:
-    180ms ease-out 120ms both study-fade,
+    180ms ease-out both study-fade,
     280ms ease-in-out both study-slide;
 }
 

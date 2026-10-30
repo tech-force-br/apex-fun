@@ -91,7 +91,7 @@ export function StudyCardColumn({
           lastFinished={lastFinished}
         />
         <StudyLessonTransition>
-          <div>{children}</div>
+          <div className="study-lesson">{children}</div>
         </StudyLessonTransition>
       </main>
       {advance ? <StudyAdvanceBar advance={advance} /> : null}
@@ -137,8 +137,8 @@ export function StudyTheoryView({
 
   return (
     <StudyCardColumn
-      backHref={`/study/${selected.id}/${topic.id}`}
-      backLabel={topic.names[locale]}
+      backHref={`/study/${selected.id}`}
+      backLabel={selected.names[locale]}
       topicId={topic.id}
       cardId={card.id}
       cardIndex={cardIndex}

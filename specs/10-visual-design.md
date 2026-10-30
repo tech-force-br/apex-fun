@@ -24,9 +24,23 @@ The login card sits on the light homepage, centered, and stays easy to read.
 
 Do not use official Salesforce mascots (Astro, Codey, Cloudy, and the rest) unless Salesforce gives written permission.
 
-## Completed module
+## Completed module, topic, and card
 
-On the module list, a completed module uses a light green surface `#e7f6ee`, a green border `#1f7a4d`, and a Completed tag with that green and white text. Open modules stay white with the blue Open tag. Coming later stays gray. This green is only for a completed module.
+A completed module uses a light green surface `#e7f6ee`, a green border `#1f7a4d`, and a Completed tag with that green and white text. A finished topic uses that same green surface and green border. The topic’s folder icon uses that green. The finished topic shows a green circle with a white check. It does not show a Completed tag. This green is only for completed items.
+
+On the module list, open modules that are not complete stay white with the blue Open tag. Coming later stays gray.
+
+On the topic list, the current topic stays on the light blue highlight. It shows how many of its cards are finished, divided by the number of cards in the topic, as a whole percent at or below the exact rate. A topic with no finished cards shows 0%. A topic with no cards shows 0%. It does not show a Current tag. An open topic that is not finished stays white and shows a lock icon. It does not show an Open tag. The owner can still open it. A locked topic stays gray and shows a lock icon. It does not show a Locked tag.
+
+On the card list beside a lesson, a finished card keeps the plain row. The row shows Theory or Exercise. It does not say Completed, Doing, or Locked. The circle is green with a white check. The card on screen stays on the light blue highlight. The first unfinished card shows a blue circle. It does not show a Current tag. A card after that shows a lock icon. The owner can still open that card. A card that is locked for a student stays gray and is not a link.
+
+## Motion
+
+Study moves use the View Transitions API. A move is either a page slide or a card slide. The header and the footer stay fixed on both. The browser’s own back and forward buttons carry no direction, so they do not play the directional slide. While a view transition runs, the page does not accept pointer input. `prefers-reduced-motion: reduce` plays every view transition with no duration.
+
+A page slide moves about 48px over 280ms, with a short fade. Going deeper slides the old page out to the left and the new page in from the right. That is opening a module on the map, opening a topic, and Next topic. Going back slides the other way. That is the back link, the wordmark while the path is under `/study/`, and Module list and Restart on the results modal. On a page slide, the topic list, the lesson, the back link, and Continue move with the page.
+
+A card slide is a move between two cards in the same topic. Continue to the next card slides forward. A card list link slides forward to a later card and back to an earlier card. The link for the card already on screen does not start a slide. The page itself stays put. The lesson body slides the same 48px and fade as a page slide. That body is the theory text and sample, or the exercise prompt, editor, and result. The topic card list, the back link, the progress track, the percent, and Continue stay where they are. When the percent goes up, the blue fill eases to the new width over 500ms while the lesson slides. Opening an earlier card leaves the percent where it is, so the fill does not move. The bar’s width ease is the same 500ms ease on the card itself when the last card is finished and the page does not change.
 
 ## Buttons
 

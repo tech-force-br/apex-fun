@@ -4,10 +4,15 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { drillBack } from "@/components/study-drill-transition";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
-import { FolderIcon, lockBadge, TopicPathRow } from "@/components/study-row";
+import { TopicPathRow } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
-import { topicAvailability, topicListMeta } from "@/lib/curriculum";
+import {
+  topicAvailability,
+  topicListMeta,
+  topicRowState,
+} from "@/lib/curriculum";
 import { studyCopy, topicListLine } from "@/lib/study-copy";
+import { topicLandingHref } from "@/lib/study-route";
 
 export function StudyModuleView() {
   const params = useParams<{ moduleId: string }>();
@@ -58,16 +63,10 @@ export function StudyModuleView() {
                 connectBelow={topicIndex < selected.topics.length - 1}
                 name={topic.names[locale]}
                 meta={meta}
-                badge={lockBadge(lock, copy)}
+                state={topicRowState(lock, topic, finished)}
                 accessibleLabel={copy.folder}
-                lock={lock}
-                href={`/study/${selected.id}/${topic.id}`}
-                leading={
-                  <FolderIcon
-                    active={lock !== "locked"}
-                    locked={lock === "locked"}
-                  />
-                }
+                copy={copy}
+                href={topicLandingHref(selected.id, topic, finished)}
               />
             </li>
           );
