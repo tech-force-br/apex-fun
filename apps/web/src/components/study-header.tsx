@@ -6,6 +6,7 @@ import { useLayoutEffect, useRef } from "react";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
+import { drillBack } from "@/components/study-drill-transition";
 import { chromeCopy } from "@/lib/locale";
 import { studyChromeWidth } from "@/lib/study-route";
 
@@ -50,7 +51,7 @@ export function StudyHeader() {
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur-md"
+      className="study-header-anchor sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur-md"
     >
       <div
         className={`mx-auto flex w-full flex-wrap items-center justify-between gap-3 px-6 py-4 ${
@@ -59,6 +60,7 @@ export function StudyHeader() {
       >
         <Link
           href="/study"
+          transitionTypes={pathname.startsWith("/study/") ? drillBack : undefined}
           className="cursor-pointer text-xl font-bold tracking-tight text-accent-deep"
         >
           {chrome.wordmark}

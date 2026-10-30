@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { drillForward } from "@/components/study-drill-transition";
 import type { TopicLock } from "@/lib/curriculum";
 
 export function lockBadge(
@@ -111,6 +112,8 @@ type StudyActionProps = {
   label: string;
   className: string;
   children: ReactNode;
+  /** Set on drill-in rows. Locked rows do not navigate. */
+  transitionTypes?: string[];
 };
 
 function StudyAction({
@@ -120,6 +123,7 @@ function StudyAction({
   label,
   className,
   children,
+  transitionTypes,
 }: StudyActionProps) {
   if (locked) {
     return (
@@ -135,6 +139,7 @@ function StudyAction({
       className={`${className} cursor-pointer`}
       aria-current={current ? "step" : undefined}
       aria-label={label}
+      transitionTypes={transitionTypes}
     >
       {children}
     </Link>
@@ -213,6 +218,7 @@ export function TopicPathRow({
       href={href}
       label={entryLabel(name, accessibleLabel)}
       className="flex w-full items-stretch gap-3 text-left"
+      transitionTypes={drillForward}
     >
       <span className="flex w-12 shrink-0 flex-col items-center">
         {leading}
@@ -256,6 +262,7 @@ export function CardSheetRow({
       href={href}
       label={entryLabel(name, accessibleLabel)}
       className={`flex w-full items-center gap-3 px-4 py-3 text-left transition ${surface}`}
+      transitionTypes={drillForward}
     >
       {leading}
       <EntryText name={name} meta={meta} locked={locked} />
@@ -293,6 +300,7 @@ export function ModuleStop({
       href={href}
       label={entryLabel(name, accessibleLabel)}
       className={`relative z-10 flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border px-1.5 py-3 text-center transition sm:px-3 ${surface}`}
+      transitionTypes={drillForward}
     >
       {leading}
       <span

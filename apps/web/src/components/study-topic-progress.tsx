@@ -1,29 +1,42 @@
-/** Place in the topic, or 100 once the last card is finished. */
+"use client";
+
+import { useEffect } from "react";
+import { reachCard, useReachedIndex } from "@/lib/study-progress";
+
+/** Furthest card reached, or 100 once the last card is finished. */
 export function topicProgressPercent(
-  cardIndex: number,
+  reachedIndex: number,
   cardCount: number,
   lastFinished: boolean,
 ) {
   if (lastFinished) return 100;
-  if (cardCount <= 0 || cardIndex <= 0) return 0;
-  return Math.round((cardIndex / cardCount) * 100);
+  if (cardCount <= 0 || reachedIndex <= 0) return 0;
+  return Math.round((reachedIndex / cardCount) * 100);
 }
 
 export function TopicProgress({
+  topicId,
   cardIndex,
   cardCount,
   label,
   lastFinished,
 }: {
+  topicId: string;
   cardIndex: number;
   cardCount: number;
   label: string;
   lastFinished: boolean;
 }) {
-  const percent = topicProgressPercent(cardIndex, cardCount, lastFinished);
+  const stored = useReachedIndex(topicId);
+  const reachedIndex = Math.max(stored, cardIndex);
+  const percent = topicProgressPercent(reachedIndex, cardCount, lastFinished);
+
+  useEffect(() => {
+    if (cardIndex > stored) reachCard(topicId, cardIndex);
+  }, [topicId, cardIndex, stored]);
 
   return (
-    <div className="mt-3 flex items-center gap-3">
+    <div className="mt-3 grid grid-cols-[minmax(0,1fr)_2.75rem] items-center gap-3">
       <div
         role="progressbar"
         aria-label={label}
@@ -31,14 +44,14 @@ export function TopicProgress({
         aria-valuemax={100}
         aria-valuenow={percent}
         aria-valuetext={`${percent}%`}
-        className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-line"
-      >
-        <div
-          className="h-full rounded-full bg-accent transition-[width] duration-500 ease-out motion-reduce:transition-none"
-          style={{ width: `${percent}%` }}
-        />
-      </div>
-      <p className="w-11 shrink-0 text-right text-sm font-bold tabular-nums text-ink">
+        className="study-topic-progress col-start-1 row-start-1 h-2 rounded-full bg-line"
+      />
+      <div
+        aria-hidden
+        className="study-topic-progress-fill col-start-1 row-start-1 h-2 justify-self-start rounded-full bg-accent transition-[width] duration-500 ease-out motion-reduce:transition-none"
+        style={{ width: `${percent}%` }}
+      />
+      <p className="study-topic-progress-value col-start-2 row-start-1 text-right text-sm font-bold tabular-nums text-ink">
         {percent}%
       </p>
     </div>

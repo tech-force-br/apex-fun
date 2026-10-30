@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
+import { cardBack, cardForward } from "@/components/study-drill-transition";
 import { useLocale } from "@/components/locale-provider";
 import { cardAvailability, cardLabel, type Topic } from "@/lib/curriculum";
 import { studyCopy } from "@/lib/study-copy";
@@ -23,6 +24,7 @@ export function TopicCardPane({
   const copy = studyCopy[locale];
   const paneRef = useRef<HTMLElement>(null);
   const activeRef = useRef<HTMLLIElement>(null);
+  const activeIndex = topic.cards.findIndex((card) => card.id === activeCardId);
 
   useLayoutEffect(() => {
     const pane = paneRef.current;
@@ -41,7 +43,7 @@ export function TopicCardPane({
     <nav
       ref={paneRef}
       aria-label={copy.topicCards}
-      className="max-h-64 min-h-0 w-full shrink-0 overflow-y-auto rounded-lg border border-line bg-white p-3 md:max-h-none md:w-72"
+      className="study-card-pane max-h-64 min-h-0 w-full shrink-0 overflow-y-auto rounded-lg border border-line bg-white p-3 md:max-h-none md:w-72"
     >
       <p className="text-xs font-medium tracking-wide text-muted uppercase">
         {copy.topicCards}
@@ -102,6 +104,13 @@ export function TopicCardPane({
               ) : (
                 <Link
                   href={`/study/${moduleId}/${topic.id}/${card.id}`}
+                  transitionTypes={
+                    cardIndex > activeIndex
+                      ? cardForward
+                      : cardIndex < activeIndex
+                        ? cardBack
+                        : undefined
+                  }
                   className={`${className} cursor-pointer`}
                   aria-current={current ? "page" : undefined}
                   aria-label={label}

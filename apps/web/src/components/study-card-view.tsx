@@ -1,15 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { CheckResult, RunSpinner } from "@/components/check-result";
 import { CodeEditor } from "@/components/code-editor";
 import { TopicCardPane } from "@/components/study-card-pane";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
-import { TopicProgress } from "@/components/study-topic-progress";
 import {
-  StudyAdvanceBar,
+  StudyCardColumn,
   StudyTheoryView,
   useCardAdvance,
 } from "@/components/study-theory-view";
@@ -124,78 +122,68 @@ function StudyExerciseView({
   }
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col md:min-h-0">
-      <main
-        className={`w-full md:min-h-0 md:flex-1 md:overflow-y-auto ${
-          visibleAdvance ? "pb-28 md:pb-0" : ""
-        }`}
+    <StudyCardColumn
+      backHref={`/study/${selected.id}/${topic.id}`}
+      backLabel={topic.names[locale]}
+      topicId={topic.id}
+      cardIndex={cardIndex}
+      cardCount={topic.cards.length}
+      progressLabel={copy.topicProgress}
+      lastFinished={lastFinished}
+      advance={visibleAdvance}
+    >
+      <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
+        {copy.exercise}
+      </h1>
+      {prompt ? (
+        <p
+          className="mt-4 text-base leading-7 whitespace-pre-wrap text-ink"
+          onCopy={(event) => event.preventDefault()}
+          onCut={(event) => event.preventDefault()}
+          onPaste={(event) => event.preventDefault()}
+        >
+          {prompt}
+        </p>
+      ) : null}
+      <div
+        className={`mt-6 ${running ? "pointer-events-none opacity-60" : ""}`}
+        aria-busy={running}
       >
-        <Link
-          href={`/study/${selected.id}/${topic.id}`}
-          className="cursor-pointer text-sm text-muted hover:text-accent"
-        >
-          ← {topic.names[locale]}
-        </Link>
-        <TopicProgress
-          cardIndex={cardIndex}
-          cardCount={topic.cards.length}
-          label={copy.topicProgress}
-          lastFinished={lastFinished}
+        <CodeEditor
+          key={card.id}
+          blockClipboard
+          readOnly={running}
+          label={copy.editor}
+          minHeight="12rem"
+          onChange={setCode}
         />
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
-          {copy.exercise}
-        </h1>
-        {prompt ? (
-          <p
-            className="mt-4 text-base leading-7 whitespace-pre-wrap text-ink"
-            onCopy={(event) => event.preventDefault()}
-            onCut={(event) => event.preventDefault()}
-            onPaste={(event) => event.preventDefault()}
-          >
-            {prompt}
-          </p>
-        ) : null}
-        <div
-          className={`mt-6 ${running ? "pointer-events-none opacity-60" : ""}`}
+      </div>
+      {showValidate ? (
+        <button
+          type="button"
+          onClick={() => void onValidate()}
+          disabled={running}
           aria-busy={running}
+          className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
         >
-          <CodeEditor
-            key={card.id}
-            blockClipboard
-            readOnly={running}
-            label={copy.editor}
-            minHeight="12rem"
-            onChange={setCode}
+          {running ? <RunSpinner /> : null}
+          {running ? copy.validating : copy.validate}
+        </button>
+      ) : null}
+      {result && !running ? (
+        <div className="mt-4 rounded-lg border border-line bg-white p-4">
+          <CheckResult
+            passed={result.passed}
+            unavailable={result.unavailable}
+            message={result.passed ? copy.passed : result.message}
+            log={result.log}
+            logLabel={copy.log}
           />
         </div>
-        {showValidate ? (
-          <button
-            type="button"
-            onClick={() => void onValidate()}
-            disabled={running}
-            aria-busy={running}
-            className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
-          >
-            {running ? <RunSpinner /> : null}
-            {running ? copy.validating : copy.validate}
-          </button>
-        ) : null}
-        {result && !running ? (
-          <div className="mt-4 rounded-lg border border-line bg-white p-4">
-            <CheckResult
-              passed={result.passed}
-              unavailable={result.unavailable}
-              message={result.passed ? copy.passed : result.message}
-              log={result.log}
-              logLabel={copy.log}
-            />
-          </div>
-        ) : null}
-        {visibleAdvance?.burst ? (
-          <ConfettiBurst origin={visibleAdvance.burst} />
-        ) : null}
-      </main>
-      {visibleAdvance ? <StudyAdvanceBar advance={visibleAdvance} /> : null}
-    </div>
+      ) : null}
+      {visibleAdvance?.burst ? (
+        <ConfettiBurst origin={visibleAdvance.burst} />
+      ) : null}
+    </StudyCardColumn>
   );
 }

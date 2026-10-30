@@ -109,9 +109,9 @@ export function resolveStudyTarget(args: {
 /**
  * Where a card's advance button goes.
  * An earlier card opens the next card.
- * The current last card completes the topic. `nextLabel` is the button after
- * that click (Next topic, or the topic list on the last topic). The button
- * before the click still says Continue.
+ * The current last card completes the topic. `next` is where the button after
+ * that click goes: the next topic, or this module's topic list. `nextLabel`
+ * is that button's text. The button before the click still says Continue.
  * Once the last card is finished, no card shows Continue.
  */
 export function theoryAdvance(
@@ -123,7 +123,12 @@ export function theoryAdvance(
   copy: { nextTopic: string; topicsTitle: string },
 ):
   | { href: string; completesTopic: false }
-  | { href: string; completesTopic: true; nextLabel: string }
+  | {
+      href: string;
+      completesTopic: true;
+      next: "topic" | "module";
+      nextLabel: string;
+    }
   | undefined {
   if (lastCardFinished(topic, finished)) return undefined;
   const nextCard = topic.cards[cardIndex + 1];
@@ -138,12 +143,14 @@ export function theoryAdvance(
     return {
       href: `/study/${selected.id}/${nextTopic.id}`,
       completesTopic: true,
+      next: "topic",
       nextLabel: copy.nextTopic,
     };
   }
   return {
     href: `/study/${selected.id}`,
     completesTopic: true,
+    next: "module",
     nextLabel: copy.topicsTitle,
   };
 }

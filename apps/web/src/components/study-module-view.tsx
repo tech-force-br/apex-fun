@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { drillBack } from "@/components/study-drill-transition";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
 import { FolderIcon, lockBadge, TopicPathRow } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
@@ -24,6 +25,7 @@ export function StudyModuleView() {
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
       <Link
         href="/study"
+        transitionTypes={drillBack}
         className="cursor-pointer text-sm text-muted hover:text-accent"
       >
         ← {copy.backToMap}

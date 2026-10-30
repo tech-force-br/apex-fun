@@ -1,3 +1,4 @@
+import { StudyDrillTransition } from "@/components/study-drill-transition";
 import { StudyTopicView } from "@/components/study-topic-view";
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function StudyTopicPage() {
-  return <StudyTopicView />;
+  return (
+    <StudyDrillTransition>
+      <StudyTopicView />
+    </StudyDrillTransition>
+  );
 }

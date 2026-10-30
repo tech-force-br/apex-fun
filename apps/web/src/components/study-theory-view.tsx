@@ -1,8 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import {
+  cardForward,
+  drillBack,
+  drillForward,
+  StudyLessonTransition,
+} from "@/components/study-drill-transition";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { CodeEditor } from "@/components/code-editor";
 import { useLocale } from "@/components/locale-provider";
 import {
@@ -36,7 +42,7 @@ export type Advance = {
 
 export function StudyAdvanceBar({ advance }: { advance: Advance }) {
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-height)+1rem)] z-20 flex justify-center px-6 md:pointer-events-auto md:static md:z-auto md:shrink-0 md:px-0 md:pt-4">
+    <div className="study-card-advance pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-height)+1rem)] z-20 flex justify-center px-6 md:pointer-events-auto md:static md:z-auto md:shrink-0 md:px-0 md:pt-4">
       <button
         type="button"
         onClick={(event) => {
@@ -77,6 +83,7 @@ export function useCardAdvance({
     href: string;
     label: string;
     origin: ConfettiOrigin;
+    transitionTypes: string[];
   } | null>(null);
   const startedFor = useRef<string | null>(null);
   const active = held?.cardId === cardId ? held : null;
@@ -96,18 +103,21 @@ export function useCardAdvance({
       label: active.label,
       tone: "next",
       burst: active.origin,
-      run: () => router.push(href),
+      run: () =>
+        router.push(href, { transitionTypes: active.transitionTypes }),
     };
   } else if (destination?.completesTopic) {
     const href = destination.href;
     const nextLabel = destination.nextLabel;
+    const transitionTypes =
+      destination.next === "module" ? drillBack : drillForward;
     advance = {
       label: copy.continue,
       tone: "continue",
       run: (origin) => {
         if (startedFor.current === cardId) return;
         startedFor.current = cardId;
-        setHeld({ cardId, href, label: nextLabel, origin });
+        setHeld({ cardId, href, label: nextLabel, origin, transitionTypes });
         finishCard(cardId);
       },
     };
@@ -118,12 +128,63 @@ export function useCardAdvance({
       tone: "continue",
       run: () => {
         finishCard(cardId);
-        router.push(href);
+        router.push(href, { transitionTypes: cardForward });
       },
     };
   }
 
   return { lastFinished: lastCardFinished(topic, finished), advance };
+}
+
+export function StudyCardColumn({
+  backHref,
+  backLabel,
+  topicId,
+  cardIndex,
+  cardCount,
+  progressLabel,
+  lastFinished,
+  advance,
+  children,
+}: {
+  backHref: string;
+  backLabel: string;
+  topicId: string;
+  cardIndex: number;
+  cardCount: number;
+  progressLabel: string;
+  lastFinished: boolean;
+  advance: Advance | undefined;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex min-w-0 flex-1 flex-col md:min-h-0">
+      <main
+        className={`w-full md:min-h-0 md:flex-1 md:overflow-y-auto ${
+          advance ? "pb-28 md:pb-0" : ""
+        }`}
+      >
+        <Link
+          href={backHref}
+          transitionTypes={drillBack}
+          className="study-card-back cursor-pointer text-sm text-muted hover:text-accent"
+        >
+          ← {backLabel}
+        </Link>
+        <TopicProgress
+          topicId={topicId}
+          cardIndex={cardIndex}
+          cardCount={cardCount}
+          label={progressLabel}
+          lastFinished={lastFinished}
+        />
+        <StudyLessonTransition>
+          <div>{children}</div>
+        </StudyLessonTransition>
+      </main>
+      {advance ? <StudyAdvanceBar advance={advance} /> : null}
+    </div>
+  );
 }
 
 export function StudyTheoryView({
@@ -154,30 +215,20 @@ export function StudyTheoryView({
   });
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col md:min-h-0">
-      <main
-        className={`w-full md:min-h-0 md:flex-1 md:overflow-y-auto ${
-          advance ? "pb-28 md:pb-0" : ""
-        }`}
-      >
-        <Link
-          href={`/study/${selected.id}/${topic.id}`}
-          className="cursor-pointer text-sm text-muted hover:text-accent"
-        >
-          ← {topic.names[locale]}
-        </Link>
-        <TopicProgress
-          cardIndex={cardIndex}
-          cardCount={topic.cards.length}
-          label={copy.topicProgress}
-          lastFinished={lastFinished}
-        />
-        <p className="mt-4 text-sm text-muted">{copy.theory}</p>
-        <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
-        {advance?.burst ? <ConfettiBurst origin={advance.burst} /> : null}
-      </main>
-      {advance ? <StudyAdvanceBar advance={advance} /> : null}
-    </div>
+    <StudyCardColumn
+      backHref={`/study/${selected.id}/${topic.id}`}
+      backLabel={topic.names[locale]}
+      topicId={topic.id}
+      cardIndex={cardIndex}
+      cardCount={topic.cards.length}
+      progressLabel={copy.topicProgress}
+      lastFinished={lastFinished}
+      advance={advance}
+    >
+      <p className="mt-4 text-sm text-muted">{copy.theory}</p>
+      <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
+      {advance?.burst ? <ConfettiBurst origin={advance.burst} /> : null}
+    </StudyCardColumn>
   );
 }
 
