@@ -88,3 +88,107 @@ export function ConfettiBurst({ origin }: { origin: ConfettiOrigin }) {
     document.body,
   );
 }
+
+type Drop = {
+  x: number;
+  y: number;
+  vy: number;
+  sway: number;
+  phase: number;
+  swaySpeed: number;
+  w: number;
+  h: number;
+  color: string;
+  rot: number;
+  spin: number;
+  kind: "rect" | "ribbon" | "circle";
+};
+
+export function ConfettiRain() {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const reduceMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas || reduceMotion) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const width = canvas.width;
+    const height = canvas.height;
+    const pieces: Drop[] = Array.from({ length: 120 }, (_, index) => {
+      const kind =
+        index % 5 === 0 ? "circle" : index % 3 === 0 ? "ribbon" : "rect";
+      return {
+        x: Math.random() * width,
+        y: -16 - Math.random() * height * 0.65,
+        vy: 3.4 + Math.random() * 3.2,
+        sway: 12 + Math.random() * 26,
+        phase: Math.random() * Math.PI * 2,
+        swaySpeed: 0.018 + Math.random() * 0.035,
+        w: kind === "ribbon" ? 3 + Math.random() * 2 : 8 + Math.random() * 7,
+        h: kind === "ribbon" ? 16 + Math.random() * 18 : 9 + Math.random() * 8,
+        color: COLORS[index % COLORS.length] ?? COLORS[0],
+        rot: Math.random() * Math.PI,
+        spin: (Math.random() - 0.5) * 0.1,
+        kind,
+      };
+    });
+
+    let frame = 0;
+    let raf = 0;
+    const tick = () => {
+      frame += 1;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let stillFalling = false;
+      for (const piece of pieces) {
+        piece.phase += piece.swaySpeed;
+        piece.y += piece.vy;
+        piece.vy += 0.012;
+        piece.rot += piece.spin;
+        if (piece.y < canvas.height + 40) stillFalling = true;
+        if (piece.y < -40 || piece.y > canvas.height + 30) continue;
+        const x = piece.x + Math.sin(piece.phase) * piece.sway;
+        ctx.save();
+        ctx.translate(x, piece.y);
+        ctx.rotate(piece.rot);
+        ctx.fillStyle = piece.color;
+        if (piece.kind === "circle") {
+          ctx.beginPath();
+          ctx.arc(0, 0, piece.w / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(-piece.w / 2, -piece.h / 2, piece.w, piece.h);
+        }
+        ctx.restore();
+      }
+      if (stillFalling && frame < 720) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+    };
+  }, [reduceMotion]);
+
+  if (reduceMotion) return null;
+
+  return createPortal(
+    <canvas
+      ref={ref}
+      aria-hidden
+      className="pointer-events-none fixed inset-0 z-[60]"
+    />,
+    document.body,
+  );
+}

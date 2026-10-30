@@ -6,18 +6,18 @@ import { CheckResult, RunSpinner } from "@/components/check-result";
 import { CodeEditor } from "@/components/code-editor";
 import { TopicCardPane } from "@/components/study-card-pane";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
+import { useCardAdvance } from "@/components/study-card-advance";
 import {
   StudyCardColumn,
   StudyTheoryView,
-  useCardAdvance,
 } from "@/components/study-theory-view";
-import { ConfettiBurst } from "@/components/study-confetti";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
 import type { CurriculumModule, ExerciseCard, Topic } from "@/lib/curriculum";
 import { validateExercise } from "@/lib/exercise-check-action";
-import { syncSessionCookie } from "@/lib/mock-auth";
+import { sessionIsAdmin, syncSessionCookie } from "@/lib/mock-auth";
 import type { ExerciseCheck } from "@/lib/score-run";
+import { recordFirstAttempt } from "@/lib/study-progress";
 import { studyCopy } from "@/lib/study-copy";
 
 export function StudyCardView() {
@@ -96,7 +96,7 @@ function StudyExerciseView({
   const [result, setResult] = useState<ExerciseCheck | null>(null);
   const [earnedAdvance, setEarnedAdvance] = useState(false);
   const prompt = card.prompts[locale].trim();
-  const { lastFinished, advance } = useCardAdvance({
+  const { lastFinished, advance, finish } = useCardAdvance({
     selected,
     topic,
     topicIndex,
@@ -114,6 +114,7 @@ function StudyExerciseView({
     setRunning(true);
     try {
       const next = await validateExercise(card.id, code, locale);
+      if (!next.unavailable) recordFirstAttempt(card.id, next.passed);
       if (next.passed) setEarnedAdvance(true);
       setResult(next);
     } finally {
@@ -126,11 +127,13 @@ function StudyExerciseView({
       backHref={`/study/${selected.id}/${topic.id}`}
       backLabel={topic.names[locale]}
       topicId={topic.id}
+      cardId={card.id}
       cardIndex={cardIndex}
       cardCount={topic.cards.length}
       progressLabel={copy.topicProgress}
       lastFinished={lastFinished}
       advance={visibleAdvance}
+      finish={finish}
     >
       <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
         {copy.exercise}
@@ -151,7 +154,7 @@ function StudyExerciseView({
       >
         <CodeEditor
           key={card.id}
-          blockClipboard
+          blockClipboard={!sessionIsAdmin(session)}
           readOnly={running}
           label={copy.editor}
           minHeight="12rem"
@@ -180,9 +183,6 @@ function StudyExerciseView({
             logLabel={copy.log}
           />
         </div>
-      ) : null}
-      {visibleAdvance?.burst ? (
-        <ConfettiBurst origin={visibleAdvance.burst} />
       ) : null}
     </StudyCardColumn>
   );

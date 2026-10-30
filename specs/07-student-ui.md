@@ -33,7 +33,7 @@ Short reminders of earlier theory live in this pane. They are not extra theory w
 - Student types the full snippet
 - Copy and paste blocked in the editor, in prompts, and in theory samples
 
-Admin screens may paste.
+Admin screens may paste. The site owner may also use the clipboard in the exercise editor on a study card. Theory samples and prompts stay blocked.
 
 ## Log
 

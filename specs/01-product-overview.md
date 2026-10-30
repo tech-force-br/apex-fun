@@ -38,7 +38,7 @@ Teach Apex fundamentals with little theory and many small, checked exercises.
 3. Read theory cards in order.
 4. Type exercises in order. Each one must pass before the next card unlocks.
 5. Finish mixed review.
-6. See a results page. 90% clean first tries completes the module. Under 90% restarts Variables from the start.
+6. Finish the last card. The topic bar fills to 100% and confetti plays, then a modal shows the 90% result and each topic’s percent. 90% or higher completes the module. When that modal opens, confetti falls from the top of the screen to the bottom. Module list opens the module list. Share sits beside it and does nothing yet. Under 90% resets the module when the modal opens. Home opens the module list. Restart opens that module’s topic list. An X closes the modal and stays on the card.
 
 ## What the owner does
 

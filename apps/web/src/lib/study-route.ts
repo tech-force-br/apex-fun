@@ -35,6 +35,7 @@ export type StudyTarget =
  * A missing or locked step redirects. An unlocked card stays, including an exercise.
  * topicIndex and cardIndex are omitted when this page has no such id.
  * A negative index means the id is not in the list.
+ * `pinnedCardId` keeps that one card on screen after a module wipe.
  */
 export function resolveStudyTarget(args: {
   selected: CurriculumModule | undefined;
@@ -45,6 +46,7 @@ export function resolveStudyTarget(args: {
   finished: ReadonlySet<string>;
   depth: StudyDepth;
   unlockAll: boolean;
+  pinnedCardId: string | null;
 }): StudyTarget {
   if (
     !args.selected ||
@@ -58,18 +60,25 @@ export function resolveStudyTarget(args: {
     return { status: "ready", depth: "module", selected };
   }
 
+  const stayOnPinnedCard =
+    args.depth === "card" &&
+    args.pinnedCardId != null &&
+    args.card != null &&
+    args.card.id === args.pinnedCardId;
+
   const topicIndex = args.topicIndex;
   if (
     args.topic === undefined ||
     topicIndex === undefined ||
     topicIndex < 0 ||
-    topicAvailability(
-      selected.status,
-      selected.topics,
-      topicIndex,
-      args.finished,
-      args.unlockAll,
-    ) === "locked"
+    (!stayOnPinnedCard &&
+      topicAvailability(
+        selected.status,
+        selected.topics,
+        topicIndex,
+        args.finished,
+        args.unlockAll,
+      ) === "locked")
   ) {
     return { status: "redirect", href: `/study/${selected.id}` };
   }
@@ -87,8 +96,9 @@ export function resolveStudyTarget(args: {
     };
   }
   if (
+    !stayOnPinnedCard &&
     cardAvailability(topic, cardIndex, args.finished, args.unlockAll) ===
-    "locked"
+      "locked"
   ) {
     return {
       status: "redirect",
@@ -109,9 +119,10 @@ export function resolveStudyTarget(args: {
 /**
  * Where a card's advance button goes.
  * An earlier card opens the next card.
- * The current last card completes the topic. `next` is where the button after
- * that click goes: the next topic, or this module's topic list. `nextLabel`
- * is that button's text. The button before the click still says Continue.
+ * The last card of an earlier topic completes that topic. The button after
+ * that click opens the next topic. `nextLabel` is that button's text.
+ * The last card of the last topic fills the bar and plays confetti, then opens the module result modal.
+ * The button before the click still says Continue.
  * Once the last card is finished, no card shows Continue.
  */
 export function theoryAdvance(
@@ -120,15 +131,16 @@ export function theoryAdvance(
   topicIndex: number,
   cardIndex: number,
   finished: ReadonlySet<string>,
-  copy: { nextTopic: string; topicsTitle: string },
+  copy: { nextTopic: string },
 ):
   | { href: string; completesTopic: false }
   | {
       href: string;
       completesTopic: true;
-      next: "topic" | "module";
+      next: "topic";
       nextLabel: string;
     }
+  | { completesTopic: true; next: "result" }
   | undefined {
   if (lastCardFinished(topic, finished)) return undefined;
   const nextCard = topic.cards[cardIndex + 1];
@@ -147,12 +159,7 @@ export function theoryAdvance(
       nextLabel: copy.nextTopic,
     };
   }
-  return {
-    href: `/study/${selected.id}`,
-    completesTopic: true,
-    next: "module",
-    nextLabel: copy.topicsTitle,
-  };
+  return { completesTopic: true, next: "result" };
 }
 
 /** Wide chrome lines up with a card page and with admin. Other pages stay narrow. */

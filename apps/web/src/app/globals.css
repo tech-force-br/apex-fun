@@ -10,6 +10,8 @@
   --color-accent-deep: #032d60;
   --color-highlight: #eaf5fe;
   --color-line: #dddbda;
+  --color-done: #1f7a4d;
+  --color-done-soft: #e7f6ee;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }

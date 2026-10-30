@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { reachCard, useReachedIndex } from "@/lib/study-progress";
+import {
+  reachCard,
+  usePinnedCardId,
+  useReachedIndex,
+} from "@/lib/study-progress";
 
 /** Furthest card reached, or 100 once the last card is finished. */
 export function topicProgressPercent(
@@ -16,24 +20,28 @@ export function topicProgressPercent(
 
 export function TopicProgress({
   topicId,
+  cardId,
   cardIndex,
   cardCount,
   label,
   lastFinished,
 }: {
   topicId: string;
+  cardId: string;
   cardIndex: number;
   cardCount: number;
   label: string;
   lastFinished: boolean;
 }) {
   const stored = useReachedIndex(topicId);
+  const pinnedCardId = usePinnedCardId();
   const reachedIndex = Math.max(stored, cardIndex);
   const percent = topicProgressPercent(reachedIndex, cardCount, lastFinished);
 
   useEffect(() => {
+    if (pinnedCardId === cardId) return;
     if (cardIndex > stored) reachCard(topicId, cardIndex);
-  }, [topicId, cardIndex, stored]);
+  }, [topicId, cardId, cardIndex, stored, pinnedCardId]);
 
   return (
     <div className="mt-3 grid grid-cols-[minmax(0,1fr)_2.75rem] items-center gap-3">

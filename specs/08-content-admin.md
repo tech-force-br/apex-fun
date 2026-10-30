@@ -14,6 +14,7 @@ Only the site owner is admin in v1. No other teachers.
 - Create new modules
 - View a student’s progress
 - Paste freely while writing content
+- Use the clipboard in the exercise editor on a study card. Theory samples and prompts stay blocked
 - Preview an exercise against sample student code
 - Open every module, topic, and card on the study map, including modules marked coming later. This does not mark them finished
 

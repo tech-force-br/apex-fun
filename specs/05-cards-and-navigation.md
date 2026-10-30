@@ -44,9 +44,9 @@ This list is not the theory reference pane. See [07-student-ui.md](07-student-ui
 
 On a card, a progress bar sits under the back link. It shows the furthest card reached in its topic. The first card is 0%, and a later card is its index divided by the number of cards in the topic, as a whole percent. A topic with two cards shows 0% on the first card and 50% once the second card is reached. Opening an earlier card leaves the bar at that percent. Once the last card is finished, the bar shows 100% on every card in the topic, including an earlier card the student opens again. When the percent increases, the bar eases to the new width. The bar is on theory cards and exercise cards. It is not on the map, the module list, or the card list.
 
-The advance button on every card says Continue. On an earlier card, Continue opens the next card and the bar starts easing to that card’s percent on that click. On the current last card, Continue starts filling the bar to 100% on that click and shows confetti from that button. The page stays on that card. Continue is replaced by a Next topic button: same size, with a white face, accent text, and an accent border. The student clicks it when ready, and it opens the next topic. On the last topic in the module, that button opens the module’s topic list. Once the topic is at 100%, no card in that topic shows Continue. The bar stays at 100%.
+The advance button on every card says Continue. On an earlier card, Continue opens the next card and the bar starts easing to that card’s percent on that click. On the last card of an earlier topic, Continue starts filling the bar to 100% on that click and shows confetti from that button. The page stays on that card. Continue is replaced by a Next topic button: same size, with a white face, accent text, and an accent border. The student clicks it when ready, and it opens the next topic. On the last topic in the module, Continue starts filling the bar to 100% on that click and shows confetti from that button. The results modal in [04-progress-and-scoring.md](04-progress-and-scoring.md) opens after that fill starts. There is no Topics button. Once a topic is at 100%, no card in that topic shows Continue. The bar stays at 100%.
 
-On an exercise, Continue appears after Validate passes. If the student validates again and that run fails, Continue or Next topic stays on the card. A failed retry does not take the button away.
+On an exercise, Continue appears after Validate passes. If the student validates again and that run fails, Continue, Next topic, or the results modal stays on the card. A failed retry does not take it away.
 
 ## Exercise card
 
@@ -69,7 +69,7 @@ Theory is also available as a **pane** on exercise screens. That pane is a refer
 
 ## Map after Variables is complete
 
-Variables remains open.
+Variables remains open. A completed module shows a Completed tag and the completed color from [10-visual-design.md](10-visual-design.md). Open modules that are not complete keep the Open tag.
 
 Locked modules show the name and “Coming later”.
 

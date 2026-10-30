@@ -24,6 +24,10 @@ The login card sits on the light homepage, centered, and stays easy to read.
 
 Do not use official Salesforce mascots (Astro, Codey, Cloudy, and the rest) unless Salesforce gives written permission.
 
+## Completed module
+
+On the module list, a completed module uses a light green surface `#e7f6ee`, a green border `#1f7a4d`, and a Completed tag with that green and white text. Open modules stay white with the blue Open tag. Coming later stays gray. This green is only for a completed module.
+
 ## Buttons
 
 Every button uses a pointer cursor (`cursor: pointer` / Tailwind `cursor-pointer`). That includes disabled buttons. Set it in the global theme on the `button` element so new buttons inherit it. Do not leave the browser default arrow on buttons.

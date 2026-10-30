@@ -13,7 +13,7 @@ import {
   type StudyDepth,
   type StudyTarget,
 } from "@/lib/study-route";
-import { useFinishedCards } from "@/lib/study-progress";
+import { useFinishedCards, usePinnedCardId } from "@/lib/study-progress";
 
 export type StudyGate = StudyTarget & {
   finished: ReadonlySet<string>;
@@ -41,6 +41,7 @@ export function useStudyGate(ids: {
   const router = useRouter();
   const modules = useCurriculumModules();
   const finished = useFinishedCards();
+  const pinnedCardId = usePinnedCardId();
   const { session } = useMockAuth();
   const unlockAll = sessionIsAdmin(session);
   const selected = getModule(ids.moduleId, modules);
@@ -70,6 +71,7 @@ export function useStudyGate(ids: {
     finished,
     depth,
     unlockAll,
+    pinnedCardId,
   });
   const redirectHref = target.status === "redirect" ? target.href : null;
 

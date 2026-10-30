@@ -16,7 +16,7 @@ The site owner is not held to these locks. On the study map, every module, topic
 
 Students only see **passed** or **not passed**.
 
-They do not see first-try percent until the end results page.
+They do not see first-try percent until the results modal.
 
 ## Clean first try
 
@@ -28,37 +28,48 @@ Not a clean pass if they needed extra Runs.
 
 ## 90% check
 
-Checked once: after the last card of the module.
+Checked once: the student clicks Continue on the last card of the last topic.
 
-Every exercise card in the module counts. The total is however many exercise cards exist.
+Every exercise card in the module counts. The total is however many exercise cards exist. An exercise that was never run counts as not clean.
 
-- **90% or higher**, rounded up when that is not a whole number → module complete
-- **Under that** → they must start the module again from the first topic
+The pass line is 90% of that total. When that is not a whole number, round up. That many clean first tries completes the module. Fewer resets it. A module with no exercise cards is complete.
+
+The first Run is the first Validate that returns passed or not passed. A check that returns neither does not count, and a later Run does not change it.
 
 Superseded: a fixed Variables total of 110 exercises and a complete line of 99 / 110.
 
 On restart:
 
 - Treat the module as if for the first time
-- Wipe all saved passing code for that module
+- Wipe finished cards, first-try records, progress bars, and saved passing code for that module
+- The reset happens when the modal opens, before the student leaves the card
 - Mixed review order stays the same
 
-## Results page
+## Results modal
 
-Always shown after the last card of the module.
+On that Continue click, the topic bar eases to 100% and confetti plays from the Continue button. This happens on a pass and on a miss. The results modal opens after that fill has started, about 500ms later, the same time as the bar ease. The page stays on the card until the student leaves it.
 
-Shows:
+The reset happens when the modal opens, before the student leaves the card. Until the student leaves, the topic bar stays at 100% on that card.
 
-- Percent
+The modal shows:
+
+- Percent, as a whole number at or below the exact rate, so a miss never shows 90% or higher
 - Count (clean first tries out of total exercises)
+- Each topic that has exercise cards, with that topic’s clean-first-try percent, in curriculum order, on a pass and on a miss. Same whole-number rule as the module percent. Next to it, that topic’s clean count out of its exercise cards. A topic with no exercise cards is left off the list.
 
-Does **not** list which exercises were not clean.
+It does **not** list which exercises were not clean.
+
+- **Pass** → the modal congratulates the student. The bar is already at 100% and confetti from the Continue button has already played. When this modal opens, confetti falls from the top of the screen to the bottom. It does not play on a miss, and it skips prefers-reduced-motion. Two buttons. Module list opens the module list. Share sits beside it and does nothing yet. Sharing is not wired.
+- **Miss** → the modal says this module starts again, and the restart above runs when the modal opens. Confetti has already played. The modal has:
+  - Home, with a house icon, in the darker blue `#032d60`. It opens the module list.
+  - Restart, with a restart icon, in the normal blue `#0176d3`, at the far right. It opens this module’s topic list.
+  - An X at the top right. It closes the modal and stays on the card. Continue does not come back. The bar stays at 100% until the student leaves.
 
 ## After a complete module
 
-1. Complete screen
-2. Then the map
-3. Variables stays open for theory and Retry
+1. The congratulations modal
+2. Then the module list
+3. The completed module stays open for theory and Retry. It shows a Completed tag in the completed color from [10-visual-design.md](10-visual-design.md)
 4. Other modules stay locked with “Coming later”
 
 ## Retry on a passed card

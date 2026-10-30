@@ -1,44 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import {
-  cardForward,
-  drillBack,
-  drillForward,
-  StudyLessonTransition,
-} from "@/components/study-drill-transition";
-import { useRouter } from "next/navigation";
-import { useRef, useState, type ReactNode } from "react";
+import { drillBack, StudyLessonTransition } from "@/components/study-drill-transition";
+import type { ReactNode } from "react";
 import { CodeEditor } from "@/components/code-editor";
 import { useLocale } from "@/components/locale-provider";
 import {
-  ConfettiBurst,
-  type ConfettiOrigin,
-} from "@/components/study-confetti";
+  useCardAdvance,
+  type Advance,
+  type CardFinish,
+} from "@/components/study-card-advance";
+import { ConfettiBurst } from "@/components/study-confetti";
+import { ModuleResultDialog } from "@/components/study-module-result";
 import { TopicProgress } from "@/components/study-topic-progress";
-import {
-  lastCardFinished,
-  type CurriculumModule,
-  type TheoryCard,
-  type Topic,
-} from "@/lib/curriculum";
+import type { CurriculumModule, TheoryCard, Topic } from "@/lib/curriculum";
 import type { Locale } from "@/lib/locale";
 import { studyCopy } from "@/lib/study-copy";
-import { finishCard } from "@/lib/study-progress";
-import { theoryAdvance } from "@/lib/study-route";
 
 const continueClass =
   "pointer-events-auto max-w-full cursor-pointer rounded-md bg-accent px-4 py-2.5 text-left text-sm font-bold text-white hover:bg-[#014486]";
 
 const nextTopicClass =
   "pointer-events-auto max-w-full cursor-pointer rounded-md border border-accent bg-white px-4 py-2.5 text-left text-sm font-bold text-accent hover:bg-highlight";
-
-export type Advance = {
-  label: string;
-  tone: "continue" | "next";
-  burst?: ConfettiOrigin;
-  run: (at: ConfettiOrigin) => void;
-};
 
 export function StudyAdvanceBar({ advance }: { advance: Advance }) {
   return (
@@ -60,101 +43,29 @@ export function StudyAdvanceBar({ advance }: { advance: Advance }) {
   );
 }
 
-export function useCardAdvance({
-  selected,
-  topic,
-  topicIndex,
-  cardId,
-  cardIndex,
-  finished,
-  copy,
-}: {
-  selected: CurriculumModule;
-  topic: Topic;
-  topicIndex: number;
-  cardId: string;
-  cardIndex: number;
-  finished: ReadonlySet<string>;
-  copy: { continue: string; nextTopic: string; topicsTitle: string };
-}): { lastFinished: boolean; advance: Advance | undefined } {
-  const router = useRouter();
-  const [held, setHeld] = useState<{
-    cardId: string;
-    href: string;
-    label: string;
-    origin: ConfettiOrigin;
-    transitionTypes: string[];
-  } | null>(null);
-  const startedFor = useRef<string | null>(null);
-  const active = held?.cardId === cardId ? held : null;
-  const destination = theoryAdvance(
-    selected,
-    topic,
-    topicIndex,
-    cardIndex,
-    finished,
-    copy,
-  );
-
-  let advance: Advance | undefined;
-  if (active) {
-    const href = active.href;
-    advance = {
-      label: active.label,
-      tone: "next",
-      burst: active.origin,
-      run: () =>
-        router.push(href, { transitionTypes: active.transitionTypes }),
-    };
-  } else if (destination?.completesTopic) {
-    const href = destination.href;
-    const nextLabel = destination.nextLabel;
-    const transitionTypes =
-      destination.next === "module" ? drillBack : drillForward;
-    advance = {
-      label: copy.continue,
-      tone: "continue",
-      run: (origin) => {
-        if (startedFor.current === cardId) return;
-        startedFor.current = cardId;
-        setHeld({ cardId, href, label: nextLabel, origin, transitionTypes });
-        finishCard(cardId);
-      },
-    };
-  } else if (destination) {
-    const href = destination.href;
-    advance = {
-      label: copy.continue,
-      tone: "continue",
-      run: () => {
-        finishCard(cardId);
-        router.push(href, { transitionTypes: cardForward });
-      },
-    };
-  }
-
-  return { lastFinished: lastCardFinished(topic, finished), advance };
-}
-
 export function StudyCardColumn({
   backHref,
   backLabel,
   topicId,
+  cardId,
   cardIndex,
   cardCount,
   progressLabel,
   lastFinished,
   advance,
+  finish,
   children,
 }: {
   backHref: string;
   backLabel: string;
   topicId: string;
+  cardId: string;
   cardIndex: number;
   cardCount: number;
   progressLabel: string;
   lastFinished: boolean;
   advance: Advance | undefined;
+  finish?: CardFinish;
   children: ReactNode;
 }) {
   return (
@@ -173,6 +84,7 @@ export function StudyCardColumn({
         </Link>
         <TopicProgress
           topicId={topicId}
+          cardId={cardId}
           cardIndex={cardIndex}
           cardCount={cardCount}
           label={progressLabel}
@@ -183,6 +95,15 @@ export function StudyCardColumn({
         </StudyLessonTransition>
       </main>
       {advance ? <StudyAdvanceBar advance={advance} /> : null}
+      {finish?.burst ? <ConfettiBurst origin={finish.burst} /> : null}
+      {finish?.result ? (
+        <ModuleResultDialog
+          score={finish.result.score}
+          onModuleList={finish.result.onModuleList}
+          onRestart={finish.result.onRestart}
+          onDismiss={finish.result.onDismiss}
+        />
+      ) : null}
     </div>
   );
 }
@@ -204,7 +125,7 @@ export function StudyTheoryView({
 }) {
   const { locale } = useLocale();
   const copy = studyCopy[locale];
-  const { lastFinished, advance } = useCardAdvance({
+  const { lastFinished, advance, finish } = useCardAdvance({
     selected,
     topic,
     topicIndex,
@@ -219,15 +140,16 @@ export function StudyTheoryView({
       backHref={`/study/${selected.id}/${topic.id}`}
       backLabel={topic.names[locale]}
       topicId={topic.id}
+      cardId={card.id}
       cardIndex={cardIndex}
       cardCount={topic.cards.length}
       progressLabel={copy.topicProgress}
       lastFinished={lastFinished}
       advance={advance}
+      finish={finish}
     >
       <p className="mt-4 text-sm text-muted">{copy.theory}</p>
       <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
-      {advance?.burst ? <ConfettiBurst origin={advance.burst} /> : null}
     </StudyCardColumn>
   );
 }

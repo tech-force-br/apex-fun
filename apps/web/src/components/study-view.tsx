@@ -6,7 +6,9 @@ import { useLocale } from "@/components/locale-provider";
 import { moduleAvailability } from "@/lib/curriculum";
 import { useCurriculumModules } from "@/lib/curriculum-store";
 import { sessionIsAdmin } from "@/lib/mock-auth";
+import { moduleIsComplete } from "@/lib/module-score";
 import { studyCopy } from "@/lib/study-copy";
+import { useFinishedCards, useFirstAttempts } from "@/lib/study-progress";
 
 /** Modules per row on the study map. The path snakes back on the next row. */
 const MAP_COLUMNS = 4;
@@ -62,6 +64,8 @@ export function StudyView() {
   const copy = studyCopy[locale];
   const modules = useCurriculumModules();
   const unlockAll = sessionIsAdmin(session);
+  const finished = useFinishedCards();
+  const firstClean = useFirstAttempts();
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
@@ -80,6 +84,13 @@ export function StudyView() {
         {modules.map((item, index) => {
           const lock = moduleAvailability(item.status, unlockAll);
           const open = lock !== "locked";
+          const completed = moduleIsComplete(item, finished, firstClean);
+          const badge =
+            item.status !== "open"
+              ? copy.comingLater
+              : completed
+                ? copy.completed
+                : copy.open;
           const cell = snakeCell(index, MAP_COLUMNS, modules.length);
 
           return (
@@ -104,11 +115,14 @@ export function StudyView() {
               ) : null}
               <ModuleStop
                 name={item.names[locale]}
-                badge={item.status === "open" ? copy.open : copy.comingLater}
-                accessibleLabel={copy.folder}
+                badge={badge}
+                accessibleLabel={`${copy.folder}, ${badge}`}
                 locked={!open}
+                completed={completed}
                 href={`/study/${item.id}`}
-                leading={<FolderMark active={open} locked={!open} />}
+                leading={
+                  <FolderMark active={open} locked={!open} done={completed} />
+                }
               />
             </li>
           );

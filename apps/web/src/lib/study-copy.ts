@@ -50,6 +50,17 @@ export const studyCopy: Record<
     topicCards: string;
     done: string;
     notDone: string;
+    completed: string;
+    modulePassedTitle: string;
+    modulePassedBody: string;
+    moduleRestartTitle: string;
+    moduleRestartBody: string;
+    moduleScore: (percent: number, clean: number, total: number) => string;
+    moduleList: string;
+    share: string;
+    home: string;
+    restart: string;
+    close: string;
   }
 > = {
   en: {
@@ -85,6 +96,18 @@ export const studyCopy: Record<
     topicCards: "Cards in this topic",
     done: "Done",
     notDone: "Not done",
+    completed: "Completed",
+    modulePassedTitle: "You completed the module!",
+    modulePassedBody: "Nice work! Keep going!",
+    moduleRestartTitle: "Pass score not met!",
+    moduleRestartBody:
+      "Your exercise pass score is under 90%. A true exercise pass only counts when you pass on first try. To make sure that you nail the fundamentals, you must redo the entire module again. Don't give up! Students rarely pass on the first try!",
+    moduleScore: (percent, clean, total) => `${percent}% · ${clean} of ${total}`,
+    moduleList: "Module list",
+    share: "Share",
+    home: "Home",
+    restart: "Restart",
+    close: "Close",
   },
   "pt-BR": {
     title: "Módulos",
@@ -119,5 +142,17 @@ export const studyCopy: Record<
     topicCards: "Cards deste tópico",
     done: "Feito",
     notDone: "Não feito",
+    completed: "Concluído",
+    modulePassedTitle: "Você concluiu o módulo!",
+    modulePassedBody: "Bom trabalho! Continue assim!",
+    moduleRestartTitle: "Pontuação mínima não atingida!",
+    moduleRestartBody:
+      "Sua pontuação no exercício ficou abaixo de 90%. Um aproveitamento satisfatório só é considerado válido quando você é aprovado logo na primeira tentativa. Para garantir que você domine bem os fundamentos, é necessário refazer todo o módulo. Não desista! É raro que os alunos sejam aprovados logo na primeira tentativa!",
+    moduleScore: (percent, clean, total) => `${percent}% · ${clean} de ${total}`,
+    moduleList: "Lista de módulos",
+    share: "Compartilhar",
+    home: "Início",
+    restart: "Reiniciar",
+    close: "Fechar",
   },
 };

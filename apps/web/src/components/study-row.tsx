@@ -66,15 +66,16 @@ export function FolderIcon({
 export function FolderMark({
   active,
   locked,
+  done,
 }: {
   active?: boolean;
   locked?: boolean;
+  done?: boolean;
 }) {
+  const tone = done ? "text-done" : active ? "text-accent-deep" : "text-muted";
   return (
     <span
-      className={`relative flex h-10 w-10 shrink-0 items-center justify-center ${
-        active ? "text-accent-deep" : "text-muted"
-      }`}
+      className={`relative flex h-10 w-10 shrink-0 items-center justify-center ${tone}`}
     >
       <FolderArt locked={locked} />
     </span>
@@ -273,13 +274,14 @@ export function CardSheetRow({
 
 /**
  * One module on the study map.
- * Modules are open or locked. There is no current module.
+ * Modules are open, completed, or locked. There is no current module.
  */
 export function ModuleStop({
   name,
   badge,
   accessibleLabel,
   locked,
+  completed = false,
   href,
   leading,
 }: {
@@ -287,12 +289,15 @@ export function ModuleStop({
   badge: string;
   accessibleLabel: string;
   locked: boolean;
+  completed?: boolean;
   href: string;
   leading: ReactNode;
 }) {
   const surface = locked
     ? "border-line bg-white"
-    : "border-line bg-white hover:border-accent";
+    : completed
+      ? "border-done bg-done-soft hover:border-done"
+      : "border-line bg-white hover:border-accent";
 
   return (
     <StudyAction
@@ -312,7 +317,11 @@ export function ModuleStop({
       </span>
       <span
         className={`max-w-full rounded-md px-1.5 py-1 text-center text-[10px] font-bold leading-tight sm:px-2 sm:text-xs ${
-          locked ? "bg-space text-muted" : "bg-highlight text-accent-deep"
+          completed
+            ? "bg-done text-white"
+            : locked
+              ? "bg-space text-muted"
+              : "bg-highlight text-accent-deep"
         }`}
       >
         {badge}

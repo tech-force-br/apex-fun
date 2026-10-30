@@ -47,7 +47,7 @@ Do not run student Apex in Supabase Edge Functions either.
 5. Save pass / first-try / passing code in Supabase
 6. Return log + pass/fail + the first student message if any
 
-Laptop slice: the action reads the mock session cookie, loads the seed exercise (or, for owner preview, the draft test). Owner preview of a run-clean test also receives the compile-fail list saved in the tab. The action calls the local runner and returns the log. It does not write Supabase. The page marks the card finished only after a pass, in tab memory.
+Laptop slice: the action reads the mock session cookie, loads the seed exercise (or, for owner preview, the draft test). Owner preview of a run-clean test also receives the compile-fail list saved in the tab. The action calls the local runner and returns the log. It does not write Supabase. The page marks the card finished only after a pass, in tab memory. The first scored Validate and a module restart live in that same tab memory.
 
 ## Related
 
