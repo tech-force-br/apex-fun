@@ -1,6 +1,6 @@
 import {
   cardAvailability,
-  lastCardFinished,
+  cardMark,
   moduleAvailability,
   topicAvailability,
   type Card,
@@ -140,7 +140,9 @@ export function resolveStudyTarget(args: {
 
 /**
  * Where a card's advance button goes.
- * An earlier card opens the next card.
+ * Continue is only on the current card, the first unfinished card.
+ * A finished card and a later card have no Continue.
+ * When that current card is not last, Continue opens the next card.
  * The last card of an earlier topic completes that topic. The button after
  * that click opens the doing card of the next topic. `nextLabel` is that button's text.
  * The last card of the last topic fills the bar and plays confetti, then opens the module result modal.
@@ -164,7 +166,7 @@ export function theoryAdvance(
     }
   | { completesTopic: true; next: "result" }
   | undefined {
-  if (lastCardFinished(topic, finished)) return undefined;
+  if (cardMark(topic, cardIndex, finished) !== "next") return undefined;
   const nextCard = topic.cards[cardIndex + 1];
   if (nextCard) {
     return {
