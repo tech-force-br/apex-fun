@@ -46,7 +46,7 @@ This list is not the theory reference pane. See [07-student-ui.md](07-student-ui
 
 ## Progress on a card
 
-Moving from one card to another in the same topic plays the card slide in [10-visual-design.md](10-visual-design.md). Opening a module, opening a topic, Next topic, and the back link play the page slide in that same section.
+Continue to another card in the same topic plays the card slide in [10-visual-design.md](10-visual-design.md). A list link does not play that slide. Opening a module, opening a topic, Next topic, and the back link play the page slide in that same section.
 
 On a card, a progress bar sits under the back link. It shows the furthest card reached in its topic. The first card is 0%, and a later card is its index divided by the number of cards in the topic, as a whole percent. A topic with two cards shows 0% on the first card and 50% once the second card is reached. Opening an earlier card leaves the bar at that percent. Once the last card is finished, the bar shows 100% on every card in the topic, including an earlier card the student opens again. When the percent increases, the bar eases to the new width. The bar is on theory cards and exercise cards. It is not on the map or the module list.
 

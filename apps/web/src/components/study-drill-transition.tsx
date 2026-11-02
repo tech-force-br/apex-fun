@@ -7,17 +7,12 @@ export const drillForward = ["nav-forward"];
 export const drillBack = ["nav-back"];
 
 /**
- * A later card in the same topic.
+ * Continue to the next card in the same topic.
  * `card-switch` keeps the back link, list, bar, and Continue in place.
  * `card-forward` animates the lesson, so the page boundary stays off.
+ * A card list link passes no transition type.
  */
 export const cardForward = ["card-forward", "card-switch"];
-
-/**
- * An earlier card in the same topic.
- * Same split as `cardForward`: the lesson slides back, and the page does not.
- */
-export const cardBack = ["card-back", "card-switch"];
 
 const pageMotion = {
   "nav-forward": "nav-forward",
@@ -26,13 +21,12 @@ const pageMotion = {
 } as const;
 
 /**
- * Same-topic card moves only. The name pairs the old and new lesson, and
- * card-forward / card-back use the page slide classes. Any other navigation
- * leaves the class at "none", so this boundary stays inside the page snapshot.
+ * Continue to the next card only. The name pairs the old and new lesson, and
+ * card-forward uses the page slide class. Any other navigation leaves the
+ * class at "none", so this boundary stays inside the page snapshot.
  */
 const lessonMotion = {
   "card-forward": "nav-forward",
-  "card-back": "nav-back",
   default: "none",
 } as const;
 

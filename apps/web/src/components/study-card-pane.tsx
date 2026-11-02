@@ -2,20 +2,16 @@
 
 import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
-import { cardBack, cardForward } from "@/components/study-drill-transition";
 import { DoneCheck } from "@/components/study-status-mark";
 import { useLocale } from "@/components/locale-provider";
 import {
   cardAvailability,
   cardLabel,
   cardMark,
-  lastCardFinished,
   type CardMark,
   type Topic,
 } from "@/lib/curriculum";
-import { useReachedIndex } from "@/lib/study-progress";
 import { studyCopy } from "@/lib/study-copy";
-import { markTopicProgressMotion } from "@/components/study-topic-progress";
 
 export function TopicCardPane({
   moduleId,
@@ -34,8 +30,6 @@ export function TopicCardPane({
   const copy = studyCopy[locale];
   const paneRef = useRef<HTMLElement>(null);
   const activeRef = useRef<HTMLLIElement>(null);
-  const activeIndex = topic.cards.findIndex((card) => card.id === activeCardId);
-  const reached = useReachedIndex(topic.id);
 
   useLayoutEffect(() => {
     const pane = paneRef.current;
@@ -106,22 +100,6 @@ export function TopicCardPane({
                   href={`/study/${moduleId}/${topic.id}/${card.id}`}
                   scroll={false}
                   prefetch
-                  transitionTypes={
-                    cardIndex > activeIndex
-                      ? cardForward
-                      : cardIndex < activeIndex
-                        ? cardBack
-                        : undefined
-                  }
-                  onClick={() => {
-                    markTopicProgressMotion({
-                      fromIndex: activeIndex,
-                      toIndex: cardIndex,
-                      reached,
-                      cardCount: topic.cards.length,
-                      lastFinished: lastCardFinished(topic, finished),
-                    });
-                  }}
                   className={`${className} cursor-pointer`}
                   aria-current={current ? "page" : undefined}
                   aria-label={label}
