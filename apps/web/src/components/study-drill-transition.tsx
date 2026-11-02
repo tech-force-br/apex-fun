@@ -8,7 +8,8 @@ export const drillBack = ["nav-back"];
 
 /**
  * Continue to the next card in the same topic.
- * `card-switch` keeps the back link, list, bar, and Continue in place.
+ * `card-switch` keeps the back link, list, and bar in place.
+ * Continue is hidden until that transition ends.
  * `card-forward` animates the lesson, so the page boundary stays off.
  * A card list link passes no transition type.
  */

@@ -64,7 +64,9 @@ body {
   animation: none;
 }
 
-/* Card to card: back link, Continue, topic list, and progress stay put. Next topic still slides. */
+/* Card to card: back link, topic list, and progress stay put. Next topic still slides.
+   Continue keeps a name so it leaves the lesson slide, then stays hidden until the
+   transition ends and the live button can take a click. */
 html:active-view-transition-type(card-switch) .study-card-advance {
   view-transition-name: study-card-advance;
 }
@@ -90,13 +92,17 @@ html:active-view-transition-type(card-switch) .study-topic-progress-fill {
   view-transition-name: study-topic-progress-fill;
 }
 
-::view-transition-group(study-card-advance),
 ::view-transition-group(study-card-back),
 ::view-transition-group(study-card-pane),
 ::view-transition-group(study-topic-progress),
 ::view-transition-group(study-topic-progress-value) {
   animation: none;
   z-index: 20;
+}
+
+::view-transition-group(study-card-advance) {
+  animation: none;
+  visibility: hidden;
 }
 
 ::view-transition-group(study-topic-progress-fill) {
@@ -121,12 +127,16 @@ html[data-card-progress="still"]:active-view-transition-type(card-switch)::view-
   display: none;
 }
 
-::view-transition-new(study-card-advance),
 ::view-transition-new(study-card-back),
 ::view-transition-new(study-card-pane),
 ::view-transition-new(study-topic-progress),
 ::view-transition-new(study-topic-progress-value) {
   animation: none;
+}
+
+::view-transition-new(study-card-advance) {
+  animation: none;
+  visibility: hidden;
 }
 
 ::view-transition-new(study-topic-progress-fill) {
