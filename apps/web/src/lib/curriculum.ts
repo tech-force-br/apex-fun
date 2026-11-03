@@ -253,6 +253,23 @@ export function topicIsComplete(
 }
 
 /**
+ * Share of topics finished, as a whole percent at or below the exact rate.
+ * A topic counts when every card on it is finished. An empty topic list is 0%.
+ * The map shows this on an open module that is not complete.
+ */
+export function moduleTopicsDonePercent(
+  module: CurriculumModule,
+  finished: ReadonlySet<string>,
+) {
+  const total = module.topics.length;
+  if (total === 0) return 0;
+  const done = module.topics.filter((topic) =>
+    topicIsComplete(topic, finished),
+  ).length;
+  return Math.floor((done * 100) / total);
+}
+
+/**
  * Share of cards finished, as a whole percent at or below the exact rate.
  * An empty card list is 0%. A finished topic is 100%, and the topic list
  * shows a check for that topic instead of this percent.

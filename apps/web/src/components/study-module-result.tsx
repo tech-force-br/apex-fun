@@ -23,6 +23,14 @@ function RestartIcon() {
   );
 }
 
+function ShareIcon() {
+  return (
+    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="currentColor" aria-hidden>
+      <path d="M8 1.2 3.7 5.4l1.1 1.1L7.2 4.1V9.2h1.6V4.1l2.4 2.4 1.1-1.1L8 1.2ZM2.6 7.4V13.4c0 .6.5 1.1 1.1 1.1h8.6c.6 0 1.1-.5 1.1-1.1V7.4h-1.6v6H4.2v-6H2.6Z" />
+    </svg>
+  );
+}
+
 function CloseIcon() {
   return (
     <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" aria-hidden>
@@ -90,17 +98,18 @@ export function ModuleResultDialog({
         className="relative max-h-[min(40rem,calc(100vh-2rem))] w-full max-w-md overflow-y-auto rounded-lg border border-line bg-white p-6"
         onKeyDown={trapTab}
       >
-        {score.passed ? null : (
-          <button
-            type="button"
-            onClick={onDismiss}
-            aria-label={copy.close}
-            className="absolute top-3 right-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-muted hover:bg-space hover:text-ink"
-          >
-            <CloseIcon />
-          </button>
-        )}
-        <h2 id="module-result-title" className="pr-8 text-2xl font-bold text-ink">
+        <button
+          type="button"
+          onClick={onDismiss}
+          aria-label={copy.close}
+          className="absolute top-3 right-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-muted hover:bg-space hover:text-ink"
+        >
+          <CloseIcon />
+        </button>
+        <h2
+          id="module-result-title"
+          className={`pr-8 text-2xl font-bold ${score.passed ? "text-done" : "text-[#ba0517]"}`}
+        >
           {title}
         </h2>
         <p className="mt-3 text-sm font-bold text-accent-deep">
@@ -127,34 +136,25 @@ export function ModuleResultDialog({
             </ul>
           </div>
         ) : null}
-        {score.passed ? (
-          <div className="mt-6 flex flex-wrap items-center gap-3">
+        <div className="mt-6 flex items-center justify-between gap-3">
+          <button
+            ref={primaryRef}
+            type="button"
+            onClick={onModuleList}
+            className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent-deep px-4 py-2.5 text-sm font-bold text-white hover:bg-[#021f40]"
+          >
+            <HouseIcon />
+            {copy.home}
+          </button>
+          {score.passed ? (
             <button
-              ref={primaryRef}
               type="button"
-              onClick={onModuleList}
-              className="cursor-pointer rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-[#014486]"
             >
-              {copy.moduleList}
-            </button>
-            <button
-              type="button"
-              className="cursor-pointer rounded-md border border-line bg-white px-4 py-2.5 text-sm font-bold text-ink hover:bg-space"
-            >
+              <ShareIcon />
               {copy.share}
             </button>
-          </div>
-        ) : (
-          <div className="mt-6 flex items-center justify-between gap-3">
-            <button
-              ref={primaryRef}
-              type="button"
-              onClick={onModuleList}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent-deep px-4 py-2.5 text-sm font-bold text-white hover:bg-[#021f40]"
-            >
-              <HouseIcon />
-              {copy.home}
-            </button>
+          ) : (
             <button
               type="button"
               onClick={onRestart}
@@ -163,8 +163,8 @@ export function ModuleResultDialog({
               <RestartIcon />
               {copy.restart}
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>,
     document.body,

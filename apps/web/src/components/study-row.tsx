@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { drillForward } from "@/components/study-drill-transition";
-import { DoneCheck } from "@/components/study-status-mark";
+import { DoneCheck, LockIcon } from "@/components/study-status-mark";
 import type { TopicRowState } from "@/lib/curriculum";
+import type { ModuleStopState } from "@/lib/module-stop";
 
 type TopicStatusCopy = {
   completed: string;
@@ -67,16 +68,14 @@ function FolderIcon({ kind }: { kind: TopicRowState["kind"] }) {
 }
 
 /** Glyph only. The module stop supplies the card surface. */
-export function FolderMark({
-  active,
-  locked,
-  done,
-}: {
-  active?: boolean;
-  locked?: boolean;
-  done?: boolean;
-}) {
-  const tone = done ? "text-done" : active ? "text-accent-deep" : "text-muted";
+export function FolderMark({ state }: { state: ModuleStopState }) {
+  const locked = state.kind === "later" && state.locked;
+  const tone =
+    state.kind === "done"
+      ? "text-done"
+      : locked
+        ? "text-muted"
+        : "text-accent-deep";
   return (
     <span
       className={`relative flex h-10 w-10 shrink-0 items-center justify-center ${tone}`}
@@ -146,30 +145,6 @@ function EntryText({
   );
 }
 
-function LockMark() {
-  return (
-    <span className="flex h-6 w-6 shrink-0 items-center justify-center text-muted">
-      <svg viewBox="0 0 16 16" className="h-5 w-5" fill="none" aria-hidden>
-        <rect
-          x="3.25"
-          y="7"
-          width="9.5"
-          height="6.5"
-          rx="1.4"
-          stroke="currentColor"
-          strokeWidth="1.4"
-        />
-        <path
-          d="M5.25 7V5.25a2.75 2.75 0 0 1 5.5 0V7"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-      </svg>
-    </span>
-  );
-}
-
 function TopicStatus({ state }: { state: TopicRowState }) {
   switch (state.kind) {
     case "done":
@@ -182,7 +157,7 @@ function TopicStatus({ state }: { state: TopicRowState }) {
       );
     case "open":
     case "locked":
-      return <LockMark />;
+      return <LockIcon />;
   }
 }
 
@@ -262,39 +237,67 @@ export function TopicPathRow({
   );
 }
 
+type ModuleStatusCopy = {
+  completed: string;
+  comingLater: string;
+  moduleTopicsDone: (percent: number) => string;
+};
+
 /**
  * One module on the study map.
- * Modules are open, completed, or locked. There is no current module.
+ * There is no current module. A coming-later stop can still be a link for the owner.
  */
+function ModuleMark({ state }: { state: ModuleStopState }) {
+  if (state.kind === "done") return <DoneCheck />;
+  if (state.kind === "later") return <LockIcon />;
+  return (
+    <span className="text-xs font-bold tabular-nums text-ink sm:text-sm">
+      {state.percent}%
+    </span>
+  );
+}
+
+function moduleStatusLabel(state: ModuleStopState, copy: ModuleStatusCopy) {
+  switch (state.kind) {
+    case "done":
+      return copy.completed;
+    case "later":
+      return copy.comingLater;
+    case "open":
+      return copy.moduleTopicsDone(state.percent);
+  }
+}
+
+function moduleSurface(state: ModuleStopState) {
+  if (state.kind === "done") return "border-done bg-done-soft hover:border-done";
+  if (state.kind === "later" && state.locked) return "border-line bg-white";
+  return "border-line bg-white hover:border-accent";
+}
+
 export function ModuleStop({
   name,
-  badge,
+  state,
   accessibleLabel,
-  locked,
-  completed = false,
+  copy,
   href,
   leading,
 }: {
   name: string;
-  badge: string;
+  state: ModuleStopState;
+  /** Folder word. The row appends the spoken status once. */
   accessibleLabel: string;
-  locked: boolean;
-  completed?: boolean;
+  copy: ModuleStatusCopy;
   href: string;
   leading: ReactNode;
 }) {
-  const surface = locked
-    ? "border-line bg-white"
-    : completed
-      ? "border-done bg-done-soft hover:border-done"
-      : "border-line bg-white hover:border-accent";
+  const locked = state.kind === "later" && state.locked;
 
   return (
     <StudyAction
       locked={locked}
       href={href}
-      label={entryLabel(name, accessibleLabel, badge)}
-      className={`relative z-10 flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border px-1.5 py-3 text-center transition sm:px-3 ${surface}`}
+      label={entryLabel(name, accessibleLabel, moduleStatusLabel(state, copy))}
+      className={`relative z-10 flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border px-1.5 py-3 text-center transition sm:px-3 ${moduleSurface(state)}`}
       transitionTypes={drillForward}
     >
       {leading}
@@ -305,17 +308,7 @@ export function ModuleStop({
       >
         {name}
       </span>
-      <span
-        className={`max-w-full rounded-md px-1.5 py-1 text-center text-[10px] font-bold leading-tight sm:px-2 sm:text-xs ${
-          completed
-            ? "bg-done text-white"
-            : locked
-              ? "bg-space text-muted"
-              : "bg-highlight text-accent-deep"
-        }`}
-      >
-        {badge}
-      </span>
+      <ModuleMark state={state} />
     </StudyAction>
   );
 }

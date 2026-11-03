@@ -59,8 +59,11 @@ The modal shows:
 
 It does **not** list which exercises were not clean.
 
-- **Pass** → the modal congratulates the student. The bar is already at 100% and confetti from the Continue button has already played. When this modal opens, confetti falls from the top of the screen to the bottom. It does not play on a miss, and it skips prefers-reduced-motion. Two buttons. Module list opens the module list. Share sits beside it and does nothing yet. Sharing is not wired.
-- **Miss** → the modal says this module starts again, and the restart above runs when the modal opens. Confetti has already played. The modal has:
+- **Pass** → the modal congratulates the student. The title uses the completed green `#1f7a4d`. The bar is already at 100% and confetti from the Continue button has already played. When this modal opens, confetti falls from the top of the screen to the bottom. It does not play on a miss, and it skips prefers-reduced-motion. The buttons match a miss, with Share in place of Restart:
+  - Home, with a house icon, in the darker blue `#032d60`. It opens the module list.
+  - Share, with a share icon, in the normal blue `#0176d3`, at the far right. It does nothing yet. Sharing is not wired.
+  - An X at the top right. It closes the modal and stays on the card.
+- **Miss** → the modal says this module starts again. The title uses `#ba0517`. The restart above runs when the modal opens. Confetti has already played. The modal has:
   - Home, with a house icon, in the darker blue `#032d60`. It opens the module list.
   - Restart, with a restart icon, in the normal blue `#0176d3`, at the far right. It opens this module’s topic list.
   - An X at the top right. It closes the modal and stays on the card. Continue does not come back. The bar stays at 100% until the student leaves.
@@ -69,8 +72,8 @@ It does **not** list which exercises were not clean.
 
 1. The congratulations modal
 2. Then the module list
-3. The completed module stays open for theory and Retry. It shows a Completed tag in the completed color from [10-visual-design.md](10-visual-design.md)
-4. Other modules stay locked with “Coming later”
+3. The completed module stays open for theory and Retry. It shows a green circle with a white check in the completed color from [10-visual-design.md](10-visual-design.md)
+4. Other modules stay locked and show a lock icon
 
 ## Retry on a passed card
 

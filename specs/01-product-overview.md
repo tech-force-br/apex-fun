@@ -17,7 +17,7 @@ Teach Apex fundamentals with little theory and many small, checked exercises.
 - Accounts: email/password and Google
 - English and Brazilian Portuguese
 - The **Variables** module only (theory and exercises; the owner sets how many cards)
-- A map that shows later modules as locked (“Coming later”)
+- A map that shows later modules as locked, with a lock icon
 - An admin screen for the site owner only
 - A code runner that uses **aer** on a server (private use until licensed)
 
@@ -38,7 +38,7 @@ Teach Apex fundamentals with little theory and many small, checked exercises.
 3. Read theory cards in order.
 4. Type exercises in order. Each one must pass before the next card unlocks.
 5. Finish mixed review.
-6. Finish the last card. The topic bar fills to 100% and confetti plays, then a modal shows the 90% result and each topic’s percent. 90% or higher completes the module. When that modal opens, confetti falls from the top of the screen to the bottom. Module list opens the module list. Share sits beside it and does nothing yet. Under 90% resets the module when the modal opens. Home opens the module list. Restart opens that module’s topic list. An X closes the modal and stays on the card.
+6. Finish the last card. The topic bar fills to 100% and confetti plays, then a modal shows the 90% result and each topic’s percent. 90% or higher completes the module. When that modal opens, confetti falls from the top of the screen to the bottom. On a pass and on a miss, Home opens the module list and an X closes the modal and stays on the card. On a pass, Share sits at the far right and does nothing yet. Under 90% resets the module when the modal opens. Restart opens that module’s topic list.
 
 ## What the owner does
 

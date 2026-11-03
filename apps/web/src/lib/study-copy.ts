@@ -20,7 +20,6 @@ export const studyCopy: Record<
   Locale,
   {
     title: string;
-    intro: string;
     open: string;
     comingLater: string;
     locked: string;
@@ -29,7 +28,6 @@ export const studyCopy: Record<
     mockNote: string;
     backToMap: string;
     topicsTitle: string;
-    topicsIntro: string;
     folder: string;
     exercise: string;
     continue: string;
@@ -43,13 +41,13 @@ export const studyCopy: Record<
     topicProgress: string;
     topicCards: string;
     topicCardsDone: (percent: number) => string;
+    moduleTopicsDone: (percent: number) => string;
     completed: string;
     modulePassedTitle: string;
     modulePassedBody: string;
     moduleRestartTitle: string;
     moduleRestartBody: string;
     moduleScore: (percent: number, clean: number, total: number) => string;
-    moduleList: string;
     share: string;
     home: string;
     restart: string;
@@ -58,8 +56,6 @@ export const studyCopy: Record<
 > = {
   en: {
     title: "Modules",
-    intro:
-      "Open a module folder. Later modules stay locked until they ship.",
     open: "Open",
     comingLater: "Coming later",
     locked: "Locked",
@@ -68,7 +64,6 @@ export const studyCopy: Record<
     mockNote: "Demo only. Progress is not saved yet.",
     backToMap: "All modules",
     topicsTitle: "Topics",
-    topicsIntro: "Open the current topic. Later topics stay locked.",
     folder: "Folder",
     exercise: "Exercise",
     continue: "Continue",
@@ -82,6 +77,7 @@ export const studyCopy: Record<
     topicProgress: "Topic progress",
     topicCards: "Cards in this topic",
     topicCardsDone: (percent) => `${percent}% of cards done`,
+    moduleTopicsDone: (percent) => `${percent}% of topics done`,
     completed: "Completed",
     modulePassedTitle: "You completed the module!",
     modulePassedBody: "Nice work! Keep going!",
@@ -89,7 +85,6 @@ export const studyCopy: Record<
     moduleRestartBody:
       "Your exercise pass score is under 90%. A true exercise pass only counts when you pass on first try. To make sure that you nail the fundamentals, you must redo the entire module again. Don't give up! Students rarely pass on the first try!",
     moduleScore: (percent, clean, total) => `${percent}% · ${clean} of ${total}`,
-    moduleList: "Module list",
     share: "Share",
     home: "Home",
     restart: "Restart",
@@ -97,8 +92,6 @@ export const studyCopy: Record<
   },
   "pt-BR": {
     title: "Módulos",
-    intro:
-      "Abra uma pasta de módulo. Os módulos seguintes ficam bloqueados até serem lançados.",
     open: "Aberto",
     comingLater: "Em breve",
     locked: "Bloqueado",
@@ -107,7 +100,6 @@ export const studyCopy: Record<
     mockNote: "Só uma demonstração. O progresso ainda não é salvo.",
     backToMap: "Todos os módulos",
     topicsTitle: "Tópicos",
-    topicsIntro: "Abra o tópico atual. Os seguintes ficam bloqueados.",
     folder: "Pasta",
     exercise: "Exercício",
     continue: "Continuar",
@@ -121,6 +113,7 @@ export const studyCopy: Record<
     topicProgress: "Progresso do tópico",
     topicCards: "Cards deste tópico",
     topicCardsDone: (percent) => `${percent}% dos cards concluídos`,
+    moduleTopicsDone: (percent) => `${percent}% dos tópicos concluídos`,
     completed: "Concluído",
     modulePassedTitle: "Você concluiu o módulo!",
     modulePassedBody: "Bom trabalho! Continue assim!",
@@ -128,7 +121,6 @@ export const studyCopy: Record<
     moduleRestartBody:
       "Sua pontuação no exercício ficou abaixo de 90%. Um aproveitamento satisfatório só é considerado válido quando você é aprovado logo na primeira tentativa. Para garantir que você domine bem os fundamentos, é necessário refazer todo o módulo. Não desista! É raro que os alunos sejam aprovados logo na primeira tentativa!",
     moduleScore: (percent, clean, total) => `${percent}% · ${clean} de ${total}`,
-    moduleList: "Lista de módulos",
     share: "Compartilhar",
     home: "Início",
     restart: "Reiniciar",

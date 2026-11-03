@@ -75,11 +75,11 @@ Theory is also available as a **pane** on exercise screens. That pane is a refer
 
 ## Map after Variables is complete
 
-Variables remains open. A completed module shows a Completed tag and the completed color from [10-visual-design.md](10-visual-design.md). Open modules that are not complete keep the Open tag.
+Variables remains open. A completed module shows a green circle with a white check and the completed color from [10-visual-design.md](10-visual-design.md). It does not show a Completed tag. Open modules that are not complete show the share of their topics that are finished, as a whole percent, from that same spec. They do not show an Open tag.
 
-Locked modules show the name and “Coming later”.
+Locked modules show the name and a lock icon. They do not show the words Coming later.
 
-The owner is the exception in [08-content-admin.md](08-content-admin.md). Their map opens every module, topic, and card. Coming-later modules still show that label, and the owner can open them.
+The owner is the exception in [08-content-admin.md](08-content-admin.md). Their map opens every module, topic, and card. Coming-later modules still show the lock icon, and the owner can open them.
 
 ## Related
 

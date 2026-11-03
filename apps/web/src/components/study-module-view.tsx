@@ -44,7 +44,6 @@ export function StudyModuleView() {
       <h1 className="mt-1 text-3xl font-bold tracking-tight text-ink">
         {selected.names[locale]}
       </h1>
-      <p className="mt-2 text-muted">{copy.topicsIntro}</p>
 
       <ol className="mt-8" aria-labelledby="topic-list-label">
         {selected.topics.map((topic, topicIndex) => {

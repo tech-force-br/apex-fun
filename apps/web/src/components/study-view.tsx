@@ -3,10 +3,9 @@
 import { useMockAuth } from "@/components/mock-auth-provider";
 import { FolderMark, ModuleStop } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
-import { moduleAvailability } from "@/lib/curriculum";
 import { useCurriculumModules } from "@/lib/curriculum-store";
 import { sessionIsAdmin } from "@/lib/mock-auth";
-import { moduleIsComplete } from "@/lib/module-score";
+import { moduleStopState } from "@/lib/module-stop";
 import { studyCopy } from "@/lib/study-copy";
 import { useFinishedCards, useFirstAttempts } from "@/lib/study-progress";
 
@@ -73,7 +72,6 @@ export function StudyView() {
         <h1 id="module-list-label" className="text-3xl font-bold tracking-tight text-ink">
           {copy.title}
         </h1>
-        <p className="mt-2 max-w-xl text-muted">{copy.intro}</p>
       </header>
 
       <ol
@@ -82,15 +80,7 @@ export function StudyView() {
         aria-labelledby="module-list-label"
       >
         {modules.map((item, index) => {
-          const lock = moduleAvailability(item.status, unlockAll);
-          const open = lock !== "locked";
-          const completed = moduleIsComplete(item, finished, firstClean);
-          const badge =
-            item.status !== "open"
-              ? copy.comingLater
-              : completed
-                ? copy.completed
-                : copy.open;
+          const state = moduleStopState(item, finished, firstClean, unlockAll);
           const cell = snakeCell(index, MAP_COLUMNS, modules.length);
 
           return (
@@ -115,14 +105,11 @@ export function StudyView() {
               ) : null}
               <ModuleStop
                 name={item.names[locale]}
-                badge={badge}
-                accessibleLabel={`${copy.folder}, ${badge}`}
-                locked={!open}
-                completed={completed}
+                state={state}
+                accessibleLabel={copy.folder}
+                copy={copy}
                 href={`/study/${item.id}`}
-                leading={
-                  <FolderMark active={open} locked={!open} done={completed} />
-                }
+                leading={<FolderMark state={state} />}
               />
             </li>
           );
