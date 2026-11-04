@@ -25,7 +25,6 @@ export const studyCopy: Record<
     locked: string;
     theory: string;
     exercises: (count: number) => string;
-    mockNote: string;
     backToMap: string;
     topicsTitle: string;
     folder: string;
@@ -61,7 +60,6 @@ export const studyCopy: Record<
     locked: "Locked",
     theory: "Theory",
     exercises: (count) => exerciseLine(count, "Exercise", "Exercises"),
-    mockNote: "Demo only. Progress is not saved yet.",
     backToMap: "All modules",
     topicsTitle: "Topics",
     folder: "Folder",
@@ -97,7 +95,6 @@ export const studyCopy: Record<
     locked: "Bloqueado",
     theory: "Teoria",
     exercises: (count) => exerciseLine(count, "exercício", "exercícios"),
-    mockNote: "Só uma demonstração. O progresso ainda não é salvo.",
     backToMap: "Todos os módulos",
     topicsTitle: "Tópicos",
     folder: "Pasta",

@@ -72,8 +72,6 @@ export function StudyModuleView() {
           );
         })}
       </ol>
-
-      <p className="mt-8 text-center text-xs text-muted">{copy.mockNote}</p>
     </main>
   );
 }
