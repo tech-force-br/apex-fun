@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { ModuleIcon, StudyGlyph } from "@/components/study-marks";
 import { drillForward } from "@/components/study-drill-transition";
-import { DoneCheck, LockIcon } from "@/components/study-status-mark";
+import { DoneCheck, LockIcon, LockSvg } from "@/components/study-status-mark";
 import type { TopicRowState } from "@/lib/curriculum";
 import type { ModuleStopState } from "@/lib/module-stop";
 
@@ -12,34 +13,11 @@ type TopicStatusCopy = {
   topicCardsDone: (percent: number) => string;
 };
 
-function FolderArt({ locked }: { locked?: boolean }) {
+function LockBadge() {
   return (
-    <>
-      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden>
-        <path d="M3.75 6.5A1.75 1.75 0 0 1 5.5 4.75h3.1c.3 0 .58.14.76.38l.9 1.12h8.24A1.75 1.75 0 0 1 20.25 8v9.5A1.75 1.75 0 0 1 18.5 19.25h-13A1.75 1.75 0 0 1 3.75 17.5z" />
-      </svg>
-      {locked ? (
-        <span className="absolute -right-1 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-muted ring-1 ring-line">
-          <svg viewBox="0 0 16 16" className="h-2.5 w-2.5" fill="none" aria-hidden>
-            <rect
-              x="3.5"
-              y="7"
-              width="9"
-              height="7"
-              rx="1.5"
-              stroke="currentColor"
-              strokeWidth="1.4"
-            />
-            <path
-              d="M5.25 7V5.25a2.75 2.75 0 0 1 5.5 0V7"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-            />
-          </svg>
-        </span>
-      ) : null}
-    </>
+    <span className="absolute -right-1 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-muted ring-1 ring-line">
+      <LockSvg className="h-2.5 w-2.5" />
+    </span>
   );
 }
 
@@ -48,27 +26,33 @@ function folderTone(kind: TopicRowState["kind"]) {
     case "done":
       return "bg-done-soft text-done";
     case "locked":
-      return "border border-line bg-white text-muted";
+      return "bg-locked text-muted";
     case "current":
+      return "bg-white text-accent-deep";
     case "open":
-      return "bg-highlight text-accent-deep";
+      return "bg-locked text-accent-deep";
   }
 }
 
-function FolderIcon({ kind }: { kind: TopicRowState["kind"] }) {
-  const tone = folderTone(kind);
-
+function FolderIcon({ mark, kind }: { mark: string; kind: TopicRowState["kind"] }) {
   return (
     <span
-      className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${tone}`}
+      className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${folderTone(kind)}`}
     >
-      <FolderArt locked={kind === "locked"} />
+      <StudyGlyph mark={mark} />
+      {kind === "locked" ? <LockBadge /> : null}
     </span>
   );
 }
 
-/** Glyph only. The module stop supplies the card surface. */
-export function FolderMark({ state }: { state: ModuleStopState }) {
+/** Subject glyph for one module. The stop supplies the card surface. */
+export function ModuleGlyph({
+  moduleId,
+  state,
+}: {
+  moduleId: string;
+  state: ModuleStopState;
+}) {
   const locked = state.kind === "later" && state.locked;
   const tone =
     state.kind === "done"
@@ -77,10 +61,9 @@ export function FolderMark({ state }: { state: ModuleStopState }) {
         ? "text-muted"
         : "text-accent-deep";
   return (
-    <span
-      className={`relative flex h-10 w-10 shrink-0 items-center justify-center ${tone}`}
-    >
-      <FolderArt locked={locked} />
+    <span className={`relative flex h-10 w-10 shrink-0 items-center justify-center ${tone}`}>
+      <ModuleIcon moduleId={moduleId} />
+      {locked ? <LockBadge /> : null}
     </span>
   );
 }
@@ -177,6 +160,7 @@ function topicStatusLabel(state: TopicRowState, copy: TopicStatusCopy) {
 type StudyEntryProps = {
   name: string;
   meta?: string;
+  mark: string;
   state: TopicRowState;
   accessibleLabel: string;
   copy: TopicStatusCopy;
@@ -190,13 +174,13 @@ function entryLabel(name: string, accessibleLabel: string, statusLabel: string) 
 function pathSurface(kind: TopicRowState["kind"]) {
   switch (kind) {
     case "locked":
-      return "border-line bg-white";
+      return "border-line bg-locked";
     case "done":
       return "border-done bg-done-soft hover:border-done";
     case "current":
-      return "border-accent bg-highlight hover:border-accent-deep";
-    case "open":
       return "border-line bg-white hover:border-accent";
+    case "open":
+      return "border-line bg-locked hover:border-accent";
   }
 }
 
@@ -204,6 +188,7 @@ function pathSurface(kind: TopicRowState["kind"]) {
 export function TopicPathRow({
   name,
   meta,
+  mark,
   state,
   accessibleLabel,
   copy,
@@ -213,27 +198,25 @@ export function TopicPathRow({
   const locked = state.kind === "locked";
 
   return (
-    <StudyAction
-      locked={locked}
-      current={state.kind === "current"}
-      href={href}
-      label={entryLabel(name, accessibleLabel, topicStatusLabel(state, copy))}
-      className="flex w-full items-stretch gap-3 text-left"
-      transitionTypes={drillForward}
-    >
+    <div className="flex w-full items-stretch gap-3 text-left">
       <span className="flex w-12 shrink-0 flex-col items-center">
-        <FolderIcon kind={state.kind} />
+        <FolderIcon mark={mark} kind={state.kind} />
         {connectBelow ? <span aria-hidden className="mt-1.5 w-px flex-1 bg-line" /> : null}
       </span>
-      <span
+      <StudyAction
+        locked={locked}
+        current={state.kind === "current"}
+        href={href}
+        label={entryLabel(name, accessibleLabel, topicStatusLabel(state, copy))}
         className={`flex min-w-0 flex-1 items-center gap-3 rounded-lg border px-4 py-3 transition ${pathSurface(
           state.kind,
         )} ${connectBelow ? "mb-3" : ""}`}
+        transitionTypes={drillForward}
       >
         <EntryText name={name} meta={meta} locked={locked} />
         <TopicStatus state={state} />
-      </span>
-    </StudyAction>
+      </StudyAction>
+    </div>
   );
 }
 
@@ -243,15 +226,53 @@ type ModuleStatusCopy = {
   moduleTopicsDone: (percent: number) => string;
 };
 
+export type ModuleStopConnector = "left" | "right" | "down";
+
+function MapDots({ axis, className }: { axis: "x" | "y"; className: string }) {
+  const horizontal = axis === "x";
+  return (
+    <span
+      aria-hidden
+      className={`pointer-events-none absolute z-0 ${className}`}
+      style={{
+        backgroundImage:
+          "radial-gradient(circle, var(--color-accent) 1.5px, transparent 1.7px)",
+        backgroundSize: horizontal ? "7px 4px" : "4px 7px",
+        backgroundRepeat: horizontal ? "repeat-x" : "repeat-y",
+        backgroundPosition: "center",
+      }}
+    />
+  );
+}
+
 /**
- * One module on the study map.
- * There is no current module. A coming-later stop can still be a link for the owner.
+ * Gap bridge between stops. The cell that renders the stop is the positioning parent.
+ * Horizontal dots sit on the glyph center: 1px border + pt-3 + half of the h-10 glyph.
  */
+function MapConnector({ connector }: { connector: ModuleStopConnector | null }) {
+  if (connector === "left" || connector === "right") {
+    return (
+      <MapDots
+        axis="x"
+        className={`top-[33px] h-1 w-3 -translate-y-1/2 sm:w-8 ${
+          connector === "left" ? "right-full" : "left-full"
+        }`}
+      />
+    );
+  }
+  if (connector === "down") {
+    return (
+      <MapDots axis="y" className="top-full left-1/2 h-10 w-1 -translate-x-1/2 sm:h-14" />
+    );
+  }
+  return null;
+}
+
 function ModuleMark({ state }: { state: ModuleStopState }) {
   if (state.kind === "done") return <DoneCheck />;
   if (state.kind === "later") return <LockIcon />;
   return (
-    <span className="text-xs font-bold tabular-nums text-ink sm:text-sm">
+    <span className="text-xs font-semibold tabular-nums leading-none text-ink sm:text-sm">
       {state.percent}%
     </span>
   );
@@ -270,10 +291,16 @@ function moduleStatusLabel(state: ModuleStopState, copy: ModuleStatusCopy) {
 
 function moduleSurface(state: ModuleStopState) {
   if (state.kind === "done") return "border-done bg-done-soft hover:border-done";
-  if (state.kind === "later" && state.locked) return "border-line bg-white";
+  if (state.kind === "later") {
+    return state.locked ? "border-line bg-locked" : "border-line bg-locked hover:border-accent";
+  }
   return "border-line bg-white hover:border-accent";
 }
 
+/**
+ * One module on the study map.
+ * There is no current module. A coming-later stop can still be a link for the owner.
+ */
 export function ModuleStop({
   name,
   state,
@@ -281,6 +308,7 @@ export function ModuleStop({
   copy,
   href,
   leading,
+  connector = null,
 }: {
   name: string;
   state: ModuleStopState;
@@ -289,26 +317,32 @@ export function ModuleStop({
   copy: ModuleStatusCopy;
   href: string;
   leading: ReactNode;
+  connector?: ModuleStopConnector | null;
 }) {
   const locked = state.kind === "later" && state.locked;
 
   return (
-    <StudyAction
-      locked={locked}
-      href={href}
-      label={entryLabel(name, accessibleLabel, moduleStatusLabel(state, copy))}
-      className={`relative z-10 flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border px-1.5 py-3 text-center transition sm:px-3 ${moduleSurface(state)}`}
-      transitionTypes={drillForward}
-    >
-      {leading}
-      <span
-        className={`block w-full text-xs font-medium leading-snug sm:text-sm ${
-          locked ? "text-muted" : "text-ink"
-        }`}
+    <>
+      <MapConnector connector={connector} />
+      <StudyAction
+        locked={locked}
+        href={href}
+        label={entryLabel(name, accessibleLabel, moduleStatusLabel(state, copy))}
+        className={`relative z-10 flex h-full w-full flex-col items-center rounded-lg border px-1.5 pt-3 pb-2.5 text-center transition sm:px-3 ${moduleSurface(state)}`}
+        transitionTypes={drillForward}
       >
-        {name}
-      </span>
-      <ModuleMark state={state} />
-    </StudyAction>
+        {leading}
+        <span
+          className={`my-1.5 block w-full text-xs font-medium leading-4 sm:text-sm sm:leading-5 ${
+            locked ? "text-muted" : "text-ink"
+          }`}
+        >
+          {name}
+        </span>
+        <span className="mt-auto flex h-6 items-center justify-center">
+          <ModuleMark state={state} />
+        </span>
+      </StudyAction>
+    </>
   );
 }

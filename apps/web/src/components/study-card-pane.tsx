@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
-import { DoneCheck } from "@/components/study-status-mark";
+import { DoneCheck, LockSvg } from "@/components/study-status-mark";
 import { useLocale } from "@/components/locale-provider";
 import {
   cardAvailability,
@@ -119,23 +119,7 @@ function CardStatusMark({ mark }: { mark: CardMark }) {
   if (mark === "later") {
     return (
       <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-line text-muted">
-        <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" aria-hidden>
-          <rect
-            x="3.5"
-            y="7"
-            width="9"
-            height="6.5"
-            rx="1.4"
-            stroke="currentColor"
-            strokeWidth="1.4"
-          />
-          <path
-            d="M5.25 7V5.25a2.75 2.75 0 0 1 5.5 0V7"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-          />
-        </svg>
+        <LockSvg className="h-3.5 w-3.5" />
       </span>
     );
   }

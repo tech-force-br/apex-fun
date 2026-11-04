@@ -76,6 +76,10 @@ export const variablesTopicIds = [
 
 export type VariablesTopicId = (typeof variablesTopicIds)[number];
 
+export function isVariablesTopicId(id: string): id is VariablesTopicId {
+  return (variablesTopicIds as readonly string[]).includes(id);
+}
+
 const variablesTopicMeta: Record<
   VariablesTopicId,
   Omit<Topic, "cards" | "id">

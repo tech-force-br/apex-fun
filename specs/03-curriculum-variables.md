@@ -23,7 +23,7 @@ Pricing for later modules is out of scope for v1.
 
 ## Variables topic order
 
-Modules are folders on the map. Topics are folders inside a module. Cards live inside a topic.
+Modules are stops on the map. Topics are rows inside a module. Cards live inside a topic. Each stop and each row shows a mark that depicts that content, as in [10-visual-design.md](10-visual-design.md).
 
 | # | Topic | Student work |
 |---|---|---|

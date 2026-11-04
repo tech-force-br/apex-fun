@@ -60,6 +60,7 @@ export function StudyModuleView() {
             <li key={topic.id}>
               <TopicPathRow
                 connectBelow={topicIndex < selected.topics.length - 1}
+                mark={topic.id}
                 name={topic.names[locale]}
                 meta={meta}
                 state={topicRowState(lock, topic, finished)}

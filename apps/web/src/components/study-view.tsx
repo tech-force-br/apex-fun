@@ -1,7 +1,7 @@
 "use client";
 
 import { useMockAuth } from "@/components/mock-auth-provider";
-import { FolderMark, ModuleStop } from "@/components/study-row";
+import { ModuleGlyph, ModuleStop, type ModuleStopConnector } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
 import { useCurriculumModules } from "@/lib/curriculum-store";
 import { sessionIsAdmin } from "@/lib/mock-auth";
@@ -12,13 +12,11 @@ import { useFinishedCards, useFirstAttempts } from "@/lib/study-progress";
 /** Modules per row on the study map. The path snakes back on the next row. */
 const MAP_COLUMNS = 4;
 
-type SnakeConnector = "left" | "right" | "down";
-
 function snakeCell(
   index: number,
   columns: number,
   count: number,
-): { row: number; column: number; connector: SnakeConnector | null } {
+): { row: number; column: number; connector: ModuleStopConnector | null } {
   const row = Math.floor(index / columns);
   const indexInRow = index % columns;
   const reversed = row % 2 === 1;
@@ -32,29 +30,6 @@ function snakeCell(
     column,
     connector: nextSameRow ? (reversed ? "left" : "right") : "down",
   };
-}
-
-function MapDots({
-  axis,
-  className,
-}: {
-  axis: "x" | "y";
-  className: string;
-}) {
-  const horizontal = axis === "x";
-  return (
-    <span
-      aria-hidden
-      className={`pointer-events-none absolute z-0 ${className}`}
-      style={{
-        backgroundImage:
-          "radial-gradient(circle, var(--color-accent) 1.5px, transparent 1.7px)",
-        backgroundSize: horizontal ? "7px 4px" : "4px 7px",
-        backgroundRepeat: horizontal ? "repeat-x" : "repeat-y",
-        backgroundPosition: "center",
-      }}
-    />
-  );
 }
 
 export function StudyView() {
@@ -89,27 +64,14 @@ export function StudyView() {
               className="relative"
               style={{ gridColumn: cell.column, gridRow: cell.row + 1 }}
             >
-              {cell.connector === "left" || cell.connector === "right" ? (
-                <MapDots
-                  axis="x"
-                  className={`top-1/2 h-1 w-3 -translate-y-1/2 sm:w-8 ${
-                    cell.connector === "left" ? "right-full" : "left-full"
-                  }`}
-                />
-              ) : null}
-              {cell.connector === "down" ? (
-                <MapDots
-                  axis="y"
-                  className="top-full left-1/2 h-10 w-1 -translate-x-1/2 sm:h-14"
-                />
-              ) : null}
               <ModuleStop
                 name={item.names[locale]}
                 state={state}
                 accessibleLabel={copy.folder}
                 copy={copy}
                 href={`/study/${item.id}`}
-                leading={<FolderMark state={state} />}
+                connector={cell.connector}
+                leading={<ModuleGlyph moduleId={item.id} state={state} />}
               />
             </li>
           );
