@@ -40,6 +40,12 @@ export function StudyView() {
   const unlockAll = sessionIsAdmin(session);
   const finished = useFinishedCards();
   const firstClean = useFirstAttempts();
+  const stops = modules.map((item, index) => ({
+    item,
+    state: moduleStopState(item, finished, firstClean, unlockAll),
+    cell: snakeCell(index, MAP_COLUMNS, modules.length),
+  }));
+  const currentModuleId = stops.find((stop) => stop.state.kind === "open")?.item.id;
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
@@ -54,10 +60,7 @@ export function StudyView() {
         style={{ gridTemplateColumns: `repeat(${MAP_COLUMNS}, minmax(0, 1fr))` }}
         aria-labelledby="module-list-label"
       >
-        {modules.map((item, index) => {
-          const state = moduleStopState(item, finished, firstClean, unlockAll);
-          const cell = snakeCell(index, MAP_COLUMNS, modules.length);
-
+        {stops.map(({ item, state, cell }) => {
           return (
             <li
               key={item.id}
@@ -71,6 +74,7 @@ export function StudyView() {
                 copy={copy}
                 href={`/study/${item.id}`}
                 connector={cell.connector}
+                current={item.id === currentModuleId}
                 leading={<ModuleGlyph moduleId={item.id} state={state} />}
               />
             </li>

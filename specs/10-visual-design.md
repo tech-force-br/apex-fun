@@ -32,7 +32,7 @@ Each module on the map shows a picture of that module. Variables is an x in brac
 
 Each Variables topic has its own mark, and that mark pictures the topic: an x in braces, the letters Aa, the declaration x;, an equals sign, a log window, the digits 123, a single-quoted letter, a true/false switch, the digits 1.5, a calendar, two values joined by a plus, and 1+a. A finished topic icon uses this green. A topic without its own picture shows a folder. A locked mark still shows the small lock.
 
-On the module list, open modules that are not complete stay white and show how many of their topics are finished, divided by the number of topics in the module, as a whole percent at or below the exact rate. A topic is finished when every card on it is finished. A module with no finished topics shows 0%. A module with no topics shows 0%. They do not show an Open tag. A coming-later module uses the light gray surface `#f7f7f7` and shows a lock icon in a white circle. It does not show the words Coming later. The owner can still open it.
+On the module list, open modules that are not complete stay white and show how many of their topics are finished, divided by the number of topics in the module, as a whole percent at or below the exact rate. A topic is finished when every card on it is finished. A module with no finished topics shows 0%. A module with no topics shows 0%. They do not show an Open tag. A coming-later module uses the light gray surface `#f7f7f7` and shows a lock icon in a white circle. It does not show the words Coming later. The owner can still open it. Dotted accent connectors join the modules. Each connector keeps its dots and carries a small accent arrow on top of them, pointing along the path.
 
 On the topic list, the current topic uses a white surface and the border `#dddbda`. It shows how many of its cards are finished, divided by the number of cards in the topic, as a whole percent at or below the exact rate. A topic with no finished cards shows 0%. A topic with no cards shows 0%. It does not show a Current tag. An open topic that is not finished uses the light gray surface `#f7f7f7` and shows a lock icon in a white circle. It does not show an Open tag. The owner can still open it. A locked topic uses that same gray surface and lock icon in a white circle. It does not show a Locked tag.
 
@@ -41,6 +41,8 @@ On the card list beside a lesson, a finished card keeps the plain row. The row s
 ## Motion
 
 Study moves use the View Transitions API. A move is either a page slide or a card slide. The header and the footer stay fixed on both. The browser’s own back and forward buttons carry no direction, so they do not play the directional slide. While a view transition runs, the page does not accept pointer input. `prefers-reduced-motion: reduce` plays every view transition with no duration.
+
+The current module on the module list is the first open module that is not finished. It eases up a few pixels and back down, and it does not show a Current tag. `prefers-reduced-motion: reduce` keeps that module still.
 
 A page slide moves about 48px over 280ms, with a short fade. Going deeper slides the old page out to the left and the new page in from the right. That is opening a module on the map, opening a topic, and Next topic. Going back slides the other way. That is the back link, the wordmark while the path is under `/study/`, and Home and Restart on the results modal. On a page slide, the topic list, the lesson, the back link, and Continue move with the page.
 

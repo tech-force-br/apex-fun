@@ -202,12 +202,31 @@ html:active-view-transition-type(card-switch)::view-transition-new(root) {
   }
 }
 
+/* Current module on the study map. The connector stays put. */
+@keyframes study-module-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -5px;
+  }
+}
+
+.study-module-float {
+  animation: study-module-float 2.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(*),
   ::view-transition-new(*),
   ::view-transition-group(*) {
     animation-duration: 0s !important;
     animation-delay: 0s !important;
+  }
+
+  .study-module-float {
+    animation: none;
   }
 }
 

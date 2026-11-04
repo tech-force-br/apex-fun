@@ -228,7 +228,42 @@ type ModuleStatusCopy = {
 
 export type ModuleStopConnector = "left" | "right" | "down";
 
-function MapDots({ axis, className }: { axis: "x" | "y"; className: string }) {
+/** Small chevron on the dotted path. A page-colored understroke keeps the dots readable. */
+function MapArrow({ direction }: { direction: ModuleStopConnector }) {
+  const turn = direction === "down" ? "rotate-90" : direction === "left" ? "rotate-180" : "";
+  return (
+    <svg
+      viewBox="0 0 12 12"
+      className={`pointer-events-none absolute top-1/2 left-1/2 z-[1] size-2 -translate-x-1/2 -translate-y-1/2 text-accent sm:size-2.5 ${turn}`}
+      fill="none"
+    >
+      <path
+        d="M3.2 1.8 8.4 6 3.2 10.2"
+        stroke="var(--color-space)"
+        strokeWidth="3.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3.2 1.8 8.4 6 3.2 10.2"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function MapDots({
+  axis,
+  direction,
+  className,
+}: {
+  axis: "x" | "y";
+  direction: ModuleStopConnector;
+  className: string;
+}) {
   const horizontal = axis === "x";
   return (
     <span
@@ -241,7 +276,9 @@ function MapDots({ axis, className }: { axis: "x" | "y"; className: string }) {
         backgroundRepeat: horizontal ? "repeat-x" : "repeat-y",
         backgroundPosition: "center",
       }}
-    />
+    >
+      <MapArrow direction={direction} />
+    </span>
   );
 }
 
@@ -254,6 +291,7 @@ function MapConnector({ connector }: { connector: ModuleStopConnector | null }) 
     return (
       <MapDots
         axis="x"
+        direction={connector}
         className={`top-[33px] h-1 w-3 -translate-y-1/2 sm:w-8 ${
           connector === "left" ? "right-full" : "left-full"
         }`}
@@ -262,7 +300,11 @@ function MapConnector({ connector }: { connector: ModuleStopConnector | null }) 
   }
   if (connector === "down") {
     return (
-      <MapDots axis="y" className="top-full left-1/2 h-10 w-1 -translate-x-1/2 sm:h-14" />
+      <MapDots
+        axis="y"
+        direction="down"
+        className="top-full left-1/2 h-10 w-1 -translate-x-1/2 sm:h-14"
+      />
     );
   }
   return null;
@@ -299,7 +341,8 @@ function moduleSurface(state: ModuleStopState) {
 
 /**
  * One module on the study map.
- * There is no current module. A coming-later stop can still be a link for the owner.
+ * `current` is the first unfinished open module. It floats. The connector does not.
+ * A coming-later stop can still be a link for the owner.
  */
 export function ModuleStop({
   name,
@@ -309,6 +352,7 @@ export function ModuleStop({
   href,
   leading,
   connector = null,
+  current = false,
 }: {
   name: string;
   state: ModuleStopState;
@@ -318,31 +362,35 @@ export function ModuleStop({
   href: string;
   leading: ReactNode;
   connector?: ModuleStopConnector | null;
+  current?: boolean;
 }) {
   const locked = state.kind === "later" && state.locked;
 
   return (
     <>
       <MapConnector connector={connector} />
-      <StudyAction
-        locked={locked}
-        href={href}
-        label={entryLabel(name, accessibleLabel, moduleStatusLabel(state, copy))}
-        className={`relative z-10 flex h-full w-full flex-col items-center rounded-lg border px-1.5 pt-3 pb-2.5 text-center transition sm:px-3 ${moduleSurface(state)}`}
-        transitionTypes={drillForward}
-      >
-        {leading}
-        <span
-          className={`my-1.5 block w-full text-xs font-medium leading-4 sm:text-sm sm:leading-5 ${
-            locked ? "text-muted" : "text-ink"
-          }`}
+      <span className={`block h-full ${current ? "study-module-float" : ""}`}>
+        <StudyAction
+          locked={locked}
+          current={current}
+          href={href}
+          label={entryLabel(name, accessibleLabel, moduleStatusLabel(state, copy))}
+          className={`relative z-10 flex h-full w-full flex-col items-center rounded-lg border px-1.5 pt-3 pb-2.5 text-center transition sm:px-3 ${moduleSurface(state)}`}
+          transitionTypes={drillForward}
         >
-          {name}
-        </span>
-        <span className="mt-auto flex h-6 items-center justify-center">
-          <ModuleMark state={state} />
-        </span>
-      </StudyAction>
+          {leading}
+          <span
+            className={`my-1.5 block w-full text-xs font-medium leading-4 sm:text-sm sm:leading-5 ${
+              locked ? "text-muted" : "text-ink"
+            }`}
+          >
+            {name}
+          </span>
+          <span className="mt-auto flex h-6 items-center justify-center">
+            <ModuleMark state={state} />
+          </span>
+        </StudyAction>
+      </span>
     </>
   );
 }
