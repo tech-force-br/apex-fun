@@ -15,7 +15,8 @@ import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
 import type { CurriculumModule, ExerciseCard, Topic } from "@/lib/curriculum";
 import { validateExercise } from "@/lib/exercise-check-action";
-import { sessionIsAdmin, syncSessionCookie } from "@/lib/mock-auth";
+import { syncSessionCookie } from "@/lib/mock-auth";
+import { useUnlockAll } from "@/lib/student-view";
 import type { ExerciseCheck } from "@/lib/score-run";
 import { recordFirstAttempt } from "@/lib/study-progress";
 import { studyCopy } from "@/lib/study-copy";
@@ -90,6 +91,7 @@ function StudyExerciseView({
 }) {
   const { locale } = useLocale();
   const { session } = useMockAuth();
+  const unlockAll = useUnlockAll();
   const copy = studyCopy[locale];
   const [code, setCode] = useState("");
   const [running, setRunning] = useState(false);
@@ -154,7 +156,7 @@ function StudyExerciseView({
       >
         <CodeEditor
           key={card.id}
-          blockClipboard={!sessionIsAdmin(session)}
+          blockClipboard={!unlockAll}
           readOnly={running}
           label={copy.editor}
           minHeight="12rem"

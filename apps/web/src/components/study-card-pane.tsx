@@ -90,7 +90,7 @@ export function TopicCardPane({
                 <button
                   type="button"
                   disabled
-                  className={className}
+                  className={`${className} study-lock-cursor`}
                   aria-label={label}
                 >
                   {inner}

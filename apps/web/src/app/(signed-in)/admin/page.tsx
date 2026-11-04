@@ -1,3 +1,4 @@
+import { AdminGate } from "@/components/admin-gate";
 import { AdminView } from "@/components/admin-view";
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function AdminPage() {
-  return <AdminView />;
+  return (
+    <AdminGate>
+      <AdminView />
+    </AdminGate>
+  );
 }

@@ -79,7 +79,7 @@ Variables remains open. A completed module shows a green circle with a white che
 
 Locked modules show the name and a lock icon. They do not show the words Coming later.
 
-The owner is the exception in [08-content-admin.md](08-content-admin.md). Their map opens every module, topic, and card. Coming-later modules still show the lock icon, and the owner can open them.
+The owner is the exception in [08-content-admin.md](08-content-admin.md). Their map opens every module, topic, and card. Coming-later modules still show the lock icon, and the owner can open them. While the owner’s student-view switch is on, the map uses learner locks.
 
 ## Related
 

@@ -4,10 +4,13 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useLayoutEffect, useRef } from "react";
 import { LanguageToggle } from "@/components/language-toggle";
+import { StudentViewToggle } from "@/components/student-view-toggle";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
 import { drillBack } from "@/components/study-drill-transition";
 import { chromeCopy } from "@/lib/locale";
+import { sessionIsAdmin } from "@/lib/mock-auth";
+import { setStudentView, useStudentView } from "@/lib/student-view";
 import { studyChromeWidth } from "@/lib/study-route";
 
 export function StudyHeader() {
@@ -15,7 +18,9 @@ export function StudyHeader() {
   const router = useRouter();
   const { locale } = useLocale();
   const { session, signOut } = useMockAuth();
+  const { studentView } = useStudentView();
   const chrome = chromeCopy[locale];
+  const isAdmin = sessionIsAdmin(session);
   const admin = pathname.startsWith("/admin");
   const wide = studyChromeWidth(pathname) === "wide";
   const headerRef = useRef<HTMLElement>(null);
@@ -44,6 +49,7 @@ export function StudyHeader() {
   if (!session) return null;
 
   function onSignOut() {
+    setStudentView(false);
     signOut();
     router.replace("/");
   }
@@ -67,12 +73,24 @@ export function StudyHeader() {
         </Link>
         <div className="flex flex-wrap items-center gap-3">
           <LanguageToggle />
-          <Link
-            href={admin ? "/study" : "/admin"}
-            className="cursor-pointer text-sm font-bold text-accent-deep hover:text-accent"
-          >
-            {admin ? chrome.studyMap : chrome.admin}
-          </Link>
+          {isAdmin ? (
+            <StudentViewToggle
+              studentView={studentView}
+              onChange={(next) => {
+                setStudentView(next);
+                if (next && admin) router.push("/study");
+              }}
+            />
+          ) : null}
+          {isAdmin ? (
+            <Link
+              href={admin ? "/study" : "/admin"}
+              onClick={() => setStudentView(admin)}
+              className="cursor-pointer text-sm font-bold text-accent-deep hover:text-accent"
+            >
+              {admin ? chrome.studyMap : chrome.admin}
+            </Link>
+          ) : null}
           <p className="text-sm text-muted">{session.email}</p>
           <button
             type="button"

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { ModuleIcon, StudyGlyph } from "@/components/study-marks";
 import { drillForward } from "@/components/study-drill-transition";
-import { DoneCheck, LockIcon, LockSvg } from "@/components/study-status-mark";
+import { DoneCheck, LockIcon } from "@/components/study-status-mark";
 import type { TopicRowState } from "@/lib/curriculum";
 import type { ModuleStopState } from "@/lib/module-stop";
 
@@ -12,14 +12,6 @@ type TopicStatusCopy = {
   open: string;
   topicCardsDone: (percent: number) => string;
 };
-
-function LockBadge() {
-  return (
-    <span className="absolute -right-1 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-muted ring-1 ring-line">
-      <LockSvg className="h-2.5 w-2.5" />
-    </span>
-  );
-}
 
 function folderTone(kind: TopicRowState["kind"]) {
   switch (kind) {
@@ -37,10 +29,11 @@ function folderTone(kind: TopicRowState["kind"]) {
 function FolderIcon({ mark, kind }: { mark: string; kind: TopicRowState["kind"] }) {
   return (
     <span
-      className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${folderTone(kind)}`}
+      className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${folderTone(kind)} ${
+        kind === "current" ? "study-module-shadow" : ""
+      }`}
     >
       <StudyGlyph mark={mark} />
-      {kind === "locked" ? <LockBadge /> : null}
     </span>
   );
 }
@@ -63,7 +56,6 @@ export function ModuleGlyph({
   return (
     <span className={`relative flex h-10 w-10 shrink-0 items-center justify-center ${tone}`}>
       <ModuleIcon moduleId={moduleId} />
-      {locked ? <LockBadge /> : null}
     </span>
   );
 }
@@ -90,7 +82,7 @@ function StudyAction({
 }: StudyActionProps) {
   if (locked) {
     return (
-      <button type="button" disabled className={className} aria-label={label}>
+      <button type="button" disabled className={`${className} study-lock-cursor`} aria-label={label}>
         {children}
       </button>
     );
@@ -184,7 +176,10 @@ function pathSurface(kind: TopicRowState["kind"]) {
   }
 }
 
-/** Topic row. The icon sits on a line that runs toward the next topic. */
+/**
+ * Topic row. The icon and card of the current topic ease up and down together.
+ * A shadow sits under both. The line toward the next topic stays still.
+ */
 export function TopicPathRow({
   name,
   meta,
@@ -196,26 +191,38 @@ export function TopicPathRow({
   connectBelow = false,
 }: StudyEntryProps & { connectBelow?: boolean }) {
   const locked = state.kind === "locked";
+  const current = state.kind === "current";
 
   return (
-    <div className="flex w-full items-stretch gap-3 text-left">
-      <span className="flex w-12 shrink-0 flex-col items-center">
-        <FolderIcon mark={mark} kind={state.kind} />
-        {connectBelow ? <span aria-hidden className="mt-1.5 w-px flex-1 bg-line" /> : null}
-      </span>
-      <StudyAction
-        locked={locked}
-        current={state.kind === "current"}
-        href={href}
-        label={entryLabel(name, accessibleLabel, topicStatusLabel(state, copy))}
-        className={`flex min-w-0 flex-1 items-center gap-3 rounded-lg border px-4 py-3 transition ${pathSurface(
-          state.kind,
-        )} ${connectBelow ? "mb-3" : ""}`}
-        transitionTypes={drillForward}
+    <div className={`relative ${connectBelow ? "mb-3" : ""}`}>
+      {connectBelow ? (
+        <span
+          aria-hidden
+          className="absolute top-[2.875rem] bottom-0 left-6 w-px -translate-x-1/2 bg-line"
+        />
+      ) : null}
+      <div
+        className={`flex w-full items-stretch gap-3 text-left ${
+          current ? "study-module-float" : ""
+        }`}
       >
-        <EntryText name={name} meta={meta} locked={locked} />
-        <TopicStatus state={state} />
-      </StudyAction>
+        <span className="flex w-12 shrink-0 justify-center">
+          <FolderIcon mark={mark} kind={state.kind} />
+        </span>
+        <StudyAction
+          locked={locked}
+          current={current}
+          href={href}
+          label={entryLabel(name, accessibleLabel, topicStatusLabel(state, copy))}
+          className={`flex min-w-0 flex-1 items-center gap-3 rounded-lg border px-4 py-3 text-left transition ${pathSurface(
+            state.kind,
+          )} ${current ? "study-module-shadow" : ""}`}
+          transitionTypes={drillForward}
+        >
+          <EntryText name={name} meta={meta} locked={locked} />
+          <TopicStatus state={state} />
+        </StudyAction>
+      </div>
     </div>
   );
 }
@@ -341,7 +348,7 @@ function moduleSurface(state: ModuleStopState) {
 
 /**
  * One module on the study map.
- * `current` is the first unfinished open module. It floats. The connector does not.
+ * `current` is the first unfinished open module. It floats, with a shadow under the card. The connector does not.
  * A coming-later stop can still be a link for the owner.
  */
 export function ModuleStop({
@@ -375,7 +382,9 @@ export function ModuleStop({
           current={current}
           href={href}
           label={entryLabel(name, accessibleLabel, moduleStatusLabel(state, copy))}
-          className={`relative z-10 flex h-full w-full flex-col items-center rounded-lg border px-1.5 pt-3 pb-2.5 text-center transition sm:px-3 ${moduleSurface(state)}`}
+          className={`relative z-10 flex h-full w-full flex-col items-center rounded-lg border px-1.5 pt-3 pb-2.5 text-center transition sm:px-3 ${moduleSurface(state)} ${
+            current ? "study-module-shadow" : ""
+          }`}
           transitionTypes={drillForward}
         >
           {leading}

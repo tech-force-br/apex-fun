@@ -1,10 +1,9 @@
 "use client";
 
-import { useMockAuth } from "@/components/mock-auth-provider";
 import { ModuleGlyph, ModuleStop, type ModuleStopConnector } from "@/components/study-row";
 import { useLocale } from "@/components/locale-provider";
 import { useCurriculumModules } from "@/lib/curriculum-store";
-import { sessionIsAdmin } from "@/lib/mock-auth";
+import { useUnlockAll } from "@/lib/student-view";
 import { moduleStopState } from "@/lib/module-stop";
 import { studyCopy } from "@/lib/study-copy";
 import { useFinishedCards, useFirstAttempts } from "@/lib/study-progress";
@@ -34,10 +33,9 @@ function snakeCell(
 
 export function StudyView() {
   const { locale } = useLocale();
-  const { session } = useMockAuth();
   const copy = studyCopy[locale];
   const modules = useCurriculumModules();
-  const unlockAll = sessionIsAdmin(session);
+  const unlockAll = useUnlockAll();
   const finished = useFinishedCards();
   const firstClean = useFirstAttempts();
   const stops = modules.map((item, index) => ({

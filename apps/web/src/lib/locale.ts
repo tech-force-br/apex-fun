@@ -17,6 +17,7 @@ export const chromeCopy: Record<
     loading: string;
     admin: string;
     studyMap: string;
+    studentView: string;
   }
 > = {
   en: {
@@ -28,6 +29,7 @@ export const chromeCopy: Record<
     loading: "Loading…",
     admin: "Admin",
     studyMap: "Student",
+    studentView: "Student view",
   },
   "pt-BR": {
     wordmark: "ApexFun",
@@ -38,5 +40,6 @@ export const chromeCopy: Record<
     loading: "Carregando…",
     admin: "Admin",
     studyMap: "Aluno",
+    studentView: "Visão do aluno",
   },
 };

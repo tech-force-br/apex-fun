@@ -3,8 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/components/locale-provider";
-import { useMockAuth } from "@/components/mock-auth-provider";
-import { sessionIsAdmin } from "@/lib/mock-auth";
+import { useUnlockAll } from "@/lib/student-view";
 import { getCard, getModule, getTopic } from "@/lib/curriculum";
 import { useCurriculumModules } from "@/lib/curriculum-store";
 import { chromeCopy } from "@/lib/locale";
@@ -42,8 +41,7 @@ export function useStudyGate(ids: {
   const modules = useCurriculumModules();
   const finished = useFinishedCards();
   const pinnedCardId = usePinnedCardId();
-  const { session } = useMockAuth();
-  const unlockAll = sessionIsAdmin(session);
+  const unlockAll = useUnlockAll();
   const selected = getModule(ids.moduleId, modules);
   const topic =
     ids.topicId === undefined ? undefined : getTopic(selected, ids.topicId);

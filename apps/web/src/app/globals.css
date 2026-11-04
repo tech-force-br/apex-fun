@@ -31,6 +31,11 @@ button {
   cursor: pointer;
 }
 
+/* Learner-locked module, topic, and card rows. Beats the button pointer rule. */
+button.study-lock-cursor {
+  cursor: not-allowed;
+}
+
 body {
   background-color: var(--color-space);
   color: var(--color-ink);
@@ -202,7 +207,8 @@ html:active-view-transition-type(card-switch)::view-transition-new(root) {
   }
 }
 
-/* Current module on the study map. The connector stays put. */
+/* Current module on the study map, and the current topic on the topic list.
+   Connectors stay put. */
 @keyframes study-module-float {
   0%,
   100% {
@@ -217,6 +223,23 @@ html:active-view-transition-type(card-switch)::view-transition-new(root) {
   animation: study-module-float 2.6s ease-in-out infinite;
 }
 
+/* Shadow under the current module card, and under the current topic
+   card and its icon. It softens as they lift so it stays on the surface. */
+@keyframes study-module-shadow {
+  0%,
+  100% {
+    box-shadow: 0 5px 8px -3px rgb(3 45 96 / 0.28);
+  }
+  50% {
+    box-shadow: 0 14px 16px -6px rgb(3 45 96 / 0.34);
+  }
+}
+
+.study-module-shadow {
+  box-shadow: 0 5px 8px -3px rgb(3 45 96 / 0.28);
+  animation: study-module-shadow 2.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(*),
   ::view-transition-new(*),
@@ -225,7 +248,8 @@ html:active-view-transition-type(card-switch)::view-transition-new(root) {
     animation-delay: 0s !important;
   }
 
-  .study-module-float {
+  .study-module-float,
+  .study-module-shadow {
     animation: none;
   }
 }
