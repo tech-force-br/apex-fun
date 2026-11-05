@@ -30,7 +30,7 @@ function FolderIcon({ mark, kind }: { mark: string; kind: TopicRowState["kind"] 
   return (
     <span
       className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${folderTone(kind)} ${
-        kind === "current" ? "study-module-shadow" : ""
+        kind === "current" ? "study-current-shadow" : ""
       }`}
     >
       <StudyGlyph mark={mark} />
@@ -198,12 +198,12 @@ export function TopicPathRow({
       {connectBelow ? (
         <span
           aria-hidden
-          className="absolute top-[2.875rem] bottom-0 left-6 w-px -translate-x-1/2 bg-line"
+          className="absolute top-10 bottom-0 left-6 mt-1.5 w-px -translate-x-1/2 bg-line"
         />
       ) : null}
       <div
         className={`flex w-full items-stretch gap-3 text-left ${
-          current ? "study-module-float" : ""
+          current ? "study-current-float" : ""
         }`}
       >
         <span className="flex w-12 shrink-0 justify-center">
@@ -216,7 +216,7 @@ export function TopicPathRow({
           label={entryLabel(name, accessibleLabel, topicStatusLabel(state, copy))}
           className={`flex min-w-0 flex-1 items-center gap-3 rounded-lg border px-4 py-3 text-left transition ${pathSurface(
             state.kind,
-          )} ${current ? "study-module-shadow" : ""}`}
+          )} ${current ? "study-current-shadow" : ""}`}
           transitionTypes={drillForward}
         >
           <EntryText name={name} meta={meta} locked={locked} />
@@ -263,15 +263,13 @@ function MapArrow({ direction }: { direction: ModuleStopConnector }) {
 }
 
 function MapDots({
-  axis,
   direction,
   className,
 }: {
-  axis: "x" | "y";
   direction: ModuleStopConnector;
   className: string;
 }) {
-  const horizontal = axis === "x";
+  const horizontal = direction !== "down";
   return (
     <span
       aria-hidden
@@ -297,7 +295,6 @@ function MapConnector({ connector }: { connector: ModuleStopConnector | null }) 
   if (connector === "left" || connector === "right") {
     return (
       <MapDots
-        axis="x"
         direction={connector}
         className={`top-[33px] h-1 w-3 -translate-y-1/2 sm:w-8 ${
           connector === "left" ? "right-full" : "left-full"
@@ -308,7 +305,6 @@ function MapConnector({ connector }: { connector: ModuleStopConnector | null }) 
   if (connector === "down") {
     return (
       <MapDots
-        axis="y"
         direction="down"
         className="top-full left-1/2 h-10 w-1 -translate-x-1/2 sm:h-14"
       />
@@ -348,7 +344,7 @@ function moduleSurface(state: ModuleStopState) {
 
 /**
  * One module on the study map.
- * `current` is the first unfinished open module. It floats, with a shadow under the card. The connector does not.
+ * An open stop with `current` is the first unfinished open module. It floats, with a shadow under the card. The connector does not.
  * A coming-later stop can still be a link for the owner.
  */
 export function ModuleStop({
@@ -359,7 +355,6 @@ export function ModuleStop({
   href,
   leading,
   connector = null,
-  current = false,
 }: {
   name: string;
   state: ModuleStopState;
@@ -369,21 +364,21 @@ export function ModuleStop({
   href: string;
   leading: ReactNode;
   connector?: ModuleStopConnector | null;
-  current?: boolean;
 }) {
   const locked = state.kind === "later" && state.locked;
+  const current = state.kind === "open" && state.current;
 
   return (
     <>
       <MapConnector connector={connector} />
-      <span className={`block h-full ${current ? "study-module-float" : ""}`}>
+      <span className={`block h-full ${current ? "study-current-float" : ""}`}>
         <StudyAction
           locked={locked}
           current={current}
           href={href}
           label={entryLabel(name, accessibleLabel, moduleStatusLabel(state, copy))}
           className={`relative z-10 flex h-full w-full flex-col items-center rounded-lg border px-1.5 pt-3 pb-2.5 text-center transition sm:px-3 ${moduleSurface(state)} ${
-            current ? "study-module-shadow" : ""
+            current ? "study-current-shadow" : ""
           }`}
           transitionTypes={drillForward}
         >

@@ -18,7 +18,7 @@ export function StudyHeader() {
   const router = useRouter();
   const { locale } = useLocale();
   const { session, signOut } = useMockAuth();
-  const { studentView } = useStudentView();
+  const studentView = useStudentView();
   const chrome = chromeCopy[locale];
   const isAdmin = sessionIsAdmin(session);
   const admin = pathname.startsWith("/admin");
@@ -48,8 +48,26 @@ export function StudyHeader() {
 
   if (!session) return null;
 
-  function onSignOut() {
+  function viewAsStudent() {
+    setStudentView(true);
+    if (admin) router.push("/study");
+  }
+
+  function viewAsOwner() {
     setStudentView(false);
+  }
+
+  function openStudentMap() {
+    setStudentView(true);
+    router.push("/study");
+  }
+
+  function openBuilder() {
+    setStudentView(false);
+    router.push("/admin");
+  }
+
+  function onSignOut() {
     signOut();
     router.replace("/");
   }
@@ -77,15 +95,23 @@ export function StudyHeader() {
             <StudentViewToggle
               studentView={studentView}
               onChange={(next) => {
-                setStudentView(next);
-                if (next && admin) router.push("/study");
+                if (next) viewAsStudent();
+                else viewAsOwner();
               }}
             />
           ) : null}
           {isAdmin ? (
             <Link
               href={admin ? "/study" : "/admin"}
-              onClick={() => setStudentView(admin)}
+              onClick={(event) => {
+                // A modified click follows href into a new tab. That tab starts as the owner.
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+                  return;
+                }
+                event.preventDefault();
+                if (admin) openStudentMap();
+                else openBuilder();
+              }}
               className="cursor-pointer text-sm font-bold text-accent-deep hover:text-accent"
             >
               {admin ? chrome.studyMap : chrome.admin}

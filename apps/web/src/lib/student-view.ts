@@ -1,8 +1,12 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { useMockAuth } from "@/components/mock-auth-provider";
-import { sessionIsAdmin } from "@/lib/mock-auth";
+import {
+  getMockSessionServerSnapshot,
+  getMockSessionSnapshot,
+  sessionIsAdmin,
+  subscribeMockSession,
+} from "@/lib/mock-auth";
 
 let studentView = false;
 const listeners = new Set<() => void>();
@@ -31,17 +35,20 @@ export function setStudentView(next: boolean) {
 }
 
 export function useStudentView() {
-  const studentView = useSyncExternalStore(
+  return useSyncExternalStore(
     subscribeStudentView,
     getStudentViewSnapshot,
     getStudentViewServerSnapshot,
   );
-  return { studentView, setStudentView };
 }
 
 /** Owner unlocks, unless the owner turned on student view. */
 export function useUnlockAll() {
-  const { session } = useMockAuth();
-  const { studentView } = useStudentView();
+  const session = useSyncExternalStore(
+    subscribeMockSession,
+    getMockSessionSnapshot,
+    getMockSessionServerSnapshot,
+  );
+  const studentView = useStudentView();
   return sessionIsAdmin(session) && !studentView;
 }

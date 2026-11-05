@@ -209,7 +209,7 @@ html:active-view-transition-type(card-switch)::view-transition-new(root) {
 
 /* Current module on the study map, and the current topic on the topic list.
    Connectors stay put. */
-@keyframes study-module-float {
+@keyframes study-current-float {
   0%,
   100% {
     translate: 0 0;
@@ -219,13 +219,13 @@ html:active-view-transition-type(card-switch)::view-transition-new(root) {
   }
 }
 
-.study-module-float {
-  animation: study-module-float 2.6s ease-in-out infinite;
+.study-current-float {
+  animation: study-current-float 2.6s ease-in-out infinite;
 }
 
 /* Shadow under the current module card, and under the current topic
    card and its icon. It softens as they lift so it stays on the surface. */
-@keyframes study-module-shadow {
+@keyframes study-current-shadow {
   0%,
   100% {
     box-shadow: 0 5px 8px -3px rgb(3 45 96 / 0.28);
@@ -235,9 +235,9 @@ html:active-view-transition-type(card-switch)::view-transition-new(root) {
   }
 }
 
-.study-module-shadow {
+.study-current-shadow {
   box-shadow: 0 5px 8px -3px rgb(3 45 96 / 0.28);
-  animation: study-module-shadow 2.6s ease-in-out infinite;
+  animation: study-current-shadow 2.6s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -248,8 +248,8 @@ html:active-view-transition-type(card-switch)::view-transition-new(root) {
     animation-delay: 0s !important;
   }
 
-  .study-module-float,
-  .study-module-shadow {
+  .study-current-float,
+  .study-current-shadow {
     animation: none;
   }
 }

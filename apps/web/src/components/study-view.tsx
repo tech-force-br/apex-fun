@@ -4,7 +4,7 @@ import { ModuleGlyph, ModuleStop, type ModuleStopConnector } from "@/components/
 import { useLocale } from "@/components/locale-provider";
 import { useCurriculumModules } from "@/lib/curriculum-store";
 import { useUnlockAll } from "@/lib/student-view";
-import { moduleStopState } from "@/lib/module-stop";
+import { markCurrentModule, moduleStopState } from "@/lib/module-stop";
 import { studyCopy } from "@/lib/study-copy";
 import { useFinishedCards, useFirstAttempts } from "@/lib/study-progress";
 
@@ -38,12 +38,13 @@ export function StudyView() {
   const unlockAll = useUnlockAll();
   const finished = useFinishedCards();
   const firstClean = useFirstAttempts();
-  const stops = modules.map((item, index) => ({
-    item,
-    state: moduleStopState(item, finished, firstClean, unlockAll),
-    cell: snakeCell(index, MAP_COLUMNS, modules.length),
-  }));
-  const currentModuleId = stops.find((stop) => stop.state.kind === "open")?.item.id;
+  const stops = markCurrentModule(
+    modules.map((item, index) => ({
+      item,
+      state: moduleStopState(item, finished, firstClean, unlockAll),
+      cell: snakeCell(index, MAP_COLUMNS, modules.length),
+    })),
+  );
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
@@ -72,7 +73,6 @@ export function StudyView() {
                 copy={copy}
                 href={`/study/${item.id}`}
                 connector={cell.connector}
-                current={item.id === currentModuleId}
                 leading={<ModuleGlyph moduleId={item.id} state={state} />}
               />
             </li>
