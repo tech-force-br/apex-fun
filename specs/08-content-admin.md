@@ -18,7 +18,7 @@ Only the site owner is admin in v1. No other teachers.
 - Use the clipboard in the exercise editor on a study card. Theory samples and prompts stay blocked
 - Preview an exercise against sample student code
 - Open every module, topic, and card on the study map, including modules marked coming later. This does not mark them finished
-- Switch the signed-in header to student view. Only the owner sees that switch. Student view uses learner locks and blocks the exercise-editor clipboard. The account stays the owner. Turning it on from the builder, or following the Student link, opens the study map in student view. The Admin link turns it off and opens the builder
+- Switch the signed-in header to student view. Only the owner sees that switch, and only outside the builder. Student view uses learner locks and blocks the exercise-editor clipboard. The account stays the owner. The Admin link opens the builder. Student view is off while the builder is open, and the switch is hidden there. Leaving the builder for the study map puts the switch back to whatever it was before that Admin link. The Student link does not force student view on
 
 ## Save rules
 

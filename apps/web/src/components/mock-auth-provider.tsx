@@ -17,7 +17,7 @@ import {
   syncSessionCookie,
   type MockSession,
 } from "@/lib/mock-auth";
-import { setStudentView } from "@/lib/student-view";
+import { resetStudentView } from "@/lib/student-view";
 
 type MockAuthContextValue = {
   ready: boolean;
@@ -58,7 +58,7 @@ export function MockAuthProvider({ children }: { children: ReactNode }) {
         setMockSession(next);
       },
       signOut() {
-        setStudentView(false);
+        resetStudentView();
         setMockSession(null);
       },
       setLanguage(language) {

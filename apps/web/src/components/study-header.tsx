@@ -10,7 +10,7 @@ import { useMockAuth } from "@/components/mock-auth-provider";
 import { drillBack } from "@/components/study-drill-transition";
 import { chromeCopy } from "@/lib/locale";
 import { sessionIsAdmin } from "@/lib/mock-auth";
-import { setStudentView, useStudentView } from "@/lib/student-view";
+import { chooseStudentView, useStudentView } from "@/lib/student-view";
 import { studyChromeWidth } from "@/lib/study-route";
 
 export function StudyHeader() {
@@ -49,22 +49,11 @@ export function StudyHeader() {
   if (!session) return null;
 
   function viewAsStudent() {
-    setStudentView(true);
-    if (admin) router.push("/study");
+    chooseStudentView(true);
   }
 
   function viewAsOwner() {
-    setStudentView(false);
-  }
-
-  function openStudentMap() {
-    setStudentView(true);
-    router.push("/study");
-  }
-
-  function openBuilder() {
-    setStudentView(false);
-    router.push("/admin");
+    chooseStudentView(false);
   }
 
   function onSignOut() {
@@ -91,10 +80,11 @@ export function StudyHeader() {
         </Link>
         <div className="flex flex-wrap items-center gap-3">
           <LanguageToggle />
-          {isAdmin ? (
+          {isAdmin && !admin ? (
             <StudentViewToggle
               studentView={studentView}
               onChange={(next) => {
+                if (next === studentView) return;
                 if (next) viewAsStudent();
                 else viewAsOwner();
               }}
@@ -103,15 +93,6 @@ export function StudyHeader() {
           {isAdmin ? (
             <Link
               href={admin ? "/study" : "/admin"}
-              onClick={(event) => {
-                // A modified click follows href into a new tab. That tab starts as the owner.
-                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
-                  return;
-                }
-                event.preventDefault();
-                if (admin) openStudentMap();
-                else openBuilder();
-              }}
               className="cursor-pointer text-sm font-bold text-accent-deep hover:text-accent"
             >
               {admin ? chrome.studyMap : chrome.admin}
