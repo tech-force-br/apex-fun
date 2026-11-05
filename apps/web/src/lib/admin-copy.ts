@@ -6,7 +6,6 @@ export const adminCopy: Record<
   {
     title: string;
     intro: string;
-    memoryNote: string;
     saved: string;
     save: string;
     remove: string;
@@ -34,11 +33,12 @@ export const adminCopy: Record<
     statusLater: string;
     bodyEn: string;
     bodyPt: string;
+    bold: string;
+    italic: string;
+    underline: string;
+    bullets: string;
+    imageRejected: string;
     sampleApex: string;
-    sampleApexHelp: string;
-    imageRefs: string;
-    imageUrl: string;
-    addImage: string;
     promptEn: string;
     promptPt: string;
     hiddenTests: string;
@@ -59,7 +59,6 @@ export const adminCopy: Record<
     previewHelp: string;
     previewCode: string;
     previewRun: string;
-    previewIdle: string;
     previewChecking: string;
     log: string;
     moveUp: string;
@@ -73,8 +72,6 @@ export const adminCopy: Record<
     title: "Content admin",
     intro:
       "Create and edit modules, topic folders, cards, and the shared compile-fail tests.",
-    memoryNote:
-      "Saves apply in this tab only. Refresh restores the seed curriculum.",
     saved: "Saved in this tab.",
     save: "Save",
     remove: "Remove",
@@ -102,11 +99,12 @@ export const adminCopy: Record<
     statusLater: "Coming later",
     bodyEn: "Theory body (English)",
     bodyPt: "Theory body (Portuguese)",
-    sampleApex: "Read-only Apex sample (English)",
-    sampleApexHelp: "Optional. Apex stays English.",
-    imageRefs: "Image URLs",
-    imageUrl: "Image URL",
-    addImage: "Add image URL",
+    bold: "Bold",
+    italic: "Italic",
+    underline: "Underline",
+    bullets: "Bullets",
+    imageRejected: "That image could not be pasted.",
+    sampleApex: "Apex sample",
     promptEn: "Prompt (English)",
     promptPt: "Prompt (Portuguese)",
     hiddenTests: "Hidden tests",
@@ -131,7 +129,6 @@ export const adminCopy: Record<
     previewHelp: "Sample student code for this test. Run preview checks it on the local runner.",
     previewCode: "Sample student code",
     previewRun: "Run preview",
-    previewIdle: "No preview run yet.",
     previewChecking: "Checking…",
     log: "Log",
     moveUp: "Move up",
@@ -176,8 +173,6 @@ export const adminCopy: Record<
     title: "Admin de conteúdo",
     intro:
       "Crie e edite módulos, pastas de tópicos, cards e os testes de falha de compilação compartilhados.",
-    memoryNote:
-      "As alterações valem só nesta aba. Atualizar a página volta o currículo inicial.",
     saved: "Salvo nesta aba.",
     save: "Salvar",
     remove: "Remover",
@@ -205,11 +200,12 @@ export const adminCopy: Record<
     statusLater: "Em breve",
     bodyEn: "Corpo da teoria (inglês)",
     bodyPt: "Corpo da teoria (português)",
-    sampleApex: "Amostra Apex somente leitura (inglês)",
-    sampleApexHelp: "Opcional. Apex permanece em inglês.",
-    imageRefs: "URLs de imagens",
-    imageUrl: "URL da imagem",
-    addImage: "Adicionar URL de imagem",
+    bold: "Negrito",
+    italic: "Itálico",
+    underline: "Sublinhado",
+    bullets: "Marcadores",
+    imageRejected: "Não foi possível colar essa imagem.",
+    sampleApex: "Amostra Apex",
     promptEn: "Enunciado (inglês)",
     promptPt: "Enunciado (português)",
     hiddenTests: "Testes ocultos",
@@ -235,7 +231,6 @@ export const adminCopy: Record<
       "Código de exemplo deste teste. Rodar prévia verifica no runner local.",
     previewCode: "Código de exemplo do aluno",
     previewRun: "Rodar prévia",
-    previewIdle: "Nenhuma prévia rodada ainda.",
     previewChecking: "Verificando…",
     log: "Log",
     moveUp: "Subir",

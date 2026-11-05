@@ -137,7 +137,7 @@ export function AdminCompileFailForm({
                 enLabel={copy.testMessageEn}
                 ptLabel={copy.testMessagePt}
                 value={test.match.messages}
-                multiline
+                control="plain"
                 rows={3}
                 onChange={(messages) =>
                   patchTest(index, {

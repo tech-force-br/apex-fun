@@ -14,8 +14,8 @@ Row Level Security: a student reads and writes only their own progress. Admin by
 - `modules` — name EN/PT, sort order, locked flag / coming-later flag
 - `topics` — module id, name EN/PT, sort order
 - `cards` — topic id, type (`theory` | `exercise`), sort order
-- `theory_cards` — body EN/PT, optional image refs, optional read-only Apex sample
-- `exercises` — prompt EN/PT
+- `theory_cards` — rich-text body EN/PT (paragraphs, bullets, bold, italic, underline, inline images), optional read-only Apex sample
+- `exercises` — rich-text prompt EN/PT (paragraphs, bullets, bold, italic, underline, inline images)
 - `hidden_tests` — exercise id, sort order, check Apex, message EN/PT, sample preview code. Run-clean only
 - `compile_fail_tests` — site-wide, no exercise id, sort order, sample preview code, exactly one match (match text, message EN/PT). No check Apex. Every exercise uses this list
 

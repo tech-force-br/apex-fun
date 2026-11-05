@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { CheckResult, RunSpinner } from "@/components/check-result";
+import { RichTextView } from "@/components/rich-text-view";
 import { CodeEditor } from "@/components/code-editor";
 import { TopicCardPane } from "@/components/study-card-pane";
 import { StudyPending, useStudyGate } from "@/components/study-gate";
@@ -19,6 +20,7 @@ import { syncSessionCookie } from "@/lib/mock-auth";
 import { useUnlockAll } from "@/lib/student-view";
 import type { ExerciseCheck } from "@/lib/score-run";
 import { recordFirstAttempt } from "@/lib/study-progress";
+import { richTextIsBlank } from "@/lib/rich-text";
 import { studyCopy } from "@/lib/study-copy";
 
 export function StudyCardView() {
@@ -97,7 +99,7 @@ function StudyExerciseView({
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<ExerciseCheck | null>(null);
   const [earnedAdvance, setEarnedAdvance] = useState(false);
-  const prompt = card.prompts[locale].trim();
+  const prompt = card.prompts[locale];
   const { lastFinished, advance, finish } = useCardAdvance({
     selected,
     topic,
@@ -140,16 +142,16 @@ function StudyExerciseView({
       <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink">
         {copy.exercise}
       </h1>
-      {prompt ? (
-        <p
-          className="mt-4 text-base leading-7 whitespace-pre-wrap text-ink"
+      {richTextIsBlank(prompt) ? null : (
+        <div
           onCopy={(event) => event.preventDefault()}
           onCut={(event) => event.preventDefault()}
           onPaste={(event) => event.preventDefault()}
+          onDragStart={(event) => event.preventDefault()}
         >
-          {prompt}
-        </p>
-      ) : null}
+          <RichTextView value={prompt} />
+        </div>
+      )}
       <div
         className={`mt-6 ${running ? "pointer-events-none opacity-60" : ""}`}
         aria-busy={running}

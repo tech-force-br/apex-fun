@@ -23,7 +23,6 @@ function theory(
     id,
     type: "theory",
     bodies: { en: block(en), "pt-BR": block(pt) },
-    imageRefs: [],
     sampleApex: block(sampleApex),
   };
 }

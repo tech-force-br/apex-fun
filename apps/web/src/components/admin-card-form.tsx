@@ -22,8 +22,6 @@ import {
   Field,
   LocalizedFields,
   MoveButtons,
-  TextArea,
-  TextInput,
 } from "@/components/admin-fields";
 import { CodeEditor } from "@/components/code-editor";
 import { useLocale } from "@/components/locale-provider";
@@ -92,61 +90,20 @@ function TheoryFields({
         enLabel={copy.bodyEn}
         ptLabel={copy.bodyPt}
         value={draft.bodies}
-        multiline
-        rows={8}
+        control="rich"
         onChange={(bodies) => onChange({ ...draft, bodies })}
       />
-      <Field label={copy.sampleApex} htmlFor={sampleId} hint={copy.sampleApexHelp}>
-        <TextArea
-          id={sampleId}
-          value={draft.sampleApex}
-          mono
-          rows={6}
-          onChange={(sampleApex) => onChange({ ...draft, sampleApex })}
-        />
+      <Field label={copy.sampleApex} htmlFor={sampleId}>
+        <div className="mt-1.5">
+          <CodeEditor
+            id={sampleId}
+            initialValue={draft.sampleApex}
+            label={copy.sampleApex}
+            minHeight="9rem"
+            onChange={(sampleApex) => onChange({ ...draft, sampleApex })}
+          />
+        </div>
       </Field>
-
-      <div>
-        <p className="text-sm text-muted">{copy.imageRefs}</p>
-        <ul className="mt-2 space-y-2">
-          {draft.imageRefs.map((ref, index) => (
-            <li key={`image-${index}`} className="flex gap-2">
-              <TextInput
-                id={`image-${index}`}
-                value={ref}
-                placeholder={copy.imageUrl}
-                ariaLabel={copy.imageUrl}
-                onChange={(value) => {
-                  const imageRefs = draft.imageRefs.slice();
-                  imageRefs[index] = value;
-                  onChange({ ...draft, imageRefs });
-                }}
-              />
-              <button
-                type="button"
-                onClick={() =>
-                  onChange({
-                    ...draft,
-                    imageRefs: draft.imageRefs.filter((_, i) => i !== index),
-                  })
-                }
-                className="cursor-pointer rounded-md border border-line bg-white px-3 text-sm font-bold text-muted hover:text-ink"
-              >
-                {copy.remove}
-              </button>
-            </li>
-          ))}
-        </ul>
-        <button
-          type="button"
-          onClick={() =>
-            onChange({ ...draft, imageRefs: [...draft.imageRefs, ""] })
-          }
-          className="mt-2 cursor-pointer rounded-md border border-dashed border-line bg-white px-3 py-1.5 text-xs font-bold text-muted hover:border-accent hover:text-ink"
-        >
-          {copy.addImage}
-        </button>
-      </div>
     </>
   );
 }
@@ -199,8 +156,7 @@ function ExerciseFields({
         enLabel={copy.promptEn}
         ptLabel={copy.promptPt}
         value={draft.prompts}
-        multiline
-        rows={5}
+        control="rich"
         onChange={(prompts) => onChange({ ...draft, prompts })}
       />
 
@@ -287,7 +243,7 @@ function ExerciseFields({
                 enLabel={copy.testMessageEn}
                 ptLabel={copy.testMessagePt}
                 value={test.messages}
-                multiline
+                control="plain"
                 rows={3}
                 onChange={(messages) => patchTest(index, { ...test, messages })}
               />
@@ -376,11 +332,7 @@ export function TestPreview({
           log={result.log}
           logLabel={copy.log}
         />
-      ) : (
-        <p className="text-sm text-muted" role="status">
-          {copy.previewIdle}
-        </p>
-      )}
+      ) : null}
     </div>
   );
 }

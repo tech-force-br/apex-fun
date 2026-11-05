@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/locale";
+import { richPlainParagraphs } from "@/lib/rich-text";
 import { variablesExerciseCards } from "@/lib/variables-exercises";
 import { variablesTheoryCards } from "@/lib/variables-theory";
 
@@ -33,7 +34,6 @@ export type TheoryCard = {
   id: string;
   type: "theory";
   bodies: LocalizedText;
-  imageRefs: string[];
   sampleApex: string;
 };
 
@@ -396,10 +396,7 @@ export function cardMark(
 export function cardLabel(card: Card, locale: Locale) {
   const text =
     card.type === "theory" ? card.bodies[locale] : card.prompts[locale];
-  const title = text
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.replace(/\s+/g, " ").trim())
-    .find((paragraph) => paragraph.length > 0);
+  const title = richPlainParagraphs(text)[0];
   if (!title) {
     if (locale === "pt-BR") {
       return card.type === "theory" ? "Card de teoria" : "Card de exercício";

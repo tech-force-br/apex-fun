@@ -14,6 +14,7 @@ Only the site owner is admin in v1. No other teachers.
 - Create new modules
 - View a student’s progress
 - Paste freely while writing content
+- Format a theory body or an exercise prompt with bold, italic, underline, and bullets, and paste a screenshot into that text. A body or prompt that is only a picture still counts as filled. There is no separate image URL list
 - Use the clipboard in the exercise editor on a study card. Theory samples and prompts stay blocked
 - Preview an exercise against sample student code
 - Open every module, topic, and card on the study map, including modules marked coming later. This does not mark them finished
@@ -33,7 +34,7 @@ The shared compile-fail list may be empty. Apex samples and run-clean hidden-che
 
 ## Builder fields on an exercise (v1)
 
-- Prompt EN / Prompt pt-BR
+- Prompt EN / Prompt pt-BR, as rich text (bold, italic, underline, bullets, pasted screenshots)
 - Run-clean hidden tests (one or more), each with:
   - Check Apex (English), student message EN, student message pt-BR
   - Preview box (sample student code + last run result)

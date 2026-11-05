@@ -19,6 +19,7 @@ import {
   type TheoryCard,
   type Topic,
 } from "@/lib/curriculum";
+import { canonicalRichText, richTextIsBlank } from "@/lib/rich-text";
 
 export type SaveIssue = {
   code:
@@ -120,6 +121,13 @@ function trimText(value: LocalizedText): LocalizedText {
   return { en: value.en.trim(), "pt-BR": value["pt-BR"].trim() };
 }
 
+function trimRichText(value: LocalizedText): LocalizedText {
+  return {
+    en: canonicalRichText(value.en),
+    "pt-BR": canonicalRichText(value["pt-BR"]),
+  };
+}
+
 function slugify(value: string) {
   const slug = value
     .normalize("NFKD")
@@ -190,14 +198,14 @@ export function validateNames(names: LocalizedText): SaveIssue[] {
 export function validateCard(draft: CardDraft): SaveIssue[] {
   if (draft.type === "theory") {
     const issues: SaveIssue[] = [];
-    if (isBlank(draft.bodies.en)) issues.push({ code: "body_en" });
-    if (isBlank(draft.bodies["pt-BR"])) issues.push({ code: "body_pt" });
+    if (richTextIsBlank(draft.bodies.en)) issues.push({ code: "body_en" });
+    if (richTextIsBlank(draft.bodies["pt-BR"])) issues.push({ code: "body_pt" });
     return issues;
   }
 
   const issues: SaveIssue[] = [];
-  if (isBlank(draft.prompts.en)) issues.push({ code: "prompt_en" });
-  if (isBlank(draft.prompts["pt-BR"])) issues.push({ code: "prompt_pt" });
+  if (richTextIsBlank(draft.prompts.en)) issues.push({ code: "prompt_en" });
+  if (richTextIsBlank(draft.prompts["pt-BR"])) issues.push({ code: "prompt_pt" });
   if (draft.hiddenTests.length === 0) {
     issues.push({ code: "need_hidden_test" });
     return issues;
@@ -240,8 +248,7 @@ function toTheoryCard(id: string, draft: TheoryDraft): TheoryCard {
   return {
     id,
     type: "theory",
-    bodies: trimText(draft.bodies),
-    imageRefs: draft.imageRefs.map((ref) => ref.trim()).filter(Boolean),
+    bodies: trimRichText(draft.bodies),
     sampleApex: draft.sampleApex.trim(),
   };
 }
@@ -250,7 +257,7 @@ function toExerciseCard(id: string, draft: ExerciseDraft): ExerciseCard {
   return {
     id,
     type: "exercise",
-    prompts: trimText(draft.prompts),
+    prompts: trimRichText(draft.prompts),
     hiddenTests: draft.hiddenTests.map((test) => ({
       id: test.id,
       checkApex: test.checkApex.trim(),
@@ -315,7 +322,6 @@ export function emptyTheoryDraft(): TheoryDraft {
   return {
     type: "theory",
     bodies: { ...emptyLocalizedText },
-    imageRefs: [],
     sampleApex: "",
   };
 }
@@ -333,7 +339,6 @@ export function cardToDraft(card: Card): CardDraft {
     return {
       type: "theory",
       bodies: { ...card.bodies },
-      imageRefs: [...card.imageRefs],
       sampleApex: card.sampleApex,
     };
   }

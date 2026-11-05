@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, type ReactNode } from "react";
+import { RichTextEditor } from "@/components/rich-text-editor";
 import type { LocalizedText } from "@/lib/curriculum";
 
 export const fieldClassName =
@@ -22,11 +23,11 @@ export function Field({
   children: ReactNode;
 }) {
   return (
-    <label className="block text-sm text-muted" htmlFor={htmlFor}>
-      {label}
+    <div className="block text-sm text-muted">
+      <label htmlFor={htmlFor}>{label}</label>
       {children}
       {hint ? <span className="mt-1 block text-xs text-muted">{hint}</span> : null}
-    </label>
+    </div>
   );
 }
 
@@ -60,14 +61,14 @@ export function LocalizedFields({
   ptLabel,
   value,
   onChange,
-  multiline = false,
+  control = "text",
   rows,
 }: {
   enLabel: string;
   ptLabel: string;
   value: LocalizedText;
   onChange: (value: LocalizedText) => void;
-  multiline?: boolean;
+  control?: "text" | "plain" | "rich";
   rows?: number;
 }) {
   const enId = useId();
@@ -75,39 +76,51 @@ export function LocalizedFields({
 
   return (
     <>
-      <Field label={enLabel} htmlFor={enId}>
-        {multiline ? (
-          <TextArea
-            id={enId}
-            value={value.en}
-            rows={rows}
-            onChange={(en) => onChange({ ...value, en })}
-          />
-        ) : (
-          <TextInput
-            id={enId}
-            value={value.en}
-            onChange={(en) => onChange({ ...value, en })}
-          />
-        )}
-      </Field>
-      <Field label={ptLabel} htmlFor={ptId}>
-        {multiline ? (
-          <TextArea
-            id={ptId}
-            value={value["pt-BR"]}
-            rows={rows}
-            onChange={(pt) => onChange({ ...value, "pt-BR": pt })}
-          />
-        ) : (
-          <TextInput
-            id={ptId}
-            value={value["pt-BR"]}
-            onChange={(pt) => onChange({ ...value, "pt-BR": pt })}
-          />
-        )}
-      </Field>
+      <LocaleField
+        id={enId}
+        label={enLabel}
+        value={value.en}
+        control={control}
+        rows={rows}
+        onChange={(en) => onChange({ ...value, en })}
+      />
+      <LocaleField
+        id={ptId}
+        label={ptLabel}
+        value={value["pt-BR"]}
+        control={control}
+        rows={rows}
+        onChange={(pt) => onChange({ ...value, "pt-BR": pt })}
+      />
     </>
+  );
+}
+
+function LocaleField({
+  id,
+  label,
+  value,
+  control,
+  rows,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  control: "text" | "plain" | "rich";
+  rows?: number;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <Field label={label} htmlFor={id}>
+      {control === "rich" ? (
+        <RichTextEditor id={id} value={value} onChange={onChange} />
+      ) : control === "plain" ? (
+        <TextArea id={id} value={value} rows={rows} onChange={onChange} />
+      ) : (
+        <TextInput id={id} value={value} onChange={onChange} />
+      )}
+    </Field>
   );
 }
 

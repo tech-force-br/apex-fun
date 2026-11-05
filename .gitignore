@@ -45,3 +45,4 @@ supabase/.branches/
 # other
 .codegraph
 .rtk
+.vscode

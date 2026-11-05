@@ -159,7 +159,6 @@ export function AdminView() {
       </div>
 
       <section className="min-w-0 rounded-lg border border-line bg-white p-6">
-        <p className="mb-6 text-xs text-muted">{copy.memoryNote}</p>
         {saved ? (
           <p className="mb-4 text-sm font-bold text-accent-deep" role="status">
             {copy.saved}

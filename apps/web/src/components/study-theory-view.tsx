@@ -13,6 +13,7 @@ import {
 import { ConfettiBurst } from "@/components/study-confetti";
 import { ModuleResultDialog } from "@/components/study-module-result";
 import { TopicProgress } from "@/components/study-topic-progress";
+import { RichTextView } from "@/components/rich-text-view";
 import type { CurriculumModule, TheoryCard, Topic } from "@/lib/curriculum";
 import type { Locale } from "@/lib/locale";
 import { studyCopy } from "@/lib/study-copy";
@@ -163,37 +164,9 @@ function TheoryBody({
   locale: Locale;
   sampleLabel: string;
 }) {
-  const paragraphs = card.bodies[locale]
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
-
   return (
     <>
-      {paragraphs.map((paragraph, index) =>
-        index === 0 ? (
-          <h1
-            key={index}
-            className="mt-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl"
-          >
-            {paragraph}
-          </h1>
-        ) : (
-          <p key={index} className="mt-4 text-base leading-7 text-ink">
-            {paragraph}
-          </p>
-        ),
-      )}
-      {card.imageRefs.map((src) => (
-        // Admin image URLs are arbitrary, so this cannot go through the image optimizer.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={src}
-          src={src}
-          alt=""
-          className="mt-6 max-w-full rounded-lg border border-line"
-        />
-      ))}
+      <RichTextView value={card.bodies[locale]} headingFirst />
       {card.sampleApex ? (
         <figure className="mt-8">
           <figcaption className="text-xs font-medium tracking-wide text-muted uppercase">

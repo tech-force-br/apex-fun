@@ -38,7 +38,7 @@ A topic address with no card opens that topic’s doing card. A topic with no ca
 
 ## Topic cards while you are on a card
 
-On a theory card and on an exercise card, a pane on the left lists every card in that topic. Each row shows the card title and Theory or Exercise. The title is the first paragraph of a theory card, or the exercise prompt. A long title wraps onto extra lines. It is not cut off. The row does not continue into the rest of the card. A finished card shows a green circle with a check, as in [10-visual-design.md](10-visual-design.md). The first unfinished card shows a blue circle. It does not show a Current tag. Cards after that show a lock icon. Rows do not say Completed, Doing, or Locked. A completed card and the next unfinished card are links. Locked cards stay in the list and are not links for a student. The card on screen is marked. The owner can open every card, including locked ones, the same way as on the map.
+On a theory card and on an exercise card, a pane on the left lists every card in that topic. Each row shows the card title and Theory or Exercise. The title is the words in the first paragraph of a theory card, or the words in the exercise prompt. Bold, italic, underline, pictures, and bullet markers are not part of the title. Each bullet is its own paragraph for that title. If that first paragraph has no words, the title is the next paragraph that has words. A long title wraps onto extra lines. It is not cut off. The row does not continue into the rest of the card. A finished card shows a green circle with a check, as in [10-visual-design.md](10-visual-design.md). The first unfinished card shows a blue circle. It does not show a Current tag. Cards after that show a lock icon. Rows do not say Completed, Doing, or Locked. A completed card and the next unfinished card are links. Locked cards stay in the list and are not links for a student. The card on screen is marked. The owner can open every card, including locked ones, the same way as on the map.
 
 On a phone the list sits above the lesson and scrolls on its own.
 
@@ -58,7 +58,7 @@ On an exercise that is the current card, Continue appears after Validate passes.
 
 Exactly:
 
-- One prompt (English + Portuguese)
+- One prompt (English + Portuguese). The prompt may include bold, italic, underline, bullets, and pictures
 - One editor
 - One set of run-clean hidden tests
 - Compile always on. Compile-fail explanations are one shared list, not stored on the card. See [06-exercise-checks.md](06-exercise-checks.md)
@@ -67,8 +67,8 @@ Exactly:
 
 May include:
 
-- Text
-- Images
+- Text, including bold, italic, underline, and bullets
+- Images pasted into the text
 - A short read-only Apex sample
 
 Theory is also available as a **pane** on exercise screens. That pane is a reference, not a second card glued onto the exercise.
