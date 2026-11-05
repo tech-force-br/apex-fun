@@ -235,33 +235,7 @@ type ModuleStatusCopy = {
 
 export type ModuleStopConnector = "left" | "right" | "down";
 
-/** Small chevron on the dotted path. A page-colored understroke keeps the dots readable. */
-function MapArrow({ direction }: { direction: ModuleStopConnector }) {
-  const turn = direction === "down" ? "rotate-90" : direction === "left" ? "rotate-180" : "";
-  return (
-    <svg
-      viewBox="0 0 12 12"
-      className={`pointer-events-none absolute top-1/2 left-1/2 z-[1] size-2 -translate-x-1/2 -translate-y-1/2 text-accent sm:size-2.5 ${turn}`}
-      fill="none"
-    >
-      <path
-        d="M3.2 1.8 8.4 6 3.2 10.2"
-        stroke="var(--color-space)"
-        strokeWidth="3.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M3.2 1.8 8.4 6 3.2 10.2"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
+/** Dotted gap between module stops. */
 function MapDots({
   direction,
   className,
@@ -281,9 +255,7 @@ function MapDots({
         backgroundRepeat: horizontal ? "repeat-x" : "repeat-y",
         backgroundPosition: "center",
       }}
-    >
-      <MapArrow direction={direction} />
-    </span>
+    />
   );
 }
 
