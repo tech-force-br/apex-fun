@@ -23,7 +23,6 @@ body {
 }
 
 :root {
-  --site-footer-height: 4.75rem;
   --site-footer-overlap: 0px;
   --study-header-height: 4.5rem;
 }

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthCard } from "@/components/auth-card";
 import { LanguageToggle } from "@/components/language-toggle";
-import { SiteFooter } from "@/components/site-footer";
+import { PageScroll } from "@/components/site-footer";
 import { useLocale } from "@/components/locale-provider";
 import { useMockAuth } from "@/components/mock-auth-provider";
 import { curriculum } from "@/lib/curriculum";
@@ -36,8 +36,7 @@ export function HomeView() {
   }
 
   return (
-    <div className="home-light relative min-h-0 flex-1 overflow-y-auto">
-      <div className="min-h-full">
+    <PageScroll className="home-light relative">
       <header className="sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-6 py-4">
           <p className="text-xl font-bold tracking-tight text-accent-deep">
@@ -153,8 +152,6 @@ export function HomeView() {
           </ul>
         </section>
       </main>
-      </div>
-      <SiteFooter />
-    </div>
+    </PageScroll>
   );
 }
