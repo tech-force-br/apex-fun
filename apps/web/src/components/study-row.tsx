@@ -29,7 +29,7 @@ function folderTone(kind: TopicRowState["kind"]) {
 function FolderIcon({ mark, kind }: { mark: string; kind: TopicRowState["kind"] }) {
   return (
     <span
-      className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${folderTone(kind)} ${
+      className={`relative flex h-10 w-10 shrink-0 cursor-default select-none items-center justify-center rounded-md [&_svg]:pointer-events-none ${folderTone(kind)} ${
         kind === "current" ? "study-current-shadow" : ""
       }`}
     >
