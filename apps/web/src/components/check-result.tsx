@@ -23,7 +23,7 @@ export function CheckResult({
   const tone = unavailable
     ? "text-muted"
     : passed
-      ? "text-accent-deep"
+      ? "text-done"
       : "text-[#ba0517]";
 
   return (

@@ -185,7 +185,11 @@ function StudyExerciseView({
         </button>
       ) : null}
       {result && !running ? (
-        <div className="mt-4 rounded-lg border border-line bg-white p-4">
+        <div
+          className={`mt-4 rounded-lg border border-line p-4 ${
+            result.passed && !result.unavailable ? "bg-done-soft" : "bg-white"
+          }`}
+        >
           <CheckResult
             passed={result.passed}
             unavailable={result.unavailable}
