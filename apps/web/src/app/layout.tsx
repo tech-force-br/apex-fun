@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { LocaleProvider } from "@/components/locale-provider";
 import { MockAuthProvider } from "@/components/mock-auth-provider";
-import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,7 +31,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
               {children}
             </div>
-            <SiteFooter />
           </LocaleProvider>
         </MockAuthProvider>
       </body>

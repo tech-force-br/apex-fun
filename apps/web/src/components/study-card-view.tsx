@@ -63,7 +63,7 @@ export function StudyCardView() {
     );
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-8 md:h-[calc(100dvh-var(--site-footer-height)-var(--study-header-height))] md:min-h-0 md:flex-row md:overflow-hidden">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-8 md:h-[calc(100dvh-var(--study-header-height))] md:min-h-0 md:flex-row md:overflow-hidden">
       <TopicCardPane
         moduleId={gate.selected.id}
         topic={gate.topic}

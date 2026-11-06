@@ -26,7 +26,7 @@ const nextTopicClass =
 
 export function StudyAdvanceBar({ advance }: { advance: Advance }) {
   return (
-    <div className="study-card-advance pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-height)+1rem)] z-20 flex justify-center px-6 md:pointer-events-auto md:static md:z-auto md:shrink-0 md:px-0 md:pt-4">
+    <div className="study-card-advance pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-overlap,0px)+1rem)] z-20 flex justify-center px-6 md:pointer-events-auto md:static md:z-auto md:shrink-0 md:px-0 md:pt-4">
       <button
         type="button"
         onClick={(event) => {
@@ -70,7 +70,7 @@ export function StudyCardColumn({
   children: ReactNode;
 }) {
   return (
-    <div className="flex min-w-0 flex-1 flex-col md:min-h-0">
+    <div className="flex min-w-0 flex-col md:min-h-0 md:flex-1">
       <main
         className={`w-full md:min-h-0 md:flex-1 md:overflow-y-auto ${
           advance ? "pb-28 md:pb-0" : ""
