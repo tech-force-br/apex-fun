@@ -19,6 +19,7 @@ import { validateExercise } from "@/lib/exercise-check-action";
 import { syncSessionCookie } from "@/lib/mock-auth";
 import { useUnlockAll } from "@/lib/student-view";
 import type { ExerciseCheck } from "@/lib/score-run";
+import { editorDraft, rememberEditorDraft } from "@/lib/study-editor-memory";
 import { recordFirstAttempt } from "@/lib/study-progress";
 import { richTextIsBlank } from "@/lib/rich-text";
 import { studyCopy } from "@/lib/study-copy";
@@ -95,7 +96,7 @@ function StudyExerciseView({
   const { session } = useMockAuth();
   const unlockAll = useUnlockAll();
   const copy = studyCopy[locale];
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(() => editorDraft(card.id));
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<ExerciseCheck | null>(null);
   const [earnedAdvance, setEarnedAdvance] = useState(false);
@@ -111,6 +112,11 @@ function StudyExerciseView({
   });
   const visibleAdvance = earnedAdvance ? advance : undefined;
   const showValidate = code.trim().length > 0;
+
+  function onCodeChange(next: string) {
+    rememberEditorDraft(card.id, next);
+    setCode(next);
+  }
 
   async function onValidate() {
     if (running) return;
@@ -158,11 +164,12 @@ function StudyExerciseView({
       >
         <CodeEditor
           key={card.id}
+          initialValue={code}
           blockClipboard={!unlockAll}
           readOnly={running}
           label={copy.editor}
           minHeight="12rem"
-          onChange={setCode}
+          onChange={onCodeChange}
         />
       </div>
       {showValidate ? (

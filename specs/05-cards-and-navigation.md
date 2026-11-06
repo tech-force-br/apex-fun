@@ -59,7 +59,7 @@ On an exercise that is the current card, Continue appears after Validate passes.
 Exactly:
 
 - One prompt (English + Portuguese). The prompt may include bold, italic, underline, bullets, and pictures
-- One editor
+- One editor. Its text stays in the browser tab when the student opens another card. Coming back shows that text. A reload clears it. The account does not store it.
 - One set of run-clean hidden tests
 - Compile always on. Compile-fail explanations are one shared list, not stored on the card. See [06-exercise-checks.md](06-exercise-checks.md)
 

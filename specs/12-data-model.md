@@ -33,7 +33,7 @@ On module restart for under 90%: delete that user’s progress and passing code 
 
 ## What we do not store
 
-- Draft editor text
+- Draft editor text. The open tab may keep it until a reload. It is not written to the account.
 - Which exercises were not clean, as a student-facing list (we may still have `first_run_clean` in the database for the results count)
 
 ## Related

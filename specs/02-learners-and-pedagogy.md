@@ -17,7 +17,7 @@ Explanations on the website stay simple. Early variable theory may use a few met
 
 ## Practice rules
 
-- The editor starts empty. They type the full snippet.
+- The editor starts empty. They type the full snippet. Opening another card keeps what they typed in the browser tab. Coming back shows it. A reload starts empty again. The account does not keep that text.
 - They cannot copy or paste in theory samples, prompts, or the student editor. Admin screens may paste. The site owner may also use the clipboard in the exercise editor on a study card. Theory samples and prompts stay blocked.
 - There is no hint button and no per-card hint text in v1. A failed Run does not add a prompt to open Theory.
 - Failed Runs show the Apex error plus a short plain-language explanation.
