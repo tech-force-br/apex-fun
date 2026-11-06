@@ -10,7 +10,7 @@ import { useMockAuth } from "@/components/mock-auth-provider";
 import { drillBack } from "@/components/study-drill-transition";
 import { chromeCopy } from "@/lib/locale";
 import { sessionIsAdmin } from "@/lib/mock-auth";
-import { chooseStudentView, useStudentView } from "@/lib/student-view";
+import { setStudentView, useStudentView } from "@/lib/student-view";
 import { studyChromeWidth } from "@/lib/study-route";
 
 export function StudyHeader() {
@@ -48,14 +48,6 @@ export function StudyHeader() {
 
   if (!session) return null;
 
-  function viewAsStudent() {
-    chooseStudentView(true);
-  }
-
-  function viewAsOwner() {
-    chooseStudentView(false);
-  }
-
   function onSignOut() {
     signOut();
     router.replace("/");
@@ -83,11 +75,7 @@ export function StudyHeader() {
           {isAdmin && !admin ? (
             <StudentViewToggle
               studentView={studentView}
-              onChange={(next) => {
-                if (next === studentView) return;
-                if (next) viewAsStudent();
-                else viewAsOwner();
-              }}
+              onChange={setStudentView}
             />
           ) : null}
           {isAdmin ? (
