@@ -35,7 +35,7 @@ export function HomeView() {
   }
 
   return (
-    <div className="home-light relative flex min-h-full shrink-0 flex-col">
+    <div className="home-light relative flex min-h-0 flex-1 flex-col overflow-y-auto">
       <header className="sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-6 py-4">
           <p className="text-xl font-bold tracking-tight text-accent-deep">

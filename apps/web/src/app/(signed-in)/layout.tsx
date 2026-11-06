@@ -19,7 +19,7 @@ export default function SignedInLayout({ children }: LayoutProps<"/">) {
   if (!ready || !session) {
     return (
       <main
-        className="relative flex flex-1 items-center justify-center px-6 py-12"
+        className="relative flex min-h-0 flex-1 items-center justify-center px-6 py-12"
         aria-busy="true"
       >
         <p className="text-sm text-muted">{chromeCopy[locale].loading}</p>
@@ -28,9 +28,11 @@ export default function SignedInLayout({ children }: LayoutProps<"/">) {
   }
 
   return (
-    <div className="relative flex flex-1 flex-col">
+    <div className="relative flex min-h-0 flex-1 flex-col">
       <StudyHeader />
-      {children}
+      <div className="relative flex min-h-0 flex-1 flex-col overflow-y-auto">
+        {children}
+      </div>
     </div>
   );
 }

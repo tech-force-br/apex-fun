@@ -127,7 +127,7 @@ export function AdminView() {
 
   return (
     <main className="mx-auto grid w-full max-w-6xl flex-1 gap-6 px-6 py-8 lg:grid-cols-[minmax(18rem,24rem)_1fr]">
-      <div className="min-w-0 lg:sticky lg:top-20 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
+      <div className="min-w-0 lg:sticky lg:top-0 lg:max-h-[calc(100dvh-var(--site-footer-height)-var(--study-header-height)-4rem)] lg:overflow-y-auto">
         <AdminTree
           modules={modules}
           selection={selection}

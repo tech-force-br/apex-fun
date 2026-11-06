@@ -11,7 +11,6 @@ import { drillBack } from "@/components/study-drill-transition";
 import { chromeCopy } from "@/lib/locale";
 import { sessionIsAdmin } from "@/lib/mock-auth";
 import { setStudentView, useStudentView } from "@/lib/student-view";
-import { studyChromeWidth } from "@/lib/study-route";
 
 export function StudyHeader() {
   const pathname = usePathname();
@@ -22,7 +21,6 @@ export function StudyHeader() {
   const chrome = chromeCopy[locale];
   const isAdmin = sessionIsAdmin(session);
   const admin = pathname.startsWith("/admin");
-  const wide = studyChromeWidth(pathname) === "wide";
   const headerRef = useRef<HTMLElement>(null);
 
   useLayoutEffect(() => {
@@ -56,13 +54,9 @@ export function StudyHeader() {
   return (
     <header
       ref={headerRef}
-      className="study-header-anchor sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur-md"
+      className="study-header-anchor sticky top-0 z-20 shrink-0 border-b border-line bg-white/90 backdrop-blur-md"
     >
-      <div
-        className={`mx-auto flex w-full flex-wrap items-center justify-between gap-3 px-6 py-4 ${
-          wide ? "max-w-6xl" : "max-w-3xl"
-        }`}
-      >
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-4">
         <Link
           href="/study"
           transitionTypes={pathname.startsWith("/study/") ? drillBack : undefined}
