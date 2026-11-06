@@ -186,8 +186,10 @@ function StudyExerciseView({
       ) : null}
       {result && !running ? (
         <div
-          className={`mt-4 rounded-lg border border-line p-4 ${
-            result.passed && !result.unavailable ? "bg-done-soft" : "bg-white"
+          className={`mt-4 rounded-lg border p-4 ${
+            result.passed && !result.unavailable
+              ? "border-done bg-done-soft"
+              : "border-line bg-white"
           }`}
         >
           <CheckResult
