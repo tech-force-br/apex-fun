@@ -168,7 +168,7 @@ function pathSurface(kind: TopicRowState["kind"]) {
     case "locked":
       return "border-line bg-locked";
     case "done":
-      return "border-done bg-done-soft hover:border-done";
+      return "border-line bg-done-soft hover:border-done";
     case "current":
       return "border-line bg-white hover:border-accent";
     case "open":
@@ -307,7 +307,7 @@ function moduleStatusLabel(state: ModuleStopState, copy: ModuleStatusCopy) {
 }
 
 function moduleSurface(state: ModuleStopState) {
-  if (state.kind === "done") return "border-done bg-done-soft hover:border-done";
+  if (state.kind === "done") return "border-line bg-done-soft hover:border-done";
   if (state.kind === "later") {
     return state.locked ? "border-line bg-locked" : "border-line bg-locked hover:border-accent";
   }
