@@ -1,4 +1,5 @@
 import type { ExerciseCard, VariablesTopicId } from "@/lib/curriculum";
+import { styleExercisePrompt } from "@/lib/exercise-prompt-marks";
 
 /**
  * Seed exercises. Run-clean check Apex stays English.
@@ -14,7 +15,10 @@ function exercise(
   return {
     id,
     type: "exercise",
-    prompts: { en, "pt-BR": pt },
+    prompts: {
+      en: styleExercisePrompt(en),
+      "pt-BR": styleExercisePrompt(pt),
+    },
     hiddenTests: tests,
   };
 }
