@@ -149,8 +149,7 @@ export function StudyTheoryView({
       advance={advance}
       finish={finish}
     >
-      <p className="mt-4 text-sm text-muted">{copy.theory}</p>
-      <div className="mt-3 rounded-lg border border-line bg-white px-5 py-5 sm:px-6 [&>:first-child]:mt-0">
+      <div className="mt-4 rounded-lg border border-line bg-white px-5 py-5 sm:px-6 [&>:first-child]:mt-0">
         <TheoryBody card={card} locale={locale} sampleLabel={copy.sample} />
       </div>
     </StudyCardColumn>
