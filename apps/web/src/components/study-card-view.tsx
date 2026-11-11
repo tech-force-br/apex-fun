@@ -24,6 +24,10 @@ import { recordFirstAttempt } from "@/lib/study-progress";
 import { richTextIsBlank } from "@/lib/rich-text";
 import { studyCopy } from "@/lib/study-copy";
 
+function blockLearnerClipboard(event: { preventDefault(): void }) {
+  event.preventDefault();
+}
+
 export function StudyCardView() {
   const params = useParams<{
     moduleId: string;
@@ -101,6 +105,7 @@ function StudyExerciseView({
   const [result, setResult] = useState<ExerciseCheck | null>(null);
   const [earnedAdvance, setEarnedAdvance] = useState(false);
   const prompt = card.prompts[locale];
+  const blockPrompt = unlockAll ? undefined : blockLearnerClipboard;
   const { lastFinished, advance, finish } = useCardAdvance({
     selected,
     topic,
@@ -150,10 +155,10 @@ function StudyExerciseView({
       </h1>
       {richTextIsBlank(prompt) ? null : (
         <div
-          onCopy={(event) => event.preventDefault()}
-          onCut={(event) => event.preventDefault()}
-          onPaste={(event) => event.preventDefault()}
-          onDragStart={(event) => event.preventDefault()}
+          onCopy={blockPrompt}
+          onCut={blockPrompt}
+          onPaste={blockPrompt}
+          onDragStart={blockPrompt}
         >
           <RichTextView value={prompt} />
         </div>

@@ -15,10 +15,10 @@ Only the site owner is admin in v1. No other teachers.
 - View a student’s progress
 - Paste freely while writing content
 - Format a theory body or an exercise prompt with bold, italic, underline, and bullets, and paste a screenshot into that text. A body or prompt that is only a picture still counts as filled. There is no separate image URL list
-- Use the clipboard in the exercise editor on a study card. Theory samples and prompts stay blocked
+- Use the clipboard in the exercise editor and on the exercise prompt on a study card. Student view blocks both. Theory samples stay blocked
 - Preview an exercise against sample student code
 - Open every module, topic, and card on the study map, including modules marked coming later. This does not mark them finished
-- Switch the signed-in header to student view. Only the owner sees that switch, and only outside the builder. Student view uses learner locks and blocks the exercise-editor clipboard. The account stays the owner. The Admin link opens the builder. Student view is off while the builder is open, and the switch is hidden there. Leaving the builder for the study map puts the switch back to whatever it was before that Admin link. The Student link does not force student view on
+- Switch the signed-in header to student view. Only the owner sees that switch, and only outside the builder. Student view uses learner locks and blocks the clipboard in the exercise editor and on the exercise prompt. The account stays the owner. The Admin link opens the builder. Student view is off while the builder is open, and the switch is hidden there. Leaving the builder for the study map puts the switch back to whatever it was before that Admin link. The Student link does not force student view on
 
 ## Save rules
 

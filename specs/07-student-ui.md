@@ -33,7 +33,7 @@ Short reminders of earlier theory live in this pane. They are not extra theory w
 - Student types the full snippet
 - Copy and paste blocked in the editor, in prompts, and in theory samples. A prompt may show bold, italic, underline, bullets, and pictures. Those pictures stay in the prompt. The student still cannot copy or paste there
 
-Admin screens may paste. The site owner may also use the clipboard in the exercise editor on a study card. Theory samples and prompts stay blocked.
+Admin screens may paste. The site owner may also use the clipboard in the exercise editor and on the exercise prompt on a study card. Student view blocks both. Theory samples stay blocked.
 
 ## Log
 

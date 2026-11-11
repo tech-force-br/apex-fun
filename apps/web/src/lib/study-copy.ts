@@ -101,7 +101,7 @@ export const studyCopy: Record<
     exercise: "Exercício",
     continue: "Continuar",
     nextTopic: "Próximo tópico",
-    sample: "Amostra",
+    sample: "Exemplo",
     editor: "Editor de Apex",
     validate: "Validar",
     validating: "Verificando…",
