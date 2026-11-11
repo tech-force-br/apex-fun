@@ -97,8 +97,8 @@ const integerExercises: ExerciseCard[] = [
   ),
   one(
     "integer-empty-seats",
-    "Declare an Integer named emptySeats and store 0.",
-    "Declare um Integer chamado emptySeats e guarde 0.",
+    "Declare a variable named emptySeats and store 0.",
+    "Declare uma variável chamada emptySeats e guarde 0.",
     valueIs("emptySeats", "0"),
     "emptySeats needs to be an Integer with the value 0.",
     "emptySeats precisa ser um Integer com o valor 0.",
@@ -106,8 +106,8 @@ const integerExercises: ExerciseCard[] = [
   ),
   one(
     "integer-temperature",
-    "Declare an Integer named temperature and store -2.",
-    "Declare um Integer chamado temperature e guarde -2.",
+    "Declare a variable named temperature and store -2.",
+    "Declare uma variável chamada temperature e guarde -2.",
     valueIs("temperature", "-2"),
     "temperature needs to be an Integer with the value -2.",
     "temperature precisa ser um Integer com o valor -2.",
@@ -115,8 +115,8 @@ const integerExercises: ExerciseCard[] = [
   ),
   one(
     "integer-headcount",
-    "Declare an Integer named headcount and store 1500.",
-    "Declare um Integer chamado headcount e guarde 1500.",
+    "Declare a variable named headcount and store 1500.",
+    "Declare uma variável chamada headcount e guarde 1500.",
     valueIs("headcount", "1500"),
     "headcount needs to be an Integer with the value 1500.",
     "headcount precisa ser um Integer com o valor 1500.",
@@ -124,8 +124,8 @@ const integerExercises: ExerciseCard[] = [
   ),
   one(
     "integer-missing",
-    "Declare an Integer named missing and leave the value off.",
-    "Declare um Integer chamado missing e deixe o valor de fora.",
+    "Declare a variable named missing and leave the value off.",
+    "Declare uma variável chamada missing e deixe o valor de fora.",
     valueIs("missing", "null"),
     "missing needs to be an Integer with no value stored.",
     "missing precisa ser um Integer sem valor guardado.",
@@ -133,8 +133,8 @@ const integerExercises: ExerciseCard[] = [
   ),
   one(
     "integer-open-seats",
-    "Declare an Integer named openSeats. On the next line, store 12 in openSeats.",
-    "Declare um Integer chamado openSeats. Na linha seguinte, guarde 12 em openSeats.",
+    "Declare a variable named openSeats. On the next line, store 12 in openSeats.",
+    "Declare uma variável chamada openSeats. Na linha seguinte, guarde 12 em openSeats.",
     valueIs("openSeats", "12"),
     "openSeats needs to be an Integer with the value 12.",
     "openSeats precisa ser um Integer com o valor 12.",
@@ -142,8 +142,8 @@ const integerExercises: ExerciseCard[] = [
   ),
   one(
     "integer-guest-count",
-    "Declare an Integer named guestCount and store 3. On the next line, store 4 in guestCount.",
-    "Declare um Integer chamado guestCount e guarde 3. Na linha seguinte, guarde 4 em guestCount.",
+    "Declare a variable named guestCount and store 3. On the next line, store 4 in guestCount.",
+    "Declare uma variável chamada guestCount e guarde 3. Na linha seguinte, guarde 4 em guestCount.",
     valueIs("guestCount", "4"),
     "guestCount needs to be an Integer with the value 4.",
     "guestCount precisa ser um Integer com o valor 4.",
@@ -151,8 +151,8 @@ const integerExercises: ExerciseCard[] = [
   ),
   one(
     "integer-floor",
-    "Declare an Integer named floor and store -1. On the next line, store 2 in floor.",
-    "Declare um Integer chamado floor e guarde -1. Na linha seguinte, guarde 2 em floor.",
+    "Declare a variable named floor and store -1. On the next line, store 2 in floor.",
+    "Declare uma variável chamada floor e guarde -1. Na linha seguinte, guarde 2 em floor.",
     valueIs("floor", "2"),
     "floor needs to be an Integer with the value 2.",
     "floor precisa ser um Integer com o valor 2.",
@@ -160,8 +160,8 @@ const integerExercises: ExerciseCard[] = [
   ),
   many(
     "integer-rows",
-    "Declare an Integer named rowCount and store 10. Declare an Integer named columnCount and store 4.",
-    "Declare um Integer chamado rowCount e guarde 10. Declare um Integer chamado columnCount e guarde 4.",
+    "Declare a variable named rowCount and store 10. Declare a variable named columnCount and store 4.",
+    "Declare uma variável chamada rowCount e guarde 10. Declare uma variável chamada columnCount e guarde 4.",
     [
       runClean(
         "integer-rows-row-count",
@@ -204,8 +204,8 @@ const stringExercises: ExerciseCard[] = [
   ),
   one(
     "string-note",
-    "Declare a String named note and store Call tomorrow.",
-    "Declare uma String chamada note e guarde Call tomorrow.",
+    "Declare a variable named note and store Call tomorrow.",
+    "Declare uma variável chamada note e guarde Call tomorrow.",
     valueIs("note", "'Call tomorrow'"),
     "note needs to be a String with the value Call tomorrow.",
     "note precisa ser uma String com o valor Call tomorrow.",
@@ -213,8 +213,8 @@ const stringExercises: ExerciseCard[] = [
   ),
   many(
     "string-capitals",
-    "Declare a String named loud and store Hi. Declare a String named quiet and store hi.",
-    "Declare uma String chamada loud e guarde Hi. Declare uma String chamada quiet e guarde hi.",
+    "Declare a variable named loud and store Hi. Declare a variable named quiet and store hi.",
+    "Declare uma variável chamada loud e guarde Hi. Declare uma variável chamada quiet e guarde hi.",
     [
       runClean(
         "string-capitals-loud",
@@ -234,8 +234,8 @@ const stringExercises: ExerciseCard[] = [
   ),
   one(
     "string-blank",
-    "Declare a String named blank and store empty text.",
-    "Declare uma String chamada blank e guarde um texto vazio.",
+    "Declare a variable named blank and store empty text.",
+    "Declare uma variável chamada blank e guarde um texto vazio.",
     valueIs("blank", "''"),
     "blank needs to be a String with no characters.",
     "blank precisa ser uma String sem nenhum caractere.",
@@ -243,8 +243,8 @@ const stringExercises: ExerciseCard[] = [
   ),
   one(
     "string-missing",
-    "Declare a String named missing and leave the value off.",
-    "Declare uma String chamada missing e deixe o valor de fora.",
+    "Declare a variable named missing and leave the value off.",
+    "Declare uma variável chamada missing e deixe o valor de fora.",
     valueIs("missing", "null"),
     "missing needs to be a String with no value stored.",
     "missing precisa ser uma String sem valor guardado.",
@@ -252,8 +252,8 @@ const stringExercises: ExerciseCard[] = [
   ),
   one(
     "string-apostrophe",
-    "Declare a String named contactName and store O'Brien.",
-    "Declare uma String chamada contactName e guarde O'Brien.",
+    "Declare a variable named contactName and store O'Brien.",
+    "Declare uma variável chamada contactName e guarde O'Brien.",
     valueIs("contactName", "'O\\'Brien'"),
     "contactName needs to be a String with the value O'Brien.",
     "contactName precisa ser uma String com o valor O'Brien.",
@@ -261,8 +261,8 @@ const stringExercises: ExerciseCard[] = [
   ),
   one(
     "string-nickname",
-    "Declare a String named nickname. On the next line, store Ace in nickname.",
-    "Declare uma String chamada nickname. Na linha seguinte, guarde Ace em nickname.",
+    "Declare a variable named nickname. On the next line, store Ace in nickname.",
+    "Declare uma variável chamada nickname. Na linha seguinte, guarde Ace em nickname.",
     valueIs("nickname", "'Ace'"),
     "nickname needs to be a String with the value Ace.",
     "nickname precisa ser uma String com o valor Ace.",
@@ -270,8 +270,8 @@ const stringExercises: ExerciseCard[] = [
   ),
   one(
     "string-status",
-    "Declare a String named status and store Open. On the next line, store Closed in status.",
-    "Declare uma String chamada status e guarde Open. Na linha seguinte, guarde Closed em status.",
+    "Declare a variable named status and store Open. On the next line, store Closed in status.",
+    "Declare uma variável chamada status e guarde Open. Na linha seguinte, guarde Closed em status.",
     valueIs("status", "'Closed'"),
     "status needs to be a String with the value Closed.",
     "status precisa ser uma String com o valor Closed.",
@@ -279,8 +279,8 @@ const stringExercises: ExerciseCard[] = [
   ),
   many(
     "string-names",
-    "Declare a String named firstName and store Ana. Declare a String named lastName and store Silva.",
-    "Declare uma String chamada firstName e guarde Ana. Declare uma String chamada lastName e guarde Silva.",
+    "Declare a variable named firstName and store Ana. Declare a variable named lastName and store Silva.",
+    "Declare uma variável chamada firstName e guarde Ana. Declare uma variável chamada lastName e guarde Silva.",
     [
       runClean(
         "string-names-first",
@@ -323,8 +323,8 @@ const booleanExercises: ExerciseCard[] = [
   ),
   one(
     "boolean-can-edit",
-    "Declare a Boolean named canEdit and store true.",
-    "Declare um Boolean chamado canEdit e guarde true.",
+    "Declare a variable named canEdit and store true.",
+    "Declare uma variável chamada canEdit e guarde true.",
     valueIs("canEdit", "true"),
     "canEdit needs to be a Boolean with the value true.",
     "canEdit precisa ser um Boolean com o valor true.",
@@ -332,8 +332,8 @@ const booleanExercises: ExerciseCard[] = [
   ),
   one(
     "boolean-is-converted",
-    "Declare a Boolean named isConverted and store false.",
-    "Declare um Boolean chamado isConverted e guarde false.",
+    "Declare a variable named isConverted and store false.",
+    "Declare uma variável chamada isConverted e guarde false.",
     valueIs("isConverted", "false"),
     "isConverted needs to be a Boolean with the value false.",
     "isConverted precisa ser um Boolean com o valor false.",
@@ -341,8 +341,8 @@ const booleanExercises: ExerciseCard[] = [
   ),
   one(
     "boolean-is-ready",
-    "Declare a Boolean named isReady and leave the value off.",
-    "Declare um Boolean chamado isReady e deixe o valor de fora.",
+    "Declare a variable named isReady and leave the value off.",
+    "Declare uma variável chamada isReady e deixe o valor de fora.",
     valueIs("isReady", "null"),
     "isReady needs to be a Boolean with no value stored.",
     "isReady precisa ser um Boolean sem valor guardado.",
@@ -350,8 +350,8 @@ const booleanExercises: ExerciseCard[] = [
   ),
   one(
     "boolean-is-won",
-    "Declare a Boolean named isWon. On the next line, store true in isWon.",
-    "Declare um Boolean chamado isWon. Na linha seguinte, guarde true em isWon.",
+    "Declare a variable named isWon. On the next line, store true in isWon.",
+    "Declare uma variável chamada isWon. Na linha seguinte, guarde true em isWon.",
     valueIs("isWon", "true"),
     "isWon needs to be a Boolean with the value true.",
     "isWon precisa ser um Boolean com o valor true.",
@@ -359,8 +359,8 @@ const booleanExercises: ExerciseCard[] = [
   ),
   one(
     "boolean-is-open",
-    "Declare a Boolean named isOpen and store true. On the next line, store false in isOpen.",
-    "Declare um Boolean chamado isOpen e guarde true. Na linha seguinte, guarde false em isOpen.",
+    "Declare a variable named isOpen and store true. On the next line, store false in isOpen.",
+    "Declare uma variável chamada isOpen e guarde true. Na linha seguinte, guarde false em isOpen.",
     valueIs("isOpen", "false"),
     "isOpen needs to be a Boolean with the value false.",
     "isOpen precisa ser um Boolean com o valor false.",
@@ -368,8 +368,8 @@ const booleanExercises: ExerciseCard[] = [
   ),
   one(
     "boolean-is-customer",
-    "Declare a Boolean named isCustomer and store false. On the next line, store true in isCustomer.",
-    "Declare um Boolean chamado isCustomer e guarde false. Na linha seguinte, guarde true em isCustomer.",
+    "Declare a variable named isCustomer and store false. On the next line, store true in isCustomer.",
+    "Declare uma variável chamada isCustomer e guarde false. Na linha seguinte, guarde true em isCustomer.",
     valueIs("isCustomer", "true"),
     "isCustomer needs to be a Boolean with the value true.",
     "isCustomer precisa ser um Boolean com o valor true.",
@@ -377,8 +377,8 @@ const booleanExercises: ExerciseCard[] = [
   ),
   many(
     "boolean-phone-email",
-    "Declare a Boolean named hasPhone and store true. Declare a Boolean named hasEmail and store false.",
-    "Declare um Boolean chamado hasPhone e guarde true. Declare um Boolean chamado hasEmail e guarde false.",
+    "Declare a variable named hasPhone and store true. Declare a variable named hasEmail and store false.",
+    "Declare uma variável chamada hasPhone e guarde true. Declare uma variável chamada hasEmail e guarde false.",
     [
       runClean(
         "boolean-phone-email-phone",
@@ -398,8 +398,8 @@ const booleanExercises: ExerciseCard[] = [
   ),
   one(
     "boolean-is-blocked",
-    "Declare a Boolean named isBlocked. On the next line, store false in isBlocked.",
-    "Declare um Boolean chamado isBlocked. Na linha seguinte, guarde false em isBlocked.",
+    "Declare a variable named isBlocked. On the next line, store false in isBlocked.",
+    "Declare uma variável chamada isBlocked. Na linha seguinte, guarde false em isBlocked.",
     valueIs("isBlocked", "false"),
     "isBlocked needs to be a Boolean with the value false.",
     "isBlocked precisa ser um Boolean com o valor false.",
@@ -430,8 +430,8 @@ const decimalExercises: ExerciseCard[] = [
   ),
   one(
     "decimal-tax-rate",
-    "Declare a Decimal named taxRate and store 0.08.",
-    "Declare um Decimal chamado taxRate e guarde 0.08.",
+    "Declare a variable named taxRate and store 0.08.",
+    "Declare uma variável chamada taxRate e guarde 0.08.",
     decimalIs("taxRate", "0.08"),
     "taxRate needs to be a Decimal with the value 0.08.",
     "taxRate precisa ser um Decimal com o valor 0.08.",
@@ -439,8 +439,8 @@ const decimalExercises: ExerciseCard[] = [
   ),
   one(
     "decimal-adjustment",
-    "Declare a Decimal named adjustment and store -3.25.",
-    "Declare um Decimal chamado adjustment e guarde -3.25.",
+    "Declare a variable named adjustment and store -3.25.",
+    "Declare uma variável chamada adjustment e guarde -3.25.",
     decimalIs("adjustment", "-3.25"),
     "adjustment needs to be a Decimal with the value -3.25.",
     "adjustment precisa ser um Decimal com o valor -3.25.",
@@ -448,8 +448,8 @@ const decimalExercises: ExerciseCard[] = [
   ),
   one(
     "decimal-zero",
-    "Declare a Decimal named zero and store 0.0.",
-    "Declare um Decimal chamado zero e guarde 0.0.",
+    "Declare a variable named zero and store 0.0.",
+    "Declare uma variável chamada zero e guarde 0.0.",
     decimalIs("zero", "0.0"),
     "zero needs to be a Decimal with the value 0.0.",
     "zero precisa ser um Decimal com o valor 0.0.",
@@ -457,8 +457,8 @@ const decimalExercises: ExerciseCard[] = [
   ),
   one(
     "decimal-missing",
-    "Declare a Decimal named missing and leave the value off.",
-    "Declare um Decimal chamado missing e deixe o valor de fora.",
+    "Declare a variable named missing and leave the value off.",
+    "Declare uma variável chamada missing e deixe o valor de fora.",
     valueIs("missing", "null"),
     "missing needs to be a Decimal with no value stored.",
     "missing precisa ser um Decimal sem valor guardado.",
@@ -466,8 +466,8 @@ const decimalExercises: ExerciseCard[] = [
   ),
   one(
     "decimal-price",
-    "Declare a Decimal named price. On the next line, store 12.5 in price.",
-    "Declare um Decimal chamado price. Na linha seguinte, guarde 12.5 em price.",
+    "Declare a variable named price. On the next line, store 12.5 in price.",
+    "Declare uma variável chamada price. Na linha seguinte, guarde 12.5 em price.",
     decimalIs("price", "12.5"),
     "price needs to be a Decimal with the value 12.5.",
     "price precisa ser um Decimal com o valor 12.5.",
@@ -475,8 +475,8 @@ const decimalExercises: ExerciseCard[] = [
   ),
   one(
     "decimal-fee",
-    "Declare a Decimal named fee and store 10.5. On the next line, store 8.75 in fee.",
-    "Declare um Decimal chamado fee e guarde 10.5. Na linha seguinte, guarde 8.75 em fee.",
+    "Declare a variable named fee and store 10.5. On the next line, store 8.75 in fee.",
+    "Declare uma variável chamada fee e guarde 10.5. Na linha seguinte, guarde 8.75 em fee.",
     decimalIs("fee", "8.75"),
     "fee needs to be a Decimal with the value 8.75.",
     "fee precisa ser um Decimal com o valor 8.75.",
@@ -484,8 +484,8 @@ const decimalExercises: ExerciseCard[] = [
   ),
   one(
     "decimal-balance",
-    "Declare a Decimal named balance and store -15.5. On the next line, store 0.0 in balance.",
-    "Declare um Decimal chamado balance e guarde -15.5. Na linha seguinte, guarde 0.0 em balance.",
+    "Declare a variable named balance and store -15.5. On the next line, store 0.0 in balance.",
+    "Declare uma variável chamada balance e guarde -15.5. Na linha seguinte, guarde 0.0 em balance.",
     decimalIs("balance", "0.0"),
     "balance needs to be a Decimal with the value 0.0.",
     "balance precisa ser um Decimal com o valor 0.0.",
@@ -493,8 +493,8 @@ const decimalExercises: ExerciseCard[] = [
   ),
   many(
     "decimal-unit-shipping",
-    "Declare a Decimal named unitPrice and store 10.0. Declare a Decimal named shipping and store 4.5.",
-    "Declare um Decimal chamado unitPrice e guarde 10.0. Declare um Decimal chamado shipping e guarde 4.5.",
+    "Declare a variable named unitPrice and store 10.0. Declare a variable named shipping and store 4.5.",
+    "Declare uma variável chamada unitPrice e guarde 10.0. Declare uma variável chamada shipping e guarde 4.5.",
     [
       runClean(
         "decimal-unit-shipping-unit",
@@ -537,8 +537,8 @@ const dateExercises: ExerciseCard[] = [
   ),
   one(
     "date-holiday",
-    "Declare a Date named holiday and store 4 July 2026.",
-    "Declare uma Date chamada holiday e guarde 4 de julho de 2026.",
+    "Declare a variable named holiday and store 4 July 2026.",
+    "Declare uma variável chamada holiday e guarde 4 de julho de 2026.",
     valueIs("holiday", "Date.newInstance(2026, 7, 4)"),
     "holiday needs to be a Date for 4 July 2026.",
     "holiday precisa ser uma Date de 4 de julho de 2026.",
@@ -546,8 +546,8 @@ const dateExercises: ExerciseCard[] = [
   ),
   one(
     "date-end",
-    "Declare a Date named endDate and store 31 December 2026.",
-    "Declare uma Date chamada endDate e guarde 31 de dezembro de 2026.",
+    "Declare a variable named endDate and store 31 December 2026.",
+    "Declare uma variável chamada endDate e guarde 31 de dezembro de 2026.",
     valueIs("endDate", "Date.newInstance(2026, 12, 31)"),
     "endDate needs to be a Date for 31 December 2026.",
     "endDate precisa ser uma Date de 31 de dezembro de 2026.",
@@ -555,8 +555,8 @@ const dateExercises: ExerciseCard[] = [
   ),
   one(
     "date-fiscal-start",
-    "Declare a Date named fiscalStart and store 28 February 2026.",
-    "Declare uma Date chamada fiscalStart e guarde 28 de fevereiro de 2026.",
+    "Declare a variable named fiscalStart and store 28 February 2026.",
+    "Declare uma variável chamada fiscalStart e guarde 28 de fevereiro de 2026.",
     valueIs("fiscalStart", "Date.newInstance(2026, 2, 28)"),
     "fiscalStart needs to be a Date for 28 February 2026.",
     "fiscalStart precisa ser uma Date de 28 de fevereiro de 2026.",
@@ -564,8 +564,8 @@ const dateExercises: ExerciseCard[] = [
   ),
   one(
     "date-due",
-    "Declare a Date named dueDate and leave the value off.",
-    "Declare uma Date chamada dueDate e deixe o valor de fora.",
+    "Declare a variable named dueDate and leave the value off.",
+    "Declare uma variável chamada dueDate e deixe o valor de fora.",
     valueIs("dueDate", "null"),
     "dueDate needs to be a Date with no value stored.",
     "dueDate precisa ser uma Date sem valor guardado.",
@@ -573,8 +573,8 @@ const dateExercises: ExerciseCard[] = [
   ),
   one(
     "date-today",
-    "Declare a Date named today and store the day this code runs.",
-    "Declare uma Date chamada today e guarde o dia em que este código roda.",
+    "Declare a variable named today and store the day this code runs.",
+    "Declare uma variável chamada today e guarde o dia em que este código roda.",
     valueIs("today", "Date.today()"),
     "today needs to be a Date for the day this code runs.",
     "today precisa ser uma Date do dia em que este código roda.",
@@ -582,8 +582,8 @@ const dateExercises: ExerciseCard[] = [
   ),
   one(
     "date-launch",
-    "Declare a Date named launchDate. On the next line, store 1 June 2026 in launchDate.",
-    "Declare uma Date chamada launchDate. Na linha seguinte, guarde 1 de junho de 2026 em launchDate.",
+    "Declare a variable named launchDate. On the next line, store 1 June 2026 in launchDate.",
+    "Declare uma variável chamada launchDate. Na linha seguinte, guarde 1 de junho de 2026 em launchDate.",
     valueIs("launchDate", "Date.newInstance(2026, 6, 1)"),
     "launchDate needs to be a Date for 1 June 2026.",
     "launchDate precisa ser uma Date de 1 de junho de 2026.",
@@ -591,8 +591,8 @@ const dateExercises: ExerciseCard[] = [
   ),
   one(
     "date-review",
-    "Declare a Date named reviewDate and store 15 March 2026. On the next line, store 16 March 2026 in reviewDate.",
-    "Declare uma Date chamada reviewDate e guarde 15 de março de 2026. Na linha seguinte, guarde 16 de março de 2026 em reviewDate.",
+    "Declare a variable named reviewDate and store 15 March 2026. On the next line, store 16 March 2026 in reviewDate.",
+    "Declare uma variável chamada reviewDate e guarde 15 de março de 2026. Na linha seguinte, guarde 16 de março de 2026 em reviewDate.",
     valueIs("reviewDate", "Date.newInstance(2026, 3, 16)"),
     "reviewDate needs to be a Date for 16 March 2026.",
     "reviewDate precisa ser uma Date de 16 de março de 2026.",
@@ -600,8 +600,8 @@ const dateExercises: ExerciseCard[] = [
   ),
   many(
     "date-window",
-    "Declare a Date named kickoff and store 1 April 2026. Declare a Date named deadline and store 30 April 2026.",
-    "Declare uma Date chamada kickoff e guarde 1 de abril de 2026. Declare uma Date chamada deadline e guarde 30 de abril de 2026.",
+    "Declare a variable named kickoff and store 1 April 2026. Declare a variable named deadline and store 30 April 2026.",
+    "Declare uma variável chamada kickoff e guarde 1 de abril de 2026. Declare uma variável chamada deadline e guarde 30 de abril de 2026.",
     [
       runClean(
         "date-window-kickoff",
@@ -705,8 +705,8 @@ const concatenationExercises: ExerciseCard[] = [
   ),
   one(
     "concatenation-stuck",
-    "Declare a String named stuck and store HelloAna by joining the text Hello and the text Ana, with no space.",
-    "Declare uma String chamada stuck e guarde HelloAna, juntando o texto Hello e o texto Ana, sem espaço.",
+    "Declare a variable named stuck and store HelloAna by joining the text Hello and the text Ana, with no space.",
+    "Declare uma variável chamada stuck e guarde HelloAna, juntando o texto Hello e o texto Ana, sem espaço.",
     valueIs("stuck", "'HelloAna'"),
     "stuck needs to be a String with the value HelloAna.",
     "stuck precisa ser uma String com o valor HelloAna.",
@@ -714,8 +714,8 @@ const concatenationExercises: ExerciseCard[] = [
   ),
   many(
     "concatenation-account-line",
-    "Declare a String named accountName and store Acme. Then declare a String named line and store Account: Acme by joining Account: with accountName.",
-    "Declare uma String chamada accountName e guarde Acme. Depois declare uma String chamada line e guarde Account: Acme, juntando Account: com accountName.",
+    "Declare a variable named accountName and store Acme. Then declare a variable named line and store Account: Acme by joining Account: with accountName.",
+    "Declare uma variável chamada accountName e guarde Acme. Depois declare uma variável chamada line e guarde Account: Acme, juntando Account: com accountName.",
     [
       runClean(
         "concatenation-account-line-name",
@@ -735,8 +735,8 @@ const concatenationExercises: ExerciseCard[] = [
   ),
   many(
     "concatenation-guests",
-    "Declare an Integer named guestCount and store 6. Then declare a String named label and store Guests: 6 by joining Guests: with guestCount.",
-    "Declare um Integer chamado guestCount e guarde 6. Depois declare uma String chamada label e guarde Guests: 6, juntando Guests: com guestCount.",
+    "Declare a variable named guestCount and store 6. Then declare a variable named label and store Guests: 6 by joining Guests: with guestCount.",
+    "Declare uma variável chamada guestCount e guarde 6. Depois declare uma variável chamada label e guarde Guests: 6, juntando Guests: com guestCount.",
     [
       runClean(
         "concatenation-guests-count",
@@ -756,8 +756,8 @@ const concatenationExercises: ExerciseCard[] = [
   ),
   many(
     "concatenation-active",
-    "Declare a Boolean named isActive and store true. Then declare a String named statusLine and store Active: true by joining Active: with isActive.",
-    "Declare um Boolean chamado isActive e guarde true. Depois declare uma String chamada statusLine e guarde Active: true, juntando Active: com isActive.",
+    "Declare a variable named isActive and store true. Then declare a variable named statusLine and store Active: true by joining Active: with isActive.",
+    "Declare uma variável chamada isActive e guarde true. Depois declare uma variável chamada statusLine e guarde Active: true, juntando Active: com isActive.",
     [
       runClean(
         "concatenation-active-flag",
@@ -777,8 +777,8 @@ const concatenationExercises: ExerciseCard[] = [
   ),
   many(
     "concatenation-discount",
-    "Declare a Boolean named hasDiscount and store false. Then declare a String named discountLine and store Discount: false by joining Discount: with hasDiscount.",
-    "Declare um Boolean chamado hasDiscount e guarde false. Depois declare uma String chamada discountLine e guarde Discount: false, juntando Discount: com hasDiscount.",
+    "Declare a variable named hasDiscount and store false. Then declare a variable named discountLine and store Discount: false by joining Discount: with hasDiscount.",
+    "Declare uma variável chamada hasDiscount e guarde false. Depois declare uma variável chamada discountLine e guarde Discount: false, juntando Discount: com hasDiscount.",
     [
       runClean(
         "concatenation-discount-flag",
@@ -798,8 +798,8 @@ const concatenationExercises: ExerciseCard[] = [
   ),
   many(
     "concatenation-total",
-    "Declare a Decimal named amount and store 19.99. Then declare a String named totalLine and store Total: 19.99 by joining Total: with amount.",
-    "Declare um Decimal chamado amount e guarde 19.99. Depois declare uma String chamada totalLine e guarde Total: 19.99, juntando Total: com amount.",
+    "Declare a variable named amount and store 19.99. Then declare a variable named totalLine and store Total: 19.99 by joining Total: with amount.",
+    "Declare uma variável chamada amount e guarde 19.99. Depois declare uma variável chamada totalLine e guarde Total: 19.99, juntando Total: com amount.",
     [
       runClean(
         "concatenation-total-amount",
@@ -819,8 +819,8 @@ const concatenationExercises: ExerciseCard[] = [
   ),
   many(
     "concatenation-close",
-    "Declare a Date named closeDate and store 15 March 2026. Then declare a String named closeLine and store the text for that day by joining Closes: with closeDate.",
-    "Declare uma Date chamada closeDate e guarde 15 de março de 2026. Depois declare uma String chamada closeLine e guarde o texto desse dia, juntando Closes: com closeDate.",
+    "Declare a variable named closeDate and store 15 March 2026. Then declare a variable named closeLine and store the text for that day by joining Closes: with closeDate.",
+    "Declare uma variável chamada closeDate e guarde 15 de março de 2026. Depois declare uma variável chamada closeLine e guarde o texto desse dia, juntando Closes: com closeDate.",
     [
       runClean(
         "concatenation-close-date",
@@ -840,8 +840,8 @@ const concatenationExercises: ExerciseCard[] = [
   ),
   many(
     "concatenation-full-name",
-    "Declare a String named firstName and store Ana. Declare a String named lastName and store Silva. Then declare a String named fullName and store Ana Silva by joining firstName, a space, and lastName.",
-    "Declare uma String chamada firstName e guarde Ana. Declare uma String chamada lastName e guarde Silva. Depois declare uma String chamada fullName e guarde Ana Silva, juntando firstName, um espaço e lastName.",
+    "Declare a variable named firstName and store Ana. Declare a variable named lastName and store Silva. Then declare a variable named fullName and store Ana Silva by joining firstName, a space, and lastName.",
+    "Declare uma variável chamada firstName e guarde Ana. Declare uma variável chamada lastName e guarde Silva. Depois declare uma variável chamada fullName e guarde Ana Silva, juntando firstName, um espaço e lastName.",
     [
       runClean(
         "concatenation-full-name-first",
@@ -1065,8 +1065,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-portion",
-    "Declare a Decimal named portion and store 0.25.",
-    "Declare um Decimal chamado portion e guarde 0.25.",
+    "Declare a variable named portion and store 0.25.",
+    "Declare uma variável chamada portion e guarde 0.25.",
     decimalIs("portion", "0.25"),
     "portion needs to be a Decimal with the value 0.25.",
     "portion precisa ser um Decimal com o valor 0.25.",
@@ -1074,8 +1074,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-holiday",
-    "Declare a Date named holidayDate and store 9 September 2026.",
-    "Declare uma Date chamada holidayDate e guarde 9 de setembro de 2026.",
+    "Declare a variable named holidayDate and store 9 September 2026.",
+    "Declare uma variável chamada holidayDate e guarde 9 de setembro de 2026.",
     valueIs("holidayDate", "Date.newInstance(2026, 9, 9)"),
     "holidayDate needs to be a Date for 9 September 2026.",
     "holidayDate precisa ser uma Date de 9 de setembro de 2026.",
@@ -1083,8 +1083,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-badge",
-    "Declare a String named prefix and store SF. Declare a String named code and store the text 100. Then declare a String named badge and store SF100 by joining prefix and code, with no space.",
-    "Declare uma String chamada prefix e guarde SF. Declare uma String chamada code e guarde o texto 100. Depois declare uma String chamada badge e guarde SF100, juntando prefix e code, sem espaço.",
+    "Declare a variable named prefix and store SF. Declare a variable named code and store the text 100. Then declare a variable named badge and store SF100 by joining prefix and code, with no space.",
+    "Declare uma variável chamada prefix e guarde SF. Declare uma variável chamada code e guarde o texto 100. Depois declare uma variável chamada badge e guarde SF100, juntando prefix e code, sem espaço.",
     [
       runClean(
         "mixed-badge-prefix",
@@ -1111,8 +1111,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-floor",
-    "Declare an Integer named floorNumber and store -3.",
-    "Declare um Integer chamado floorNumber e guarde -3.",
+    "Declare a variable named floorNumber and store -3.",
+    "Declare uma variável chamada floorNumber e guarde -3.",
     valueIs("floorNumber", "-3"),
     "floorNumber needs to be an Integer with the value -3.",
     "floorNumber precisa ser um Integer com o valor -3.",
@@ -1120,8 +1120,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-yes-code",
-    "Declare a String named answer and store Yes. Declare a String named code and store yes.",
-    "Declare uma String chamada answer e guarde Yes. Declare uma String chamada code e guarde yes.",
+    "Declare a variable named answer and store Yes. Declare a variable named code and store yes.",
+    "Declare uma variável chamada answer e guarde Yes. Declare uma variável chamada code e guarde yes.",
     [
       runClean(
         "mixed-yes-code-answer",
@@ -1141,8 +1141,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-can-view",
-    "Declare a Boolean named canView and store true, not the text true.",
-    "Declare um Boolean chamado canView e guarde true, não o texto true.",
+    "Declare a variable named canView and store true, not the text true.",
+    "Declare uma variável chamada canView e guarde true, não o texto true.",
     valueIs("canView", "true"),
     "canView needs to be a Boolean with the value true.",
     "canView precisa ser um Boolean com o valor true.",
@@ -1150,8 +1150,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-offset",
-    "Declare a Decimal named offset and store -1.5.",
-    "Declare um Decimal chamado offset e guarde -1.5.",
+    "Declare a variable named offset and store -1.5.",
+    "Declare uma variável chamada offset e guarde -1.5.",
     decimalIs("offset", "-1.5"),
     "offset needs to be a Decimal with the value -1.5.",
     "offset precisa ser um Decimal com o valor -1.5.",
@@ -1159,8 +1159,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-run-date",
-    "Declare a Date named runDate and store the day this code runs.",
-    "Declare uma Date chamada runDate e guarde o dia em que este código roda.",
+    "Declare a variable named runDate and store the day this code runs.",
+    "Declare uma variável chamada runDate e guarde o dia em que este código roda.",
     valueIs("runDate", "Date.today()"),
     "runDate needs to be a Date for the day this code runs.",
     "runDate precisa ser uma Date do dia em que este código roda.",
@@ -1168,8 +1168,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-rooms",
-    "Declare an Integer named roomCount and store 12. Then declare a String named line and store Rooms: 12 by joining Rooms: with roomCount.",
-    "Declare um Integer chamado roomCount e guarde 12. Depois declare uma String chamada line e guarde Rooms: 12, juntando Rooms: com roomCount.",
+    "Declare a variable named roomCount and store 12. Then declare a variable named line and store Rooms: 12 by joining Rooms: with roomCount.",
+    "Declare uma variável chamada roomCount e guarde 12. Depois declare uma variável chamada line e guarde Rooms: 12, juntando Rooms: com roomCount.",
     [
       runClean(
         "mixed-rooms-count",
@@ -1189,8 +1189,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-attendees",
-    "Declare an Integer named attendeeCount and store 2400.",
-    "Declare um Integer chamado attendeeCount e guarde 2400.",
+    "Declare a variable named attendeeCount and store 2400.",
+    "Declare uma variável chamada attendeeCount e guarde 2400.",
     valueIs("attendeeCount", "2400"),
     "attendeeCount needs to be an Integer with the value 2400.",
     "attendeeCount precisa ser um Integer com o valor 2400.",
@@ -1198,8 +1198,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-tag",
-    "Declare a String named tag and store empty text.",
-    "Declare uma String chamada tag e guarde um texto vazio.",
+    "Declare a variable named tag and store empty text.",
+    "Declare uma variável chamada tag e guarde um texto vazio.",
     valueIs("tag", "''"),
     "tag needs to be a String with no characters.",
     "tag precisa ser uma String sem nenhum caractere.",
@@ -1207,8 +1207,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-is-synced",
-    "Declare a Boolean named isSynced and leave the value off.",
-    "Declare um Boolean chamado isSynced e deixe o valor de fora.",
+    "Declare a variable named isSynced and leave the value off.",
+    "Declare uma variável chamada isSynced e deixe o valor de fora.",
     valueIs("isSynced", "null"),
     "isSynced needs to be a Boolean with no value stored.",
     "isSynced precisa ser um Boolean sem valor guardado.",
@@ -1216,8 +1216,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-balance-due",
-    "Declare a Decimal named balanceDue and store 0.0.",
-    "Declare um Decimal chamado balanceDue e guarde 0.0.",
+    "Declare a variable named balanceDue and store 0.0.",
+    "Declare uma variável chamada balanceDue e guarde 0.0.",
     decimalIs("balanceDue", "0.0"),
     "balanceDue needs to be a Decimal with the value 0.0.",
     "balanceDue precisa ser um Decimal com o valor 0.0.",
@@ -1225,8 +1225,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-hold",
-    "Declare a Date named holdDate and leave the value off.",
-    "Declare uma Date chamada holdDate e deixe o valor de fora.",
+    "Declare a variable named holdDate and leave the value off.",
+    "Declare uma variável chamada holdDate e deixe o valor de fora.",
     valueIs("holdDate", "null"),
     "holdDate needs to be a Date with no value stored.",
     "holdDate precisa ser uma Date sem valor guardado.",
@@ -1234,8 +1234,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-paid-line",
-    "Declare a Boolean named paidFlag and store false. Then declare a String named paidLine and store Paid: false by joining Paid: with paidFlag.",
-    "Declare um Boolean chamado paidFlag e guarde false. Depois declare uma String chamada paidLine e guarde Paid: false, juntando Paid: com paidFlag.",
+    "Declare a variable named paidFlag and store false. Then declare a variable named paidLine and store Paid: false by joining Paid: with paidFlag.",
+    "Declare uma variável chamada paidFlag e guarde false. Depois declare uma variável chamada paidLine e guarde Paid: false, juntando Paid: com paidFlag.",
     [
       runClean(
         "mixed-paid-line-flag",
@@ -1255,8 +1255,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-spare",
-    "Declare an Integer named spare and leave the value off.",
-    "Declare um Integer chamado spare e deixe o valor de fora.",
+    "Declare a variable named spare and leave the value off.",
+    "Declare uma variável chamada spare e deixe o valor de fora.",
     valueIs("spare", "null"),
     "spare needs to be an Integer with no value stored.",
     "spare precisa ser um Integer sem valor guardado.",
@@ -1264,8 +1264,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-reminder",
-    "Declare a String named reminder and leave the value off.",
-    "Declare uma String chamada reminder e deixe o valor de fora.",
+    "Declare a variable named reminder and leave the value off.",
+    "Declare uma variável chamada reminder e deixe o valor de fora.",
     valueIs("reminder", "null"),
     "reminder needs to be a String with no value stored.",
     "reminder precisa ser uma String sem valor guardado.",
@@ -1273,8 +1273,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-is-approved",
-    "Declare a Boolean named isApproved. On the next line, store true in isApproved.",
-    "Declare um Boolean chamado isApproved. Na linha seguinte, guarde true em isApproved.",
+    "Declare a variable named isApproved. On the next line, store true in isApproved.",
+    "Declare uma variável chamada isApproved. Na linha seguinte, guarde true em isApproved.",
     valueIs("isApproved", "true"),
     "isApproved needs to be a Boolean with the value true.",
     "isApproved precisa ser um Boolean com o valor true.",
@@ -1282,8 +1282,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-credit",
-    "Declare a Decimal named credit and leave the value off.",
-    "Declare um Decimal chamado credit e deixe o valor de fora.",
+    "Declare a variable named credit and leave the value off.",
+    "Declare uma variável chamada credit e deixe o valor de fora.",
     valueIs("credit", "null"),
     "credit needs to be a Decimal with no value stored.",
     "credit precisa ser um Decimal sem valor guardado.",
@@ -1291,8 +1291,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-ship",
-    "Declare a Date named shipDate. On the next line, store 20 August 2026 in shipDate.",
-    "Declare uma Date chamada shipDate. Na linha seguinte, guarde 20 de agosto de 2026 em shipDate.",
+    "Declare a variable named shipDate. On the next line, store 20 August 2026 in shipDate.",
+    "Declare uma variável chamada shipDate. Na linha seguinte, guarde 20 de agosto de 2026 em shipDate.",
     valueIs("shipDate", "Date.newInstance(2026, 8, 20)"),
     "shipDate needs to be a Date for 20 August 2026.",
     "shipDate precisa ser uma Date de 20 de agosto de 2026.",
@@ -1300,8 +1300,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-price-line",
-    "Declare a Decimal named unitPrice and store 8.5. Then declare a String named priceLine and store Price: 8.5 by joining Price: with unitPrice.",
-    "Declare um Decimal chamado unitPrice e guarde 8.5. Depois declare uma String chamada priceLine e guarde Price: 8.5, juntando Price: com unitPrice.",
+    "Declare a variable named unitPrice and store 8.5. Then declare a variable named priceLine and store Price: 8.5 by joining Price: with unitPrice.",
+    "Declare uma variável chamada unitPrice e guarde 8.5. Depois declare uma variável chamada priceLine e guarde Price: 8.5, juntando Price: com unitPrice.",
     [
       runClean(
         "mixed-price-line-price",
@@ -1321,8 +1321,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-attempts",
-    "Declare an Integer named attempts and store 1. On the next line, store 5 in attempts.",
-    "Declare um Integer chamado attempts e guarde 1. Na linha seguinte, guarde 5 em attempts.",
+    "Declare a variable named attempts and store 1. On the next line, store 5 in attempts.",
+    "Declare uma variável chamada attempts e guarde 1. Na linha seguinte, guarde 5 em attempts.",
     valueIs("attempts", "5"),
     "attempts needs to be an Integer with the value 5.",
     "attempts precisa ser um Integer com o valor 5.",
@@ -1330,8 +1330,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-city",
-    "Declare a String named city. On the next line, store Denver in city.",
-    "Declare uma String chamada city. Na linha seguinte, guarde Denver em city.",
+    "Declare a variable named city. On the next line, store Denver in city.",
+    "Declare uma variável chamada city. Na linha seguinte, guarde Denver em city.",
     valueIs("city", "'Denver'"),
     "city needs to be a String with the value Denver.",
     "city precisa ser uma String com o valor Denver.",
@@ -1339,8 +1339,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-is-draft",
-    "Declare a Boolean named isDraft and store true. On the next line, store false in isDraft.",
-    "Declare um Boolean chamado isDraft e guarde true. Na linha seguinte, guarde false em isDraft.",
+    "Declare a variable named isDraft and store true. On the next line, store false in isDraft.",
+    "Declare uma variável chamada isDraft e guarde true. Na linha seguinte, guarde false em isDraft.",
     valueIs("isDraft", "false"),
     "isDraft needs to be a Boolean with the value false.",
     "isDraft precisa ser um Boolean com o valor false.",
@@ -1348,8 +1348,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-cost",
-    "Declare a Decimal named cost. On the next line, store 7.25 in cost.",
-    "Declare um Decimal chamado cost. Na linha seguinte, guarde 7.25 em cost.",
+    "Declare a variable named cost. On the next line, store 7.25 in cost.",
+    "Declare uma variável chamada cost. Na linha seguinte, guarde 7.25 em cost.",
     decimalIs("cost", "7.25"),
     "cost needs to be a Decimal with the value 7.25.",
     "cost precisa ser um Decimal com o valor 7.25.",
@@ -1357,8 +1357,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-event",
-    "Declare a Date named eventDate and store 1 May 2026. On the next line, store 2 May 2026 in eventDate.",
-    "Declare uma Date chamada eventDate e guarde 1 de maio de 2026. Na linha seguinte, guarde 2 de maio de 2026 em eventDate.",
+    "Declare a variable named eventDate and store 1 May 2026. On the next line, store 2 May 2026 in eventDate.",
+    "Declare uma variável chamada eventDate e guarde 1 de maio de 2026. Na linha seguinte, guarde 2 de maio de 2026 em eventDate.",
     valueIs("eventDate", "Date.newInstance(2026, 5, 2)"),
     "eventDate needs to be a Date for 2 May 2026.",
     "eventDate precisa ser uma Date de 2 de maio de 2026.",
@@ -1366,8 +1366,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-starts",
-    "Declare a Date named startDate and store 1 June 2026. Then declare a String named startLine and store the text for that day by joining Starts: with startDate.",
-    "Declare uma Date chamada startDate e guarde 1 de junho de 2026. Depois declare uma String chamada startLine e guarde o texto desse dia, juntando Starts: com startDate.",
+    "Declare a variable named startDate and store 1 June 2026. Then declare a variable named startLine and store the text for that day by joining Starts: with startDate.",
+    "Declare uma variável chamada startDate e guarde 1 de junho de 2026. Depois declare uma variável chamada startLine e guarde o texto desse dia, juntando Starts: com startDate.",
     [
       runClean(
         "mixed-starts-date",
@@ -1387,8 +1387,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-room",
-    "Declare an Integer named roomNumber. On the next line, store 14 in roomNumber.",
-    "Declare um Integer chamado roomNumber. Na linha seguinte, guarde 14 em roomNumber.",
+    "Declare a variable named roomNumber. On the next line, store 14 in roomNumber.",
+    "Declare uma variável chamada roomNumber. Na linha seguinte, guarde 14 em roomNumber.",
     valueIs("roomNumber", "14"),
     "roomNumber needs to be an Integer with the value 14.",
     "roomNumber precisa ser um Integer com o valor 14.",
@@ -1396,8 +1396,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-owner",
-    "Declare a String named ownerName and store O'Neil.",
-    "Declare uma String chamada ownerName e guarde O'Neil.",
+    "Declare a variable named ownerName and store O'Neil.",
+    "Declare uma variável chamada ownerName e guarde O'Neil.",
     valueIs("ownerName", "'O\\'Neil'"),
     "ownerName needs to be a String with the value O'Neil.",
     "ownerName precisa ser uma String com o valor O'Neil.",
@@ -1405,8 +1405,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-is-member",
-    "Declare a Boolean named isMember and store false. On the next line, store true in isMember.",
-    "Declare um Boolean chamado isMember e guarde false. Na linha seguinte, guarde true em isMember.",
+    "Declare a variable named isMember and store false. On the next line, store true in isMember.",
+    "Declare uma variável chamada isMember e guarde false. Na linha seguinte, guarde true em isMember.",
     valueIs("isMember", "true"),
     "isMember needs to be a Boolean with the value true.",
     "isMember precisa ser um Boolean com o valor true.",
@@ -1414,8 +1414,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-list-price",
-    "Declare a Decimal named listPrice and store 9.99. On the next line, store 7.5 in listPrice.",
-    "Declare um Decimal chamado listPrice e guarde 9.99. Na linha seguinte, guarde 7.5 em listPrice.",
+    "Declare a variable named listPrice and store 9.99. On the next line, store 7.5 in listPrice.",
+    "Declare uma variável chamada listPrice e guarde 9.99. Na linha seguinte, guarde 7.5 em listPrice.",
     decimalIs("listPrice", "7.5"),
     "listPrice needs to be a Decimal with the value 7.5.",
     "listPrice precisa ser um Decimal com o valor 7.5.",
@@ -1423,8 +1423,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-year-end",
-    "Declare a Date named yearEnd and store 31 December 2027.",
-    "Declare uma Date chamada yearEnd e guarde 31 de dezembro de 2027.",
+    "Declare a variable named yearEnd and store 31 December 2027.",
+    "Declare uma variável chamada yearEnd e guarde 31 de dezembro de 2027.",
     valueIs("yearEnd", "Date.newInstance(2027, 12, 31)"),
     "yearEnd needs to be a Date for 31 December 2027.",
     "yearEnd precisa ser uma Date de 31 de dezembro de 2027.",
@@ -1432,8 +1432,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-leo",
-    "Declare a String named firstName and store Leo. Declare a String named lastName and store Costa. Then declare a String named fullName and store Leo Costa by joining firstName, a space, and lastName.",
-    "Declare uma String chamada firstName e guarde Leo. Declare uma String chamada lastName e guarde Costa. Depois declare uma String chamada fullName e guarde Leo Costa, juntando firstName, um espaço e lastName.",
+    "Declare a variable named firstName and store Leo. Declare a variable named lastName and store Costa. Then declare a variable named fullName and store Leo Costa by joining firstName, a space, and lastName.",
+    "Declare uma variável chamada firstName e guarde Leo. Declare uma variável chamada lastName e guarde Costa. Depois declare uma variável chamada fullName e guarde Leo Costa, juntando firstName, um espaço e lastName.",
     [
       runClean(
         "mixed-leo-first",
@@ -1460,8 +1460,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-party",
-    "Declare an Integer named adultCount and store 2. Declare an Integer named childCount and store 1.",
-    "Declare um Integer chamado adultCount e guarde 2. Declare um Integer chamado childCount e guarde 1.",
+    "Declare a variable named adultCount and store 2. Declare a variable named childCount and store 1.",
+    "Declare uma variável chamada adultCount e guarde 2. Declare uma variável chamada childCount e guarde 1.",
     [
       runClean(
         "mixed-party-adults",
@@ -1481,8 +1481,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   one(
     "mixed-stage",
-    "Declare a String named stage and store New. On the next line, store Working in stage.",
-    "Declare uma String chamada stage e guarde New. Na linha seguinte, guarde Working em stage.",
+    "Declare a variable named stage and store New. On the next line, store Working in stage.",
+    "Declare uma variável chamada stage e guarde New. Na linha seguinte, guarde Working em stage.",
     valueIs("stage", "'Working'"),
     "stage needs to be a String with the value Working.",
     "stage precisa ser uma String com o valor Working.",
@@ -1490,8 +1490,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-address",
-    "Declare a Boolean named hasStreet and store true. Declare a Boolean named hasZip and store false.",
-    "Declare um Boolean chamado hasStreet e guarde true. Declare um Boolean chamado hasZip e guarde false.",
+    "Declare a variable named hasStreet and store true. Declare a variable named hasZip and store false.",
+    "Declare uma variável chamada hasStreet e guarde true. Declare uma variável chamada hasZip e guarde false.",
     [
       runClean(
         "mixed-address-street",
@@ -1511,8 +1511,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-tax-tip",
-    "Declare a Decimal named tax and store 1.5. Declare a Decimal named tip and store 2.0.",
-    "Declare um Decimal chamado tax e guarde 1.5. Declare um Decimal chamado tip e guarde 2.0.",
+    "Declare a variable named tax and store 1.5. Declare a variable named tip and store 2.0.",
+    "Declare uma variável chamada tax e guarde 1.5. Declare uma variável chamada tip e guarde 2.0.",
     [
       runClean(
         "mixed-tax-tip-tax",
@@ -1532,8 +1532,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-window",
-    "Declare a Date named openDate and store 1 March 2026. Declare a Date named closeOut and store 31 March 2026.",
-    "Declare uma Date chamada openDate e guarde 1 de março de 2026. Declare uma Date chamada closeOut e guarde 31 de março de 2026.",
+    "Declare a variable named openDate and store 1 March 2026. Declare a variable named closeOut and store 31 March 2026.",
+    "Declare uma variável chamada openDate e guarde 1 de março de 2026. Declare uma variável chamada closeOut e guarde 31 de março de 2026.",
     [
       runClean(
         "mixed-window-open",
@@ -1553,8 +1553,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-rush",
-    "Declare an Integer named quantity and store the number 10, not the text 10. Declare a Boolean named isTaxable and store true. Declare a String named note and store Rush.",
-    "Declare um Integer chamado quantity e guarde o número 10, não o texto 10. Declare um Boolean chamado isTaxable e guarde true. Declare uma String chamada note e guarde Rush.",
+    "Declare a variable named quantity and store the number 10, not the text 10. Declare a variable named isTaxable and store true. Declare a variable named note and store Rush.",
+    "Declare uma variável chamada quantity e guarde o número 10, não o texto 10. Declare uma variável chamada isTaxable e guarde true. Declare uma variável chamada note e guarde Rush.",
     [
       runClean(
         "mixed-rush-quantity",
@@ -1581,8 +1581,8 @@ const mixedReviewExercises: ExerciseCard[] = [
   ),
   many(
     "mixed-summary",
-    "Declare an Integer named guestCount and store 4. Declare a Decimal named fee and store 12.5. Then declare a String named summary and store Guests: 4 Fee: 12.5 by joining the text Guests: , guestCount, the text Fee: , and fee.",
-    "Declare um Integer chamado guestCount e guarde 4. Declare um Decimal chamado fee e guarde 12.5. Depois declare uma String chamada summary e guarde Guests: 4 Fee: 12.5, juntando o texto Guests: , guestCount, o texto Fee:  e fee.",
+    "Declare a variable named guestCount and store 4. Declare a variable named fee and store 12.5. Then declare a variable named summary and store Guests: 4 Fee: 12.5 by joining the text Guests: , guestCount, the text Fee: , and fee.",
+    "Declare uma variável chamada guestCount e guarde 4. Declare uma variável chamada fee e guarde 12.5. Depois declare uma variável chamada summary e guarde Guests: 4 Fee: 12.5, juntando o texto Guests: , guestCount, o texto Fee:  e fee.",
     [
       runClean(
         "mixed-summary-count",

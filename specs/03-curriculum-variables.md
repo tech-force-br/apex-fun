@@ -44,6 +44,8 @@ The owner chooses how many theory cards and exercise cards each topic has, and c
 
 The seed places ten exercises after the theory cards on Integer, String, Boolean, Decimal, Date, and Concatenation. Mixed review has 50 exercises.
 
+The first two exercise prompts on Integer, String, Boolean, Decimal, Date, and Concatenation name the Apex type in the declare instruction. From the third exercise on, the prompt names the variable and the value and does not name the type. The student chooses the type from that topic's theory and from the value. Mixed review names the type on the first ten exercises. From the eleventh exercise on, those prompts do not name the type. A later prompt can still contrast a value with text, such as the number 10 rather than the text 10, or true rather than the text true.
+
 Superseded: a seed of one example exercise on each of those six topics.
 
 Each primitive topic includes one exercise that declares a variable and leaves the value off, so it is null. A check on that card accepts null. It does not require the characters `= null`.
