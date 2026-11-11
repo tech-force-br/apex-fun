@@ -130,6 +130,7 @@ function addValuePhrase(start: number, phrase: string, ranges: Range[]) {
     }
     return;
   }
+  if (phrase === "the text for that day" || phrase === "o texto desse dia") return;
   if (phrase.length > 0) {
     ranges.push({ start, end: start + phrase.length, kind: "underline" });
   }
@@ -151,7 +152,9 @@ function addJoiningValues(text: string, ranges: Range[]) {
     if (literal.endsWith(".")) literal = literal.slice(0, -1);
     if (!literal || /^(?:for|desse)\b/.test(literal)) continue;
     const start = base + (match.index ?? 0) + lead;
-    ranges.push({ start, end: start + literal.length, kind: "underline" });
+    let end = start + literal.length;
+    if (literal.endsWith(":") && text[end] === " ") end += 1;
+    ranges.push({ start, end, kind: "underline" });
   }
 
   for (const match of clause.matchAll(/(?:by joining|juntando) ([A-Za-z]+:)/g)) {
