@@ -27,7 +27,7 @@ export function StudyModuleView() {
   const { selected, finished, unlockAll } = gate;
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
+    <main className="mx-auto w-full max-w-xl flex-1 px-6 py-10">
       <Link
         href="/study"
         transitionTypes={drillBack}

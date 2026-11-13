@@ -1,39 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { PageScroll } from "@/components/site-footer";
-import { StudyHeader } from "@/components/study-header";
-import { useLocale } from "@/components/locale-provider";
-import { useMockAuth } from "@/components/mock-auth-provider";
-import { chromeCopy } from "@/lib/locale";
+import type { ReactNode } from "react";
+import { SignedInFrame } from "@/components/signed-in-frame";
 
-export default function SignedInLayout({ children }: LayoutProps<"/">) {
-  const router = useRouter();
-  const { locale } = useLocale();
-  const { ready, session } = useMockAuth();
-
-  useEffect(() => {
-    if (ready && !session) router.replace("/");
-  }, [ready, session, router]);
-
-  if (!ready || !session) {
-    return (
-      <PageScroll>
-        <main
-          className="relative flex min-h-full items-center justify-center px-6 py-12"
-          aria-busy="true"
-        >
-          <p className="text-sm text-muted">{chromeCopy[locale].loading}</p>
-        </main>
-      </PageScroll>
-    );
-  }
-
-  return (
-    <div className="relative flex min-h-0 flex-1 flex-col">
-      <StudyHeader />
-      <PageScroll className="relative">{children}</PageScroll>
-    </div>
-  );
+export default function SignedInLayout({ children }: { children: ReactNode }) {
+  return <SignedInFrame>{children}</SignedInFrame>;
 }
