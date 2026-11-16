@@ -10,12 +10,10 @@ export const authCopy: Record<
     email: string;
     password: string;
     emailPlaceholder: string;
-    languageHelp: string;
     submitSignIn: string;
     submitSignUp: string;
     or: string;
     google: string;
-    mockNote: string;
     errors: {
       missing_email: string;
       invalid_email: string;
@@ -31,12 +29,10 @@ export const authCopy: Record<
     email: "Email",
     password: "Password",
     emailPlaceholder: "you@example.com",
-    languageHelp: "Lessons and the site will use this language.",
     submitSignIn: "Sign in",
     submitSignUp: "Create account",
     or: "or",
     google: "Continue with Google",
-    mockNote: "Demo only. Accounts are not saved yet.",
     errors: {
       missing_email: "Enter an email address.",
       invalid_email: "Enter a valid email address.",
@@ -51,12 +47,10 @@ export const authCopy: Record<
     email: "E-mail",
     password: "Senha",
     emailPlaceholder: "voce@exemplo.com",
-    languageHelp: "As lições e o site vão usar este idioma.",
     submitSignIn: "Entrar",
     submitSignUp: "Criar conta",
     or: "ou",
     google: "Continuar com o Google",
-    mockNote: "Só uma demonstração. As contas ainda não são salvas.",
     errors: {
       missing_email: "Digite um e-mail.",
       invalid_email: "Digite um e-mail válido.",

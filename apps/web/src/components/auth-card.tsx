@@ -86,7 +86,6 @@ export function AuthCard() {
       <h2 className="text-2xl font-bold tracking-tight text-ink">
         {mode === "signin" ? copy.signIn : copy.signUp}
       </h2>
-      <p className="mt-2 text-sm text-muted">{copy.languageHelp}</p>
 
       <SegmentedControl
         className="mt-6"
@@ -162,8 +161,6 @@ export function AuthCard() {
         <GoogleMark />
         {copy.google}
       </button>
-
-      <p className="mt-5 text-center text-xs text-muted">{copy.mockNote}</p>
     </section>
   );
 }
