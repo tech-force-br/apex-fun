@@ -95,7 +95,7 @@ export const studyCopy: Record<
     locked: "Bloqueado",
     theory: "Teoria",
     exercises: (count) => exerciseLine(count, "exercício", "exercícios"),
-    backToMap: "Todos os módulos",
+    backToMap: "Módulos",
     topicsTitle: "Tópicos",
     folder: "Pasta",
     exercise: "Exercício",
