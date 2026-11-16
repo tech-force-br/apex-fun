@@ -4,6 +4,7 @@ import type {
   HiddenTest,
 } from "@/lib/curriculum";
 import type { Locale } from "@/lib/locale";
+import { applyValueReplacements } from "@/lib/value-replacements";
 
 /** What `POST /run` returns. The website decides pass/fail. */
 export type RunnerBody = {
@@ -133,7 +134,9 @@ export async function scoreTest(
   locale: Locale,
   runApex: (apex: string) => Promise<RunnerBody>,
 ): Promise<ExerciseCheck> {
-  const { program, studentLines } = glueProgram(studentCode, test.checkApex);
+  const source = applyValueReplacements(studentCode, test.replacements);
+  const replaced = source !== studentCode;
+  const { program, studentLines } = glueProgram(source, test.checkApex);
   let run: RunnerBody;
   try {
     run = await runApex(program);
@@ -145,7 +148,9 @@ export async function scoreTest(
   if (run.clean) {
     return { passed: true, unavailable: false, message: "", log: run.log };
   }
-  if (!run.compiled && studentCompile(run.raw, studentLines)) {
+  // The rewritten snippet is not the student's code. A compile error there
+  // is this test failing, so the new values stay hidden.
+  if (!replaced && !run.compiled && studentCompile(run.raw, studentLines)) {
     return missed(compilePositionMessage(run.log, locale), run.log);
   }
   return missed(test.messages[locale]?.trim() ?? "", run.log);

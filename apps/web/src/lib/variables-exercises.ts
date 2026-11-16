@@ -35,6 +35,7 @@ function runClean(
     checkApex,
     messages: { en, "pt-BR": pt },
     previewCode,
+    replacements: [],
   };
 }
 

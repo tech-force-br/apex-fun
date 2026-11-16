@@ -25,6 +25,8 @@ if (age != 20) {
 
 The site sends the student snippet alone first. If the runner reports that it did not compile, the site matches that raw compiler text against the shared compile-fail list and stops. It does not glue a check. If the snippet compiled, the site discards that result and runs every run-clean test, in card order, each as its own program. Stop at the first failure from the site’s point of view. A compile-fail explanation does not change the run-clean glue.
 
+When that test lists value replacements, the site rewrites the snippet before gluing the check. See [06-exercise-checks.md](06-exercise-checks.md). The snippet sent for the first compile is never rewritten. Each test rewrites from that original snippet, not from an earlier test.
+
 Superseded: running a compile-fail test as its own program that passed only when the code failed to compile, in card order, and only when that card had one.
 
 ## Runner service

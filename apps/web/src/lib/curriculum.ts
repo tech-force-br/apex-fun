@@ -23,11 +23,19 @@ export type CompileFailTest = {
   previewCode: string;
 };
 
+/** A plain assignment to `name` uses `value` before this hidden test runs. */
+export type ValueReplacement = {
+  id: string;
+  name: string;
+  value: string;
+};
+
 export type HiddenTest = {
   id: string;
   checkApex: string;
   messages: LocalizedText;
   previewCode: string;
+  replacements: ValueReplacement[];
 };
 
 export type TheoryCard = {

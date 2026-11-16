@@ -29,6 +29,7 @@ Blocked until filled:
 - English and Portuguese student messages on every run-clean test, and on every compile-fail test
 - Match text on every compile-fail test that exists
 - At least one run-clean hidden test per exercise
+- A value replacement that the owner started: one Apex variable name, one new value, and that name only once on the test. A row with both sides blank is dropped
 
 The shared compile-fail list may be empty. Apex samples and run-clean hidden-check Apex stay English. Compile-fail tests have no check Apex.
 
@@ -36,6 +37,7 @@ The shared compile-fail list may be empty. Apex samples and run-clean hidden-che
 
 - Prompt EN / Prompt pt-BR, as rich text (bold, italic, underline, bullets, pasted screenshots)
 - Run-clean hidden tests (one or more), each with:
+  - Value replacements (optional): variable name, new Apex value
   - Check Apex (English), student message EN, student message pt-BR
   - Preview box (sample student code + last run result)
 
@@ -56,7 +58,7 @@ Owner admin lives at `/admin` after mock sign-in. The builder creates and edits 
 
 Edits apply only in the browser tab’s memory. Refresh restores the seed curriculum, including the seed compile-fail list. Not stored in Supabase yet.
 
-Run preview of a shared compile-fail test sends that draft and scores that test only. Run preview of a run-clean test sends that draft and the compile-fail list saved in this tab, then follows the check order in [06-exercise-checks.md](06-exercise-checks.md) for that sample and that one test.
+Run preview of a shared compile-fail test sends that draft and scores that test only. Run preview of a run-clean test sends that draft, including its value replacements, and the compile-fail list saved in this tab, then follows the check order in [06-exercise-checks.md](06-exercise-checks.md) for that sample and that one test.
 
 Not in this slice: student progress view. Edits are still tab memory, so preview sends the draft test to the action. A student check loads the seed card and the seed compile-fail list on the server and does not use unsaved admin edits.
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { Fragment, useId, useState } from "react";
 import { CheckResult, RunSpinner } from "@/components/check-result";
 import { useMockAuth } from "@/components/mock-auth-provider";
 import { adminCopy } from "@/lib/admin-copy";
@@ -9,6 +9,7 @@ import { syncSessionCookie } from "@/lib/mock-auth";
 import type { ExerciseCheck } from "@/lib/score-run";
 import {
   emptyHiddenTest,
+  emptyValueReplacement,
   moveById,
   useCompileFailTests,
   type CardDraft,
@@ -16,12 +17,13 @@ import {
   type SaveIssue,
   type TheoryDraft,
 } from "@/lib/curriculum-store";
-import type { HiddenTest } from "@/lib/curriculum";
+import type { HiddenTest, ValueReplacement } from "@/lib/curriculum";
 import {
   AdminForm,
   Field,
   LocalizedFields,
   MoveButtons,
+  TextInput,
 } from "@/components/admin-fields";
 import { CodeEditor } from "@/components/code-editor";
 import { useLocale } from "@/components/locale-provider";
@@ -215,11 +217,15 @@ function ExerciseFields({
                 </div>
               </div>
 
-              <Field
-                label={copy.checkApex}
-                htmlFor={`${test.id}-check`}
-                hint={copy.checkApexHelp}
-              >
+              <ValueReplacements
+                test={test}
+                locked={locked}
+                onChange={(replacements) =>
+                  patchTest(index, { ...test, replacements })
+                }
+              />
+
+              <Field label={copy.checkApex} htmlFor={`${test.id}-check`}>
                 <div className="mt-1.5">
                   <div
                     className={locked ? "pointer-events-none opacity-60" : undefined}
@@ -264,6 +270,121 @@ function ExerciseFields({
         </ol>
       </div>
     </>
+  );
+}
+
+function ValueReplacements({
+  test,
+  locked,
+  onChange,
+}: {
+  test: HiddenTest;
+  locked: boolean;
+  onChange: (replacements: ValueReplacement[]) => void;
+}) {
+  const { locale } = useLocale();
+  const copy = adminCopy[locale];
+  const stored = test.replacements;
+  const blankId = `${test.id}-replacement`;
+  const showingBlank = stored.length === 0;
+  const rows = showingBlank
+    ? [{ id: blankId, name: "", value: "" }]
+    : stored;
+  const stepButton =
+    "inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border border-dashed border-line bg-white text-lg font-bold text-muted hover:border-accent hover:text-ink disabled:cursor-not-allowed disabled:opacity-40";
+
+  function write(next: ValueReplacement[]) {
+    onChange(next);
+  }
+
+  function patchRow(rowIndex: number, next: ValueReplacement) {
+    if (showingBlank) {
+      write([next]);
+      return;
+    }
+    const replacements = stored.slice();
+    replacements[rowIndex] = next;
+    write(replacements);
+  }
+
+  function addAfter(rowIndex: number) {
+    const created = emptyValueReplacement();
+    if (showingBlank) {
+      write([{ id: blankId, name: "", value: "" }, created]);
+      return;
+    }
+    const replacements = stored.slice();
+    replacements.splice(rowIndex + 1, 0, created);
+    write(replacements);
+  }
+
+  function removeRow(rowIndex: number) {
+    if (rows.length === 1) {
+      if (!showingBlank) write([]);
+      return;
+    }
+    write(stored.filter((_, index) => index !== rowIndex));
+  }
+
+  return (
+    <div
+      className={`space-y-2 ${locked ? "pointer-events-none opacity-60" : ""}`}
+      aria-busy={locked}
+    >
+      <h4 className="text-sm text-ink">{copy.replacements}</h4>
+      <div className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.4fr)_auto] items-center gap-x-3 gap-y-1.5 text-xs text-muted">
+        <span>{copy.replacementVariable}</span>
+        <span>{copy.replacementValue}</span>
+        {/* In flow on purpose. An sr-only label is position:absolute and would not hold this cell, so the first input would sit on the header row. */}
+        <span aria-hidden="true" />
+        {rows.map((row, rowIndex) => (
+          <Fragment key={row.id}>
+            <TextInput
+              id={`${row.id}-name`}
+              value={row.name}
+              bare
+              mono
+              disabled={locked}
+              placeholder="car"
+              ariaLabel={copy.replacementVariable}
+              onChange={(name) => patchRow(rowIndex, { ...row, name })}
+            />
+            <TextInput
+              id={`${row.id}-value`}
+              value={row.value}
+              bare
+              mono
+              disabled={locked}
+              placeholder="'Toyota'"
+              ariaLabel={copy.replacementValue}
+              onChange={(value) => patchRow(rowIndex, { ...row, value })}
+            />
+            <span className="flex shrink-0 justify-end gap-1">
+              <button
+                type="button"
+                disabled={locked}
+                aria-label={
+                  rows.length === 1 ? copy.clearReplacement : copy.remove
+                }
+                onClick={() => removeRow(rowIndex)}
+                className={stepButton}
+              >
+                −
+              </button>
+              <button
+                type="button"
+                disabled={locked}
+                aria-label={copy.addReplacement}
+                onClick={() => addAfter(rowIndex)}
+                className={stepButton}
+              >
+                +
+              </button>
+            </span>
+          </Fragment>
+        ))}
+      </div>
+    </div>
   );
 }
 

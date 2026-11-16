@@ -43,7 +43,7 @@ Do not run student Apex in Supabase Edge Functions either.
 1. Confirm the user is logged in
 2. Load the exercise, its run-clean hidden tests, and the shared compile-fail list
 3. Compile the student snippet on its own. If it does not compile, match the shared compile-fail list and stop. If it compiles, run the card's run-clean tests in card order until one fails. An empty shared list still stops on a compile error and shows the Apex error only.
-4. For each test, until one fails: build that test's program (see [13-runner.md](13-runner.md)), POST it to the runner with a shared secret, and score it.
+4. For each test, until one fails: build that test's program (see [13-runner.md](13-runner.md)). When the test lists value replacements, rewrite those assignments in a copy of the original snippet first. POST the program to the runner with a shared secret, and score it.
 5. Save pass / first-try / passing code in Supabase
 6. Return log + pass/fail + the first student message if any
 

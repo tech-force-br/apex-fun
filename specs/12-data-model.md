@@ -16,7 +16,7 @@ Row Level Security: a student reads and writes only their own progress. Admin by
 - `cards` — topic id, type (`theory` | `exercise`), sort order
 - `theory_cards` — rich-text body EN/PT (paragraphs, bullets, bold, italic, underline, inline images), optional read-only Apex sample
 - `exercises` — rich-text prompt EN/PT (paragraphs, bullets, bold, italic, underline, inline images)
-- `hidden_tests` — exercise id, sort order, check Apex, message EN/PT, sample preview code. Run-clean only
+- `hidden_tests` — exercise id, sort order, check Apex, message EN/PT, sample preview code, value replacements (variable name, new Apex value). Run-clean only. An empty replacement list leaves the student snippet unchanged
 - `compile_fail_tests` — site-wide, no exercise id, sort order, sample preview code, exactly one match (match text, message EN/PT). No check Apex. Every exercise uses this list
 
 ## Progress

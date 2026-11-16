@@ -58,6 +58,33 @@ if (someCondition) {
 
 Later modules may wrap as a class or method without changing this v1 rule.
 
+### Value replacements
+
+A run-clean test may list value replacements. Each one names a variable and gives a new Apex value. The list may be empty.
+
+The first compile still uses the student snippet unchanged. Replacements apply only when that test's program is built.
+
+For each listed name, every plain assignment to that variable uses the new value as its right-hand side. `==`, `+=`, and other compound operators stay as the student wrote them. Text inside strings and comments stays. Other variables stay. Apex names match ignoring case. The same variable is listed once on a test.
+
+A student who types the finished answer, instead of computing it from the variables, keeps that finished answer. The check then sees the new inputs and the old answer, and fails.
+
+The prompt's own values belong on a test with no replacements. A replacement does not check those original values. It checks the result after the new values.
+
+The new value is Apex, in English, on one line. The owner writes `'Toyota'` or `42`, including quotes when the value is text.
+
+```apex
+String car = 'Toyota';
+String year = '2005';
+String fullName = car + year;
+if (fullName != 'Toyota2005') {
+    System.assert(false);
+}
+```
+
+The student wrote `'Honda'` and `'1991'`. This test replaced those two assignments. `fullName = 'Honda1991'` stays `'Honda1991'` and fails.
+
+If the rewritten program does not compile, that hidden test fails. The student sees that test's message, not the compiler text of the rewritten snippet.
+
 ## Shared compile-fail tests
 
 One list for the whole site. The owner adds, edits, reorders, and removes tests in that list's own place in the content admin. Not on an exercise card.

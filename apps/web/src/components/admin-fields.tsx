@@ -4,8 +4,10 @@ import { useId, type ReactNode } from "react";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import type { LocalizedText } from "@/lib/curriculum";
 
-export const fieldClassName =
-  "mt-1.5 w-full rounded-md border border-line bg-white px-3 py-2.5 text-ink outline-none placeholder:text-muted/80 focus:border-accent focus:ring-2 focus:ring-accent/30";
+const fieldControlClassName =
+  "w-full rounded-md border border-line bg-white px-3 py-2.5 text-ink outline-none placeholder:text-muted/80 focus:border-accent focus:ring-2 focus:ring-accent/30";
+
+export const fieldClassName = `mt-1.5 ${fieldControlClassName}`;
 
 export const textareaClassName = `${fieldClassName} min-h-32 resize-y`;
 
@@ -37,12 +39,18 @@ export function TextInput({
   onChange,
   placeholder,
   ariaLabel,
+  mono,
+  bare,
+  disabled,
 }: {
   id: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   ariaLabel?: string;
+  mono?: boolean;
+  bare?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <input
@@ -50,8 +58,10 @@ export function TextInput({
       value={value}
       placeholder={placeholder}
       aria-label={ariaLabel}
+      disabled={disabled}
+      spellCheck={mono ? false : undefined}
       onChange={(event) => onChange(event.target.value)}
-      className={fieldClassName}
+      className={`${bare ? "" : "mt-1.5 "}min-w-0 ${fieldControlClassName}${mono ? " font-mono text-sm" : ""}`}
     />
   );
 }

@@ -7,6 +7,7 @@ import type {
   CompileFailTest,
   ExerciseCard,
   HiddenTest,
+  ValueReplacement,
 } from "@/lib/curriculum";
 import { curriculum } from "@/lib/curriculum";
 import type { Locale } from "@/lib/locale";
@@ -100,13 +101,30 @@ function asMatch(value: unknown): CompileFailMatch | null {
   return { id: matchId, text, messages: { en, "pt-BR": pt } };
 }
 
+function asReplacements(value: unknown): ValueReplacement[] | null {
+  if (value == null) return [];
+  if (!Array.isArray(value) || value.length > 20) return null;
+  const rows: ValueReplacement[] = [];
+  for (const item of value) {
+    if (!item || typeof item !== "object") return null;
+    const row = item as ValueReplacement;
+    const id = asText(row.id, 200);
+    const name = asText(row.name, 80);
+    const next = asText(row.value, 500);
+    if (!id || name == null || next == null) return null;
+    rows.push({ id, name, value: next });
+  }
+  return rows;
+}
+
 function asTest(value: unknown): HiddenTest | null {
   if (!value || typeof value !== "object") return null;
   const test = value as HiddenTest;
   const id = asText(test.id, 200);
   const checkApex = asText(test.checkApex, MAX_SOURCE);
   const previewCode = asText(test.previewCode, MAX_SOURCE);
-  if (!id || checkApex == null || previewCode == null) return null;
+  const replacements = asReplacements(test.replacements);
+  if (!id || checkApex == null || previewCode == null || !replacements) return null;
   const en = asText(test.messages?.en, 2_000);
   const pt = asText(test.messages?.["pt-BR"], 2_000);
   if (en == null || pt == null) return null;
@@ -115,6 +133,7 @@ function asTest(value: unknown): HiddenTest | null {
     checkApex,
     messages: { en, "pt-BR": pt },
     previewCode,
+    replacements,
   };
 }
 

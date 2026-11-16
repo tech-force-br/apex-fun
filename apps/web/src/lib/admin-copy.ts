@@ -50,7 +50,11 @@ export const adminCopy: Record<
     addCompileFail: string;
     compileFailN: (n: number) => string;
     checkApex: string;
-    checkApexHelp: string;
+    replacements: string;
+    replacementVariable: string;
+    replacementValue: string;
+    addReplacement: string;
+    clearReplacement: string;
     compileMatch: string;
     compileMatchHelp: string;
     testMessageEn: string;
@@ -118,8 +122,11 @@ export const adminCopy: Record<
     addCompileFail: "Add compile-fail test",
     compileFailN: (n) => `Compile-fail test ${n}`,
     checkApex: "Check Apex (English)",
-    checkApexHelp:
-      "Small snippet that runs after the student code, in the same scope.",
+    replacements: "Value replacements",
+    replacementVariable: "Variable",
+    replacementValue: "New value",
+    addReplacement: "Add replacement",
+    clearReplacement: "Clear",
     compileMatch: "Compile-fail match text",
     compileMatchHelp:
       "Used when the student's code fails to compile. The Apex error must contain this text.",
@@ -158,6 +165,10 @@ export const adminCopy: Record<
           return `Hidden test ${n}: English student message is required.`;
         case "test_message_pt":
           return `Hidden test ${n}: Portuguese student message is required.`;
+        case "replacement_fields":
+          return `Hidden test ${n}: each value replacement needs one variable name and a new value.`;
+        case "replacement_duplicate":
+          return `Hidden test ${n}: replace each variable only once.`;
         case "compile_match":
           return `Compile-fail test ${n}: match text is required.`;
         case "compile_message_en":
@@ -219,8 +230,11 @@ export const adminCopy: Record<
     addCompileFail: "Adicionar teste de falha de compilação",
     compileFailN: (n) => `Teste de falha de compilação ${n}`,
     checkApex: "Apex de verificação (inglês)",
-    checkApexHelp:
-      "Trecho curto que roda depois do código do aluno, no mesmo escopo.",
+    replacements: "Trocas de valor",
+    replacementVariable: "Variável",
+    replacementValue: "Novo valor",
+    addReplacement: "Adicionar troca",
+    clearReplacement: "Limpar",
     compileMatch: "Texto da falha de compilação",
     compileMatchHelp:
       "Usado quando o código do aluno não compila. O erro do Apex precisa conter este texto.",
@@ -260,6 +274,10 @@ export const adminCopy: Record<
           return `Teste oculto ${n}: a mensagem em inglês é obrigatória.`;
         case "test_message_pt":
           return `Teste oculto ${n}: a mensagem em português é obrigatória.`;
+        case "replacement_fields":
+          return `Teste oculto ${n}: cada troca de valor precisa de um nome de variável e de um novo valor.`;
+        case "replacement_duplicate":
+          return `Teste oculto ${n}: troque cada variável só uma vez.`;
         case "compile_match":
           return `Teste de falha de compilação ${n}: o texto é obrigatório.`;
         case "compile_message_en":

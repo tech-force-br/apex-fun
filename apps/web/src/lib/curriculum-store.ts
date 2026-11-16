@@ -15,11 +15,13 @@ import {
   type ExerciseCard,
   type HiddenTest,
   type LocalizedText,
+  type ValueReplacement,
   type ModuleStatus,
   type TheoryCard,
   type Topic,
 } from "@/lib/curriculum";
 import { canonicalRichText, richTextIsBlank } from "@/lib/rich-text";
+import { classifyReplacements } from "@/lib/value-replacements";
 
 export type SaveIssue = {
   code:
@@ -33,6 +35,8 @@ export type SaveIssue = {
     | "test_check"
     | "test_message_en"
     | "test_message_pt"
+    | "replacement_fields"
+    | "replacement_duplicate"
     | "compile_match"
     | "compile_message_en"
     | "compile_message_pt"
@@ -221,7 +225,18 @@ export function validateCard(draft: CardDraft): SaveIssue[] {
     if (isBlank(test.messages["pt-BR"])) {
       issues.push({ code: "test_message_pt", testIndex });
     }
+    issues.push(...replacementIssues(test, testIndex));
   });
+  return issues;
+}
+
+function replacementIssues(test: HiddenTest, testIndex: number): SaveIssue[] {
+  const classified = classifyReplacements(test.replacements);
+  const issues: SaveIssue[] = [];
+  if (classified.fields) issues.push({ code: "replacement_fields", testIndex });
+  if (classified.duplicate) {
+    issues.push({ code: "replacement_duplicate", testIndex });
+  }
   return issues;
 }
 
@@ -263,6 +278,7 @@ function toExerciseCard(id: string, draft: ExerciseDraft): ExerciseCard {
       checkApex: test.checkApex.trim(),
       messages: trimText(test.messages),
       previewCode: test.previewCode,
+      replacements: savedReplacements(test.replacements),
     })),
   };
 }
@@ -281,12 +297,23 @@ export function emptyCompileMatch(): CompileFailMatch {
   };
 }
 
+export function emptyValueReplacement(): ValueReplacement {
+  return { id: crypto.randomUUID(), name: "", value: "" };
+}
+
+function savedReplacements(rows: readonly ValueReplacement[]): ValueReplacement[] {
+  return classifyReplacements(rows).accepted.flatMap((row) =>
+    row.id ? [{ id: row.id, name: row.name, value: row.value }] : [],
+  );
+}
+
 export function emptyHiddenTest(): HiddenTest {
   return {
     id: crypto.randomUUID(),
     checkApex: "",
     messages: { ...emptyLocalizedText },
     previewCode: "",
+    replacements: [],
   };
 }
 
