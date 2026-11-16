@@ -92,8 +92,8 @@ One list for the whole site. The owner adds, edits, reorders, and removes tests 
 A test has exactly one match:
 
 - Compile-fail match text
-- Student message (English)
-- Student message (Portuguese)
+- Error message (English)
+- Error message (Portuguese)
 
 The builder will not save a test with a blank match text or a blank message. There is no control to add another match on the same test. The list itself may be empty.
 

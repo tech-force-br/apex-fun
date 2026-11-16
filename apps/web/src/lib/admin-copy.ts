@@ -60,7 +60,6 @@ export const adminCopy: Record<
     testMessageEn: string;
     testMessagePt: string;
     preview: string;
-    previewHelp: string;
     previewCode: string;
     previewRun: string;
     previewChecking: string;
@@ -121,7 +120,7 @@ export const adminCopy: Record<
       "No compile-fail tests yet. A compile error still shows the Apex error.",
     addCompileFail: "Add compile-fail test",
     compileFailN: (n) => `Compile-fail test ${n}`,
-    checkApex: "Check Apex (English)",
+    checkApex: "Check Apex",
     replacements: "Value replacements",
     replacementVariable: "Variable",
     replacementValue: "New value",
@@ -130,10 +129,9 @@ export const adminCopy: Record<
     compileMatch: "Compile-fail match text",
     compileMatchHelp:
       "Used when the student's code fails to compile. The Apex error must contain this text.",
-    testMessageEn: "Student message (English)",
-    testMessagePt: "Student message (Portuguese)",
+    testMessageEn: "Error message (English)",
+    testMessagePt: "Error message (Portuguese)",
     preview: "Preview",
-    previewHelp: "Sample student code for this test. Run preview checks it on the local runner.",
     previewCode: "Sample student code",
     previewRun: "Run preview",
     previewChecking: "Checking…",
@@ -229,7 +227,7 @@ export const adminCopy: Record<
       "Ainda não há testes de falha de compilação. Um erro de compilação ainda mostra o erro do Apex.",
     addCompileFail: "Adicionar teste de falha de compilação",
     compileFailN: (n) => `Teste de falha de compilação ${n}`,
-    checkApex: "Apex de verificação (inglês)",
+    checkApex: "Apex de verificação",
     replacements: "Trocas de valor",
     replacementVariable: "Variável",
     replacementValue: "Novo valor",
@@ -238,11 +236,9 @@ export const adminCopy: Record<
     compileMatch: "Texto da falha de compilação",
     compileMatchHelp:
       "Usado quando o código do aluno não compila. O erro do Apex precisa conter este texto.",
-    testMessageEn: "Mensagem ao aluno (inglês)",
-    testMessagePt: "Mensagem ao aluno (português)",
+    testMessageEn: "Mensagem de erro (inglês)",
+    testMessagePt: "Mensagem de erro (português)",
     preview: "Prévia",
-    previewHelp:
-      "Código de exemplo deste teste. Rodar prévia verifica no runner local.",
     previewCode: "Código de exemplo do aluno",
     previewRun: "Rodar prévia",
     previewChecking: "Verificando…",

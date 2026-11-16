@@ -414,7 +414,6 @@ export function TestPreview({
       <h4 className="text-sm font-medium tracking-wide text-muted uppercase">
         {copy.preview}
       </h4>
-      <p className="text-xs text-muted">{copy.previewHelp}</p>
       <Field label={copy.previewCode} htmlFor={previewId}>
         <div
           className={`mt-1.5 ${locked ? "pointer-events-none opacity-60" : ""}`}

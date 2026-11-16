@@ -38,7 +38,7 @@ The shared compile-fail list may be empty. Apex samples and run-clean hidden-che
 - Prompt EN / Prompt pt-BR, as rich text (bold, italic, underline, bullets, pasted screenshots)
 - Run-clean hidden tests (one or more), each with:
   - Value replacements (optional): variable name, new Apex value
-  - Check Apex (English), student message EN, student message pt-BR
+  - Check Apex, error message EN, error message pt-BR
   - Preview box (sample student code + last run result)
 
 No debug-match switch. No compile-fail mode on the card.
@@ -49,7 +49,7 @@ Their own place in the content admin, separate from modules, topics, and cards. 
 
 Each test has:
 
-- Exactly one compile-fail match: match text, student message EN, and student message pt-BR. The owner cannot add another match on the same test.
+- Exactly one compile-fail match: match text, error message EN, and error message pt-BR. The owner cannot add another match on the same test.
 - Preview box (sample student code + last run result)
 
 ## Current slice (2026-09-18)
