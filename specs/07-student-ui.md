@@ -6,7 +6,7 @@ Desktop first. Phone must work. The editor may feel cramped on a phone.
 
 ## Accounts
 
-Required. Email/password and Google. Progress is stored on the account.
+Required. Email/password and Google. Progress is stored on the account. The account row is `public.profiles` in [12-data-model.md](12-data-model.md). One account covers a student and the owner.
 
 Language is chosen at signup. Change later in settings and from a control on every page.
 

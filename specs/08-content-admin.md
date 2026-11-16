@@ -2,7 +2,7 @@
 
 ## Who
 
-Only the site owner is admin in v1. No other teachers.
+Only the site owner is admin in v1. No other teachers. That flag is `profiles.is_admin` in [12-data-model.md](12-data-model.md). There is no screen that grants it.
 
 ## Admin can
 

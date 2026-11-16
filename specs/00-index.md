@@ -15,7 +15,7 @@ Read these in order. Each file is more detailed than the one before it.
 | 9 | [09-languages.md](09-languages.md) | Product | English and pt-BR |
 | 10 | [10-visual-design.md](10-visual-design.md) | Product | Light theme, login card, favicon, pointer cursor on buttons, not-allowed cursor on locked study rows |
 | 11 | [11-tech-architecture.md](11-tech-architecture.md) | Tech | Stack, hosts, monorepo, request path |
-| 12 | [12-data-model.md](12-data-model.md) | Tech | Tables and progress fields |
+| 12 | [12-data-model.md](12-data-model.md) | Tech | Login identity, tables, and progress fields |
 | 13 | [13-runner.md](13-runner.md) | Tech | How student Apex is glued and run on aer |
 | 14 | [14-launch-and-legal.md](14-launch-and-legal.md) | Launch | aer license, name, trademarks |
 | 15 | [15-open-questions.md](15-open-questions.md) | Status | Not decided yet |
@@ -23,3 +23,5 @@ Read these in order. Each file is more detailed than the one before it.
 Superseded notes live in the file they belong to. Later decisions win.
 
 Written 2026-09-17 from project decisions through Question 90.
+
+Login identity in [12-data-model.md](12-data-model.md) was decided 2026-11-16. Build `public.profiles` before the content tables and `exercise_progress`.

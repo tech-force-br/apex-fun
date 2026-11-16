@@ -18,7 +18,7 @@ Browser (React / Next.js)
 |---|---|
 | Web app | Next.js + TypeScript (React) |
 | Styles | Tailwind + custom theme |
-| Auth | Supabase Auth (email/password + Google) |
+| Auth | Supabase Auth (email/password + Google). App identity is `public.profiles` in [12-data-model.md](12-data-model.md) |
 | Database | Supabase Postgres |
 | Student editor | CodeMirror 6 |
 | Site host | Vercel (Hobby while private; plan Pro for a public product) |
