@@ -49,6 +49,8 @@ Do not run student Apex in Supabase Edge Functions either.
 
 Laptop slice: the action reads the mock session cookie, loads the seed exercise (or, for owner preview, the draft test). Owner preview of a run-clean test also receives the compile-fail list saved in the tab. The action calls the local runner and returns the log. It does not write Supabase. The page marks the card finished only after a pass, in tab memory. The first scored Validate and a module restart live in that same tab memory.
 
+Local and production share one Supabase project. Account rows carry `profiles.environment` from [12-data-model.md](12-data-model.md). The laptop sends `local`. The live site sends `production`. Content tables are shared.
+
 ## Related
 
 Back: [10-visual-design.md](10-visual-design.md)

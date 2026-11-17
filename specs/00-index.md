@@ -24,4 +24,4 @@ Superseded notes live in the file they belong to. Later decisions win.
 
 Written 2026-09-17 from project decisions through Question 90.
 
-Login identity in [12-data-model.md](12-data-model.md) was decided 2026-11-16. Build `public.profiles` before the content tables and `exercise_progress`.
+Login identity in [12-data-model.md](12-data-model.md) was decided 2026-11-16. Build `public.profiles` before the content tables and `exercise_progress`. On 2026-11-17 `profiles.environment` was added: `local` or `production`, set once at signup. Local and production share one Supabase project.
